@@ -88,7 +88,6 @@ enum process_event_response app_custs1_process_handler(ke_msg_id_t const msgid,
                                                        enum ke_msg_status_tag *msg_ret);
                                          
 const process_event_func_t app_process_handlers[] = {
-
 #if (!EXCLUDE_DLG_GAP)
      (process_event_func_t) app_gap_process_handler,
 #endif
@@ -127,7 +126,6 @@ const process_event_func_t app_process_handlers[] = {
 #if ((BLE_CUSTOM1_SERVER) && (!EXCLUDE_DLG_CUSTS1))
     (process_event_func_t) app_custs1_process_handler,
 #endif
-
 };
 
 int app_entry_point_handler (ke_msg_id_t const msgid,

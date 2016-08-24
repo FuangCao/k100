@@ -415,7 +415,8 @@ enum KE_TASK_TYPE
 
     TASK_CPPS           = 52  ,   // Cycling Power Profile Server Task
     TASK_CPPC           = 53  ,   // Cycling Power Profile Client Task
-    
+    TASK_JWAOO_APP      = 54  ,
+
     // Start of conditionally assigned task types
     
     #if BLE_SPOTA_RECEIVER

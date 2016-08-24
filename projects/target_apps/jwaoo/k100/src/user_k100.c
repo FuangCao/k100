@@ -31,6 +31,11 @@
 #include "user_k100.h"
 #include "arch_api.h"
 #include "gap.h"
+#include "jwaoo_hw.h"
+#include "jwaoo_key.h"
+#include "jwaoo_task.h"
+#include "rwip.h"
+#include "wkupct_quadec.h"
 
 /*
  * TYPE DEFINITIONS
@@ -168,6 +173,10 @@ static void app_add_ad_struct(struct gapm_start_advertise_cmd *cmd, void *ad_str
 
 void user_app_adv_start(void)
 {
+	if (jwaoo_suspended) {
+		return;
+	}
+
     // Schedule the next advertising data update
     app_adv_data_update_timer_used = app_easy_timer(APP_ADV_DATA_UPDATE_TO, adv_data_update_timer_cb);
 
@@ -263,5 +272,57 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
     }
 }
 
+// ================================================================================
+
+void user_app_before_sleep(void)
+{
+	LED1_CLOSE;
+
+	rwip_env.ext_wakeup_enable = 2;
+	wkupct_enable_irq(WAKEUP_KEY_SEL_MASK, WAKEUP_KEY_POL_MASK, 1, 0);
+}
+
+static bool user_app_wait_key_release(GPIO_PORT port, GPIO_PIN pin)
+{
+	bool active = KEY_IS_ACTIVE(port, pin);
+
+	if (active) {
+		LED2_OPEN;
+		while (KEY_IS_ACTIVE(port, pin));
+		LED2_CLOSE;
+	}
+
+	return active;
+}
+
+void user_app_resume_from_sleep(void)
+{
+	if (KEY_IS_ACTIVE(WAKEUP_KEY_PORT, WAKEUP_KEY_PIN)) {
+		jwaoo_set_suspend_enable(false, true);
+	}
+
+	user_app_wait_key_release(SUSPEND_KEY_PORT, SUSPEND_KEY_PIN);
+
+	SetWord16(WKUP_RESET_IRQ_REG, 1); // Acknowledge it
+	SetBits16(WKUP_CTRL_REG, WKUP_ENABLE_IRQ, 0); // No more interrupts of this kind
+
+	LED1_OPEN;
+}
+
+enum arch_main_loop_callback_ret user_app_ble_powered(void)
+{
+	if (user_app_wait_key_release(SUSPEND_KEY_PORT, SUSPEND_KEY_PIN)) {
+		jwaoo_set_suspend_enable(true, true);
+		return GOTO_SLEEP;
+	}
+
+	if (jwaoo_suspended) {
+		return GOTO_SLEEP;
+	}
+
+	LED1_OPEN;
+
+	return KEEP_POWERED;
+}
 
 /// @} APP

@@ -64,12 +64,12 @@ static const catch_rest_event_func_t app_process_catch_rest_cb = (catch_rest_eve
 
 static const  struct arch_main_loop_callbacks user_app_main_loop_callbacks = {
     .app_on_init            = user_app_init,
-    .app_on_ble_powered     = NULL,
+    .app_on_ble_powered     = user_app_ble_powered,
     .app_on_sytem_powered   = NULL,
-    .app_before_sleep       = NULL,
+    .app_before_sleep       = user_app_before_sleep,
     .app_validate_sleep     = NULL,
     .app_going_to_sleep     = NULL,
-    .app_resume_from_sleep  = NULL,
+    .app_resume_from_sleep  = user_app_resume_from_sleep,
 };
 
 

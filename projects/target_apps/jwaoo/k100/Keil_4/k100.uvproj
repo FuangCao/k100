@@ -1020,6 +1020,41 @@
               <FileType>1</FileType>
               <FilePath>..\src\user_k100.c</FilePath>
             </File>
+            <File>
+              <FileName>jwaoo_battery.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_battery.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_hw.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -2038,6 +2073,41 @@
               <FileType>1</FileType>
               <FilePath>..\src\user_k100.c</FilePath>
             </File>
+            <File>
+              <FileName>jwaoo_battery.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_battery.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_hw.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -3055,6 +3125,41 @@
               <FileName>user_k100.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\user_k100.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_battery.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_battery.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_hw.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_hw.c</FilePath>
             </File>
           </Files>
         </Group>

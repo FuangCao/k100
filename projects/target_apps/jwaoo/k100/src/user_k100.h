@@ -135,4 +135,8 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 
 /// @} APP
 
+void user_app_before_sleep(void);
+void user_app_resume_from_sleep(void);
+enum arch_main_loop_callback_ret user_app_ble_powered(void);
+
 #endif //_USER_BAREBONE_H_

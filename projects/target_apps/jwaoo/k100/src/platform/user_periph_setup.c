@@ -25,6 +25,7 @@
 #include "global_io.h"
 #include "gpio.h"
 #include "uart.h"                    // UART initialization
+#include "jwaoo_hw.h"
 
 #if DEVELOPMENT_DEBUG
 
@@ -42,8 +43,54 @@ i.e.
 */
 
 #ifdef CFG_PRINTF_UART2
-    RESERVE_GPIO(UART2_TX, UART1_TX_GPIO_PORT, UART1_TX_GPIO_PIN, PID_UART2_TX);
-    RESERVE_GPIO(UART2_RX, UART1_RX_GPIO_PORT, UART1_RX_GPIO_PIN, PID_UART2_RX);
+    RESERVE_GPIO(UART2_TX, UART_TX_GPIO_PORT, UART_TX_GPIO_PIN, PID_UART2_TX);
+#ifdef UART_RX_GPIO_PORT
+    RESERVE_GPIO(UART2_RX, UART_RX_GPIO_PORT, UART_RX_GPIO_PIN, PID_UART2_RX);
+#endif
+#endif
+
+	RESERVE_GPIO(SPI_CLK, SPI_CLK_GPIO_PORT, SPI_CLK_GPIO_PIN, PID_SPI_CLK);
+	RESERVE_GPIO(SPI_DO, SPI_DO_GPIO_PORT, SPI_DO_GPIO_PIN, PID_SPI_DO);
+	RESERVE_GPIO(SPI_DI, SPI_DI_GPIO_PORT, SPI_DI_GPIO_PIN, PID_SPI_DI);
+	RESERVE_GPIO(SPI_EN, SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN, PID_SPI_EN);
+
+	RESERVE_GPIO(I2C_SCL, I2C1_GPIO_PORT, I2C1_SCL_GPIO_PIN, PID_I2C_SCL);
+	RESERVE_GPIO(I2C_SDA, I2C1_GPIO_PORT, I2C1_SDA_GPIO_PIN, PID_I2C_SDA);
+
+#ifdef MOTO_GPIO_RESERVE
+	MOTO_GPIO_RESERVE;
+#endif
+
+#ifdef LED1_GPIO_RESERVE
+	LED1_GPIO_RESERVE;
+#endif
+
+#ifdef LED2_GPIO_RESERVE
+	LED2_GPIO_RESERVE;
+#endif
+
+#ifdef BATT_ADC_GPIO_RESERVE
+	BATT_ADC_GPIO_RESERVE;
+#endif
+
+#ifdef CHG_STAT_GPIO_RESERVE
+	CHG_STAT_GPIO_RESERVE;
+#endif
+
+#ifdef KEY1_GPIO_PORT
+	KEY_GPIO_RESERVE(1);
+#endif
+
+#ifdef KEY2_GPIO_PORT
+	KEY_GPIO_RESERVE(2);
+#endif
+
+#ifdef KEY3_GPIO_PORT
+	KEY_GPIO_RESERVE(3);
+#endif
+
+#ifdef KEY4_GPIO_PORT
+	KEY_GPIO_RESERVE(4);
 #endif
 }
 #endif //DEVELOPMENT_DEBUG
@@ -51,15 +98,71 @@ i.e.
 void set_pad_functions(void)        // set gpio port function mode
 {
 #ifdef CFG_PRINTF_UART2
-    GPIO_ConfigurePin(UART1_TX_GPIO_PORT, UART1_TX_GPIO_PIN, OUTPUT, PID_UART2_TX, false);
-    GPIO_ConfigurePin(UART1_RX_GPIO_PORT, UART1_RX_GPIO_PIN, INPUT, PID_UART2_RX, false);
+    GPIO_ConfigurePin(UART_TX_GPIO_PORT, UART_TX_GPIO_PIN, OUTPUT, PID_UART2_TX, false);
+#ifdef UART_RX_GPIO_PORT
+    GPIO_ConfigurePin(UART_RX_GPIO_PORT, UART_RX_GPIO_PIN, INPUT, PID_UART2_RX, false);
+#endif
 #endif
 
-/*
-* Configure application ports.
-i.e.
-    GPIO_ConfigurePin( GPIO_PORT_0, GPIO_PIN_1, OUTPUT, PID_GPIO, false ); // Set P_01 as Generic purpose Output
-*/
+#ifdef MOTO_GPIO_CONFIG
+	MOTO_GPIO_CONFIG;
+#endif
+
+#ifdef LED1_GPIO_CONFIG
+	LED1_GPIO_CONFIG;
+#endif
+
+#ifdef LED2_GPIO_CONFIG
+	LED2_GPIO_CONFIG;
+#endif
+
+#ifdef BATT_ADC_GPIO_CONFIG
+	BATT_ADC_GPIO_CONFIG;
+#endif
+
+#ifdef KEY1_GPIO_PORT
+	KEY_GPIO_CONFIG(1);
+#endif
+
+#ifdef KEY2_GPIO_PORT
+	KEY_GPIO_CONFIG(2);
+#endif
+
+#ifdef KEY3_GPIO_PORT
+	KEY_GPIO_CONFIG(3);
+#endif
+
+#ifdef KEY4_GPIO_PORT
+	KEY_GPIO_CONFIG(4);
+#endif
+
+#ifdef CHG_STAT_GPIO_CONFIG
+	CHG_STAT_GPIO_CONFIG;
+#endif
+
+#ifdef LDO_P3V3_GPIO_CONFIG
+	LDO_P3V3_GPIO_CONFIG;
+#endif
+
+#if 0
+	GPIO_ConfigurePin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN, OUTPUT, PID_SPI_EN, true);
+	GPIO_ConfigurePin(SPI_CLK_GPIO_PORT, SPI_CLK_GPIO_PIN, OUTPUT, PID_SPI_CLK, false);
+	GPIO_ConfigurePin(SPI_DO_GPIO_PORT, SPI_DO_GPIO_PIN, OUTPUT, PID_SPI_DO, false);
+	GPIO_ConfigurePin(SPI_DI_GPIO_PORT, SPI_DI_GPIO_PIN, INPUT, PID_SPI_DI, false);
+#else
+	GPIO_ConfigurePin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN, OUTPUT, PID_SPI_EN, true);
+	GPIO_ConfigurePin(SPI_CLK_GPIO_PORT, SPI_CLK_GPIO_PIN, INPUT, PID_GPIO, false);
+	GPIO_ConfigurePin(SPI_DO_GPIO_PORT, SPI_DO_GPIO_PIN, INPUT, PID_GPIO, false);
+	GPIO_ConfigurePin(SPI_DI_GPIO_PORT, SPI_DI_GPIO_PIN, INPUT, PID_GPIO, false);
+#endif
+
+#if 0
+	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SCL_GPIO_PIN, OUTPUT, PID_I2C_SCL, false);
+	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SDA_GPIO_PIN, OUTPUT, PID_I2C_SDA, false);
+#else
+	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SCL_GPIO_PIN, INPUT, PID_GPIO, false);
+	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SDA_GPIO_PIN, INPUT, PID_GPIO, false);
+#endif
 }
 
 void periph_init(void)
@@ -84,6 +187,8 @@ void periph_init(void)
     SetBits16(CLK_PER_REG, UART2_ENABLE, 1);
     uart2_init(UART_BAUDRATE_115K2, 3);
 #endif
+
+	jwaoo_hw_init();
 
    // Enable the pads
     SetBits16(SYS_CTRL_REG, PAD_LATCH_EN, 1);

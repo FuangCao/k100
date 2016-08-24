@@ -123,7 +123,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
+          <Name>/</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -143,7 +143,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>JL2CM3</Key>
-          <Name>-U228206118 -O78 -S0 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO7 -FD0 -FC800 -FN0</Name>
+          <Name>-U20090928 -O78 -S0 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO7 -FD0 -FC800 -FN0</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
       <Breakpoint/>
@@ -581,7 +581,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\boot\rvds\system_ARMCM0.c</PathWithFileName>
       <FilenameWithoutPath>system_ARMCM0.c</FilenameWithoutPath>
@@ -594,10 +594,10 @@
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>4462164</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <TopLine>137</TopLine>
+      <CurrentLine>146</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\boot\rvds\boot_vectors.s</PathWithFileName>
       <FilenameWithoutPath>boot_vectors.s</FilenameWithoutPath>
@@ -613,7 +613,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\hardfault_handler.c</PathWithFileName>
       <FilenameWithoutPath>hardfault_handler.c</FilenameWithoutPath>
@@ -629,7 +629,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\nmi_handler.c</PathWithFileName>
       <FilenameWithoutPath>nmi_handler.c</FilenameWithoutPath>
@@ -653,7 +653,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\arch_console\arch_console.c</PathWithFileName>
       <FilenameWithoutPath>arch_console.c</FilenameWithoutPath>
@@ -669,7 +669,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\nvds\src\nvds.c</PathWithFileName>
       <FilenameWithoutPath>nvds.c</FilenameWithoutPath>
@@ -685,7 +685,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_main.c</PathWithFileName>
       <FilenameWithoutPath>arch_main.c</FilenameWithoutPath>
@@ -701,7 +701,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\jump_table.c</PathWithFileName>
       <FilenameWithoutPath>jump_table.c</FilenameWithoutPath>
@@ -717,7 +717,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_sleep.c</PathWithFileName>
       <FilenameWithoutPath>arch_sleep.c</FilenameWithoutPath>
@@ -733,7 +733,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_system.c</PathWithFileName>
       <FilenameWithoutPath>arch_system.c</FilenameWithoutPath>
@@ -749,7 +749,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_patch.c</PathWithFileName>
       <FilenameWithoutPath>arch_patch.c</FilenameWithoutPath>
@@ -773,7 +773,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\patch_code\DA14580\obj\atts_task.obj</PathWithFileName>
       <FilenameWithoutPath>atts_task.obj</FilenameWithoutPath>
@@ -789,7 +789,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\patch_code\DA14580\obj\ch_map.obj</PathWithFileName>
       <FilenameWithoutPath>ch_map.obj</FilenameWithoutPath>
@@ -805,7 +805,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\patch_code\DA14580\obj\gapm_util.obj</PathWithFileName>
       <FilenameWithoutPath>gapm_util.obj</FilenameWithoutPath>
@@ -821,7 +821,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\patch_code\DA14580\obj\ke_task.obj</PathWithFileName>
       <FilenameWithoutPath>ke_task.obj</FilenameWithoutPath>
@@ -837,7 +837,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\patch_code\DA14580\obj\smpc.obj</PathWithFileName>
       <FilenameWithoutPath>smpc.obj</FilenameWithoutPath>
@@ -853,7 +853,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\patch_code\DA14580\obj\smpc_task.obj</PathWithFileName>
       <FilenameWithoutPath>smpc_task.obj</FilenameWithoutPath>
@@ -869,7 +869,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\patch_code\DA14580\obj\llc.obj</PathWithFileName>
       <FilenameWithoutPath>llc.obj</FilenameWithoutPath>
@@ -893,7 +893,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\patch_code\DA14581\obj\atts_util.obj</PathWithFileName>
       <FilenameWithoutPath>atts_util.obj</FilenameWithoutPath>
@@ -909,7 +909,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\patch_code\DA14581\obj\lld.obj</PathWithFileName>
       <FilenameWithoutPath>lld.obj</FilenameWithoutPath>
@@ -925,7 +925,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\patch_code\DA14581\obj\llm_task.obj</PathWithFileName>
       <FilenameWithoutPath>llm_task.obj</FilenameWithoutPath>
@@ -941,7 +941,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\patch_code\DA14581\obj\smpc_task.obj</PathWithFileName>
       <FilenameWithoutPath>smpc_task.obj</FilenameWithoutPath>
@@ -965,7 +965,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\syscntl\syscntl.c</PathWithFileName>
       <FilenameWithoutPath>syscntl.c</FilenameWithoutPath>
@@ -981,7 +981,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\gpio\gpio.c</PathWithFileName>
       <FilenameWithoutPath>gpio.c</FilenameWithoutPath>
@@ -997,7 +997,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\wkupct_quadec\wkupct_quadec.c</PathWithFileName>
       <FilenameWithoutPath>wkupct_quadec.c</FilenameWithoutPath>
@@ -1013,7 +1013,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\battery\battery.c</PathWithFileName>
       <FilenameWithoutPath>battery.c</FilenameWithoutPath>
@@ -1029,7 +1029,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\adc\adc.c</PathWithFileName>
       <FilenameWithoutPath>adc.c</FilenameWithoutPath>
@@ -1045,7 +1045,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\trng\trng.c</PathWithFileName>
       <FilenameWithoutPath>trng.c</FilenameWithoutPath>
@@ -1061,7 +1061,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.c</PathWithFileName>
       <FilenameWithoutPath>spi_flash.c</FilenameWithoutPath>
@@ -1077,7 +1077,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\spi\spi.c</PathWithFileName>
       <FilenameWithoutPath>spi.c</FilenameWithoutPath>
@@ -1093,7 +1093,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\i2c_eeprom\i2c_eeprom.c</PathWithFileName>
       <FilenameWithoutPath>i2c_eeprom.c</FilenameWithoutPath>
@@ -1117,7 +1117,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\rf\src\rf_580.c</PathWithFileName>
       <FilenameWithoutPath>rf_580.c</FilenameWithoutPath>
@@ -1133,7 +1133,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\ble_stack\rwble\rwble.c</PathWithFileName>
       <FilenameWithoutPath>rwble.c</FilenameWithoutPath>
@@ -1149,7 +1149,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\rwip\src\rwip.c</PathWithFileName>
       <FilenameWithoutPath>rwip.c</FilenameWithoutPath>
@@ -1165,7 +1165,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\ble_stack\host\gap\gapm\gapm.c</PathWithFileName>
       <FilenameWithoutPath>gapm.c</FilenameWithoutPath>
@@ -1189,7 +1189,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\ble_stack\profiles\dis\diss\diss.c</PathWithFileName>
       <FilenameWithoutPath>diss.c</FilenameWithoutPath>
@@ -1205,7 +1205,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\ble_stack\profiles\dis\diss\diss_task.c</PathWithFileName>
       <FilenameWithoutPath>diss_task.c</FilenameWithoutPath>
@@ -1221,7 +1221,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\ble_stack\profiles\prf_utils.c</PathWithFileName>
       <FilenameWithoutPath>prf_utils.c</FilenameWithoutPath>
@@ -1245,7 +1245,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_default_hnd\app_default_handlers.c</PathWithFileName>
       <FilenameWithoutPath>app_default_handlers.c</FilenameWithoutPath>
@@ -1261,7 +1261,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_common\app.c</PathWithFileName>
       <FilenameWithoutPath>app.c</FilenameWithoutPath>
@@ -1277,7 +1277,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_common\app_task.c</PathWithFileName>
       <FilenameWithoutPath>app_task.c</FilenameWithoutPath>
@@ -1293,7 +1293,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\src\app_sec\app_security.c</PathWithFileName>
       <FilenameWithoutPath>app_security.c</FilenameWithoutPath>
@@ -1309,7 +1309,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\src\app_sec\app_security_task.c</PathWithFileName>
       <FilenameWithoutPath>app_security_task.c</FilenameWithoutPath>
@@ -1325,7 +1325,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_bass\app_bass.c</PathWithFileName>
       <FilenameWithoutPath>app_bass.c</FilenameWithoutPath>
@@ -1341,7 +1341,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_bass\app_bass_task.c</PathWithFileName>
       <FilenameWithoutPath>app_bass_task.c</FilenameWithoutPath>
@@ -1357,7 +1357,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_findme\app_findme.c</PathWithFileName>
       <FilenameWithoutPath>app_findme.c</FilenameWithoutPath>
@@ -1373,7 +1373,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_findme\app_findme_task.c</PathWithFileName>
       <FilenameWithoutPath>app_findme_task.c</FilenameWithoutPath>
@@ -1389,7 +1389,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_proxr\app_proxr.c</PathWithFileName>
       <FilenameWithoutPath>app_proxr.c</FilenameWithoutPath>
@@ -1405,7 +1405,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_proxr\app_proxr_task.c</PathWithFileName>
       <FilenameWithoutPath>app_proxr_task.c</FilenameWithoutPath>
@@ -1421,7 +1421,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_diss\app_diss.c</PathWithFileName>
       <FilenameWithoutPath>app_diss.c</FilenameWithoutPath>
@@ -1437,7 +1437,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_diss\app_diss_task.c</PathWithFileName>
       <FilenameWithoutPath>app_diss_task.c</FilenameWithoutPath>
@@ -1453,7 +1453,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_spotar\app_spotar.c</PathWithFileName>
       <FilenameWithoutPath>app_spotar.c</FilenameWithoutPath>
@@ -1469,7 +1469,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_spotar\app_spotar_task.c</PathWithFileName>
       <FilenameWithoutPath>app_spotar_task.c</FilenameWithoutPath>
@@ -1485,7 +1485,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_entry\app_entry_point.c</PathWithFileName>
       <FilenameWithoutPath>app_entry_point.c</FilenameWithoutPath>
@@ -1501,7 +1501,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_common\app_msg_utils.c</PathWithFileName>
       <FilenameWithoutPath>app_msg_utils.c</FilenameWithoutPath>
@@ -1517,7 +1517,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_easy\app_easy_msg_utils.c</PathWithFileName>
       <FilenameWithoutPath>app_easy_msg_utils.c</FilenameWithoutPath>
@@ -1533,7 +1533,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\src\app_easy\app_easy_security.c</PathWithFileName>
       <FilenameWithoutPath>app_easy_security.c</FilenameWithoutPath>
@@ -1549,7 +1549,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_easy\app_easy_timer.c</PathWithFileName>
       <FilenameWithoutPath>app_easy_timer.c</FilenameWithoutPath>
@@ -1565,7 +1565,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_custs\app_customs.c</PathWithFileName>
       <FilenameWithoutPath>app_customs.c</FilenameWithoutPath>
@@ -1581,7 +1581,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_custs\app_customs_task.c</PathWithFileName>
       <FilenameWithoutPath>app_customs_task.c</FilenameWithoutPath>
@@ -1597,7 +1597,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_custs\app_customs_common.c</PathWithFileName>
       <FilenameWithoutPath>app_customs_common.c</FilenameWithoutPath>
@@ -1621,7 +1621,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\adc\adc.h</PathWithFileName>
       <FilenameWithoutPath>adc.h</FilenameWithoutPath>
@@ -1637,7 +1637,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\battery\battery.h</PathWithFileName>
       <FilenameWithoutPath>battery.h</FilenameWithoutPath>
@@ -1653,7 +1653,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\gpio\gpio.h</PathWithFileName>
       <FilenameWithoutPath>gpio.h</FilenameWithoutPath>
@@ -1669,7 +1669,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\i2c_core\i2c_core.h</PathWithFileName>
       <FilenameWithoutPath>i2c_core.h</FilenameWithoutPath>
@@ -1685,7 +1685,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\i2c_eeprom\i2c_eeprom.h</PathWithFileName>
       <FilenameWithoutPath>i2c_eeprom.h</FilenameWithoutPath>
@@ -1701,7 +1701,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\pwm\pwm.h</PathWithFileName>
       <FilenameWithoutPath>pwm.h</FilenameWithoutPath>
@@ -1717,7 +1717,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\spi\spi.h</PathWithFileName>
       <FilenameWithoutPath>spi.h</FilenameWithoutPath>
@@ -1733,7 +1733,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.h</PathWithFileName>
       <FilenameWithoutPath>spi_flash.h</FilenameWithoutPath>
@@ -1749,7 +1749,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\systick\systick.h</PathWithFileName>
       <FilenameWithoutPath>systick.h</FilenameWithoutPath>
@@ -1765,7 +1765,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\trng\trng.h</PathWithFileName>
       <FilenameWithoutPath>trng.h</FilenameWithoutPath>
@@ -1781,7 +1781,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\uart\uart.h</PathWithFileName>
       <FilenameWithoutPath>uart.h</FilenameWithoutPath>
@@ -1797,7 +1797,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\wkupct_quadec\wkupct_quadec.h</PathWithFileName>
       <FilenameWithoutPath>wkupct_quadec.h</FilenameWithoutPath>
@@ -1821,7 +1821,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app.h</PathWithFileName>
       <FilenameWithoutPath>app.h</FilenameWithoutPath>
@@ -1837,7 +1837,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_api.h</PathWithFileName>
       <FilenameWithoutPath>app_api.h</FilenameWithoutPath>
@@ -1853,7 +1853,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_callback.h</PathWithFileName>
       <FilenameWithoutPath>app_callback.h</FilenameWithoutPath>
@@ -1869,7 +1869,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_default_handlers.h</PathWithFileName>
       <FilenameWithoutPath>app_default_handlers.h</FilenameWithoutPath>
@@ -1885,7 +1885,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_easy_gap.h</PathWithFileName>
       <FilenameWithoutPath>app_easy_gap.h</FilenameWithoutPath>
@@ -1901,7 +1901,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_easy_msg_utils.h</PathWithFileName>
       <FilenameWithoutPath>app_easy_msg_utils.h</FilenameWithoutPath>
@@ -1917,7 +1917,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_easy_security.h</PathWithFileName>
       <FilenameWithoutPath>app_easy_security.h</FilenameWithoutPath>
@@ -1933,7 +1933,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_easy_timer.h</PathWithFileName>
       <FilenameWithoutPath>app_easy_timer.h</FilenameWithoutPath>
@@ -1949,7 +1949,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_entry_point.h</PathWithFileName>
       <FilenameWithoutPath>app_entry_point.h</FilenameWithoutPath>
@@ -1965,7 +1965,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_mid.h</PathWithFileName>
       <FilenameWithoutPath>app_mid.h</FilenameWithoutPath>
@@ -1981,7 +1981,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_msg_utils.h</PathWithFileName>
       <FilenameWithoutPath>app_msg_utils.h</FilenameWithoutPath>
@@ -1997,7 +1997,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_security.h</PathWithFileName>
       <FilenameWithoutPath>app_security.h</FilenameWithoutPath>
@@ -2013,7 +2013,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_task.h</PathWithFileName>
       <FilenameWithoutPath>app_task.h</FilenameWithoutPath>
@@ -2029,7 +2029,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\app_modules\api\app_user_config.h</PathWithFileName>
       <FilenameWithoutPath>app_user_config.h</FilenameWithoutPath>
@@ -2053,7 +2053,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\arch\arch_api.h</PathWithFileName>
       <FilenameWithoutPath>arch_api.h</FilenameWithoutPath>
@@ -2069,7 +2069,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\arch\main\arch_wdg.h</PathWithFileName>
       <FilenameWithoutPath>arch_wdg.h</FilenameWithoutPath>
@@ -2085,7 +2085,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\core_modules\arch_console\arch_console.h</PathWithFileName>
       <FilenameWithoutPath>arch_console.h</FilenameWithoutPath>
@@ -2109,7 +2109,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\da1458x_config_advanced.h</PathWithFileName>
       <FilenameWithoutPath>da1458x_config_advanced.h</FilenameWithoutPath>
@@ -2125,7 +2125,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\da1458x_config_basic.h</PathWithFileName>
       <FilenameWithoutPath>da1458x_config_basic.h</FilenameWithoutPath>
@@ -2138,10 +2138,10 @@
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>4462164</ColumnNumber>
+      <ColumnNumber>19</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <TopLine>9</TopLine>
+      <CurrentLine>31</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\user_callback_config.h</PathWithFileName>
       <FilenameWithoutPath>user_callback_config.h</FilenameWithoutPath>
@@ -2157,7 +2157,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\user_config.h</PathWithFileName>
       <FilenameWithoutPath>user_config.h</FilenameWithoutPath>
@@ -2173,7 +2173,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\user_modules_config.h</PathWithFileName>
       <FilenameWithoutPath>user_modules_config.h</FilenameWithoutPath>
@@ -2186,10 +2186,10 @@
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>4462164</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <TopLine>136</TopLine>
+      <CurrentLine>178</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\user_periph_setup.h</PathWithFileName>
       <FilenameWithoutPath>user_periph_setup.h</FilenameWithoutPath>
@@ -2205,7 +2205,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\user_profiles_config.h</PathWithFileName>
       <FilenameWithoutPath>user_profiles_config.h</FilenameWithoutPath>
@@ -2221,7 +2221,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\config\user_config_sw_ver.h</PathWithFileName>
       <FilenameWithoutPath>user_config_sw_ver.h</FilenameWithoutPath>
@@ -2232,7 +2232,7 @@
 
   <Group>
     <GroupName>user_platform</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -2245,7 +2245,7 @@
       <ColumnNumber>4462164</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>0</TopLine>
-      <CurrentLine>5</CurrentLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\platform\user_periph_setup.c</PathWithFileName>
       <FilenameWithoutPath>user_periph_setup.c</FilenameWithoutPath>
@@ -2266,13 +2266,125 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>68</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>226</TopLine>
+      <CurrentLine>252</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\user_k100.c</PathWithFileName>
       <FilenameWithoutPath>user_k100.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>14</GroupNumber>
+      <FileNumber>101</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>0</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\jwaoo_battery.c</PathWithFileName>
+      <FilenameWithoutPath>jwaoo_battery.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>14</GroupNumber>
+      <FileNumber>102</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>15</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>190</TopLine>
+      <CurrentLine>191</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\jwaoo_i2c.c</PathWithFileName>
+      <FilenameWithoutPath>jwaoo_i2c.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>14</GroupNumber>
+      <FileNumber>103</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>0</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\jwaoo_key.c</PathWithFileName>
+      <FilenameWithoutPath>jwaoo_key.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>14</GroupNumber>
+      <FileNumber>104</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>15</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>1</TopLine>
+      <CurrentLine>9</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\jwaoo_pwm.c</PathWithFileName>
+      <FilenameWithoutPath>jwaoo_pwm.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>14</GroupNumber>
+      <FileNumber>105</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>0</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>1</TopLine>
+      <CurrentLine>5</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\jwaoo_spi.c</PathWithFileName>
+      <FilenameWithoutPath>jwaoo_spi.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>14</GroupNumber>
+      <FileNumber>106</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>0</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\jwaoo_task.c</PathWithFileName>
+      <FilenameWithoutPath>jwaoo_task.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>14</GroupNumber>
+      <FileNumber>107</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <ColumnNumber>0</ColumnNumber>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\jwaoo_hw.c</PathWithFileName>
+      <FilenameWithoutPath>jwaoo_hw.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
