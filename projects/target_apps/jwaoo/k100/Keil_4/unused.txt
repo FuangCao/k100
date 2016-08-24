@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Wed Aug 24 21:12:54 2016
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Wed Aug 24 21:52:48 2016
 ;VERSION 0.2
 ;FILE adc.o
 adc_calibrate <= USED 0
@@ -101,10 +101,7 @@ battery_get_lvl <= USED 0
 ;FILE gapm_util.obj
 ;FILE gpio.o
 GPIO_ConfigurePinPower <= USED 0
-GPIO_EnableIRQ <= USED 0
 GPIO_GetIRQInputLevel <= USED 0
-GPIO_RegisterCallback <= USED 0
-GPIO_SetIRQInputLevel <= USED 0
 ;FILE hardfault_handler.o
 ;FILE i2c_eeprom.o
 i2c_eeprom_init <= USED 0
@@ -119,9 +116,7 @@ i2c_wait_until_eeprom_ready <= USED 0
 ;FILE jump_table.o
 dummyf <= USED 0
 ;FILE jwaoo_battery.o
-jwaoo_battery_init <= USED 0
 ;FILE jwaoo_hw.o
-jwaoo_hw_config_irq <= USED 0
 ;FILE jwaoo_i2c.o
 jwaoo_i2c_init <= USED 0
 jwaoo_i2c_read_data <= USED 0
@@ -132,13 +127,11 @@ jwaoo_i2c_update_u32 <= USED 0
 jwaoo_i2c_update_u8 <= USED 0
 jwaoo_i2c_write_data <= USED 0
 ;FILE jwaoo_key.o
-jwaoo_key_init <= USED 0
 ;FILE jwaoo_pwm.o
 jwaoo_pwm_blink_sawtooth <= USED 0
 jwaoo_pwm_blink_set <= USED 0
 jwaoo_pwm_blink_square <= USED 0
 jwaoo_pwm_blink_walk <= USED 0
-jwaoo_pwm_init <= USED 0
 jwaoo_pwm_set_level <= USED 0
 ;FILE jwaoo_spi.o
 jwaoo_spi_init <= USED 0
@@ -152,8 +145,6 @@ prf_pack_date_time <= USED 0
 prf_server_send_event <= USED 0
 prf_unpack_date_time <= USED 0
 ;FILE pwm.o
-set_tmr_div <= USED 0
-set_tmr_enable <= USED 0
 timer0_disable_irq <= USED 0
 timer0_enable_irq <= USED 0
 timer0_init <= USED 0
@@ -165,14 +156,10 @@ timer0_set_pwm_low_counter <= USED 0
 timer0_set_pwm_on_counter <= USED 0
 timer0_start <= USED 0
 timer0_stop <= USED 0
-timer2_enable <= USED 0
-timer2_init <= USED 0
-timer2_set_hw_pause <= USED 0
 timer2_set_pwm2_duty_cycle <= USED 0
 timer2_set_pwm3_duty_cycle <= USED 0
 timer2_set_pwm4_duty_cycle <= USED 0
 timer2_set_pwm_frequency <= USED 0
-timer2_set_sw_pause <= USED 0
 timer2_stop <= USED 0
 ;FILE rf_580.o
 rf_nfm_disable <= USED 0

@@ -311,6 +311,8 @@ void user_app_resume_from_sleep(void)
 
 enum arch_main_loop_callback_ret user_app_ble_powered(void)
 {
+	LED1_OPEN;
+
 	if (user_app_wait_key_release(SUSPEND_KEY_PORT, SUSPEND_KEY_PIN)) {
 		jwaoo_set_suspend_enable(true, true);
 		return GOTO_SLEEP;
@@ -319,8 +321,6 @@ enum arch_main_loop_callback_ret user_app_ble_powered(void)
 	if (jwaoo_suspended) {
 		return GOTO_SLEEP;
 	}
-
-	LED1_OPEN;
 
 	return KEEP_POWERED;
 }

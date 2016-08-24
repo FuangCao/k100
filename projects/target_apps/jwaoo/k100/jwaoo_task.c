@@ -121,6 +121,7 @@ void jwaoo_set_deep_sleep_enable(bool enable)
 	jwaoo_deep_sleep = enable;
 
 	if (enable) {
+		set_pad_deep_sleep(true);
 		// ke_state_set(TASK_JWAOO_APP, JWAOO_APP_DEEP_SLEEP);
 
 		arch_ble_ext_wakeup_on();

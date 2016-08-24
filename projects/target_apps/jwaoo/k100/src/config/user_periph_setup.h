@@ -179,3 +179,4 @@ void set_pad_functions(void);
  ****************************************************************************************
  */
 void GPIO_reservations(void);
+void set_pad_deep_sleep(bool enable);

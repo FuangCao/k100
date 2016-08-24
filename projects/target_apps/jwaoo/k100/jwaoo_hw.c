@@ -13,9 +13,9 @@ void jwaoo_hw_config_irq(IRQn_Type irq, GPIO_handler_function_t isr, GPIO_PORT p
 
 void jwaoo_hw_init(void)
 {
-	// jwaoo_key_init();
-	// jwaoo_pwm_init();
-	// jwaoo_battery_init();
+	jwaoo_key_init();
+	jwaoo_pwm_init();
+	jwaoo_battery_init();
 
 	// jwaoo_spi_init();
 	// jwaoo_i2c_init(JWAOO_I2C_SPEED_400K, JWAOO_I2C_ADDRESS_MODE_7BIT);
