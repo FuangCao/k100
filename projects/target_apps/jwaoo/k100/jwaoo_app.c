@@ -70,7 +70,7 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 static int jwaoo_adv_stop_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	app_easy_gap_advertise_stop();
-	jwaoo_pwm_close(JWAOO_PWM_BT_LED);
+	jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
 
 	return KE_MSG_CONSUMED;
 }
@@ -104,6 +104,9 @@ static int jwaoo_key_lock_handler(ke_msg_id_t const msgid, void const *param, ke
 
 static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+	jwaoo_moto_boost_busy = false;
+	jwaoo_pwm_sync(JWAOO_PWM_MOTO);
+
 	return KE_MSG_CONSUMED;
 }
 
@@ -134,11 +137,12 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 	case JWAOO_PWM1_BLINK_TIMER:
 	case JWAOO_PWM2_BLINK_TIMER:
 	case JWAOO_PWM3_BLINK_TIMER:
-		jwaoo_pwm_close(msgid - JWAOO_PWM1_BLINK_TIMER);
+		jwaoo_pwm_blink_close(msgid - JWAOO_PWM1_BLINK_TIMER);
 		break;
 
 	case JWAOO_MOTO_BOOST:
-		jwaoo_pwm_close(JWAOO_PWM_MOTO);
+		jwaoo_moto_boost_busy = false;
+		jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
 		break;
 	}
 

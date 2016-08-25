@@ -36,9 +36,12 @@ struct jwaoo_pwm_device
 	void (*on_complete)(struct jwaoo_pwm_device *device);
 };
 
+extern bool jwaoo_moto_boost_busy;
 extern struct jwaoo_pwm_device jwaoo_pwm_devices[];
 
 struct jwaoo_pwm_device *jwaoo_pwm_get_device(uint8_t pwm);
+void jwaoo_pwm_set_level(uint8_t pwm, uint8_t level);
+void jwaoo_pwm_sync(uint8_t pwm);
 void jwaoo_pwm_blink_walk(uint8_t pwm);
 void jwaoo_pwm_blink_set(uint8_t pwm, uint8_t min, uint8_t max, uint8_t step, uint8_t delay, uint8_t count);
 void jwaoo_pwm_blink_sawtooth(uint8_t pwm, uint8_t min, uint8_t max, uint8_t step, uint32_t cycle, uint8_t count);
@@ -59,19 +62,19 @@ static inline void jwaoo_pwm_timer_clear(uint8_t pwm)
 	ke_timer_clear(JWAOO_PWM_TIMER(pwm), TASK_JWAOO_APP);
 }
 
-static inline void jwaoo_pwm_set_level(uint8_t pwm, uint8_t level)
+static inline void jwaoo_pwm_blink_set_level(uint8_t pwm, uint8_t level)
 {
 	jwaoo_pwm_blink_set(pwm, level, level, 0, 0, 0);
 }
 
-static inline void jwaoo_pwm_open(uint8_t pwm)
+static inline void jwaoo_pwm_blink_open(uint8_t pwm)
 {
-	jwaoo_pwm_set_level(pwm, JWAOO_PWM_LEVEL_MAX);
+	jwaoo_pwm_blink_set_level(pwm, JWAOO_PWM_LEVEL_MAX);
 }
 
-static inline void jwaoo_pwm_close(uint8_t pwm)
+static inline void jwaoo_pwm_blink_close(uint8_t pwm)
 {
-	jwaoo_pwm_set_level(pwm, 0);
+	jwaoo_pwm_blink_set_level(pwm, 0);
 }
 
 static inline void jwaoo_pwm_blink_sawtooth_full(uint8_t pwm, uint8_t step, uint32_t cycle, uint8_t count)
