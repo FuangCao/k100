@@ -45,6 +45,7 @@
 
 #include "app_callback.h"
 #include "app_default_handlers.h"
+#include "jwaoo_app.h"
 
 
 /*
@@ -57,11 +58,6 @@
 
 /* Advertising data update timer */
 #define APP_ADV_DATA_UPDATE_TO              (1000)  // 1000*10ms = 10sec
-
-/* Manufacturer specific data constants */
-#define APP_AD_MSD_COMPANY_ID       (0xABCD)
-#define APP_AD_MSD_COMPANY_ID_LEN   (2)
-#define APP_AD_MSD_DATA_LEN         (sizeof(uint16_t))
 
 /*
  * TYPE DEFINITIONS
@@ -80,14 +76,6 @@
  ****************************************************************************************
 */
 void user_app_init(void);
-
-/**
- ****************************************************************************************
- * @brief Advertising function.
- * @return void
- ****************************************************************************************
-*/
-void user_app_adv_start(void);
 
 /**
  ****************************************************************************************
@@ -134,9 +122,5 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                           ke_task_id_t const src_id);
 
 /// @} APP
-
-void user_app_before_sleep(void);
-void user_app_resume_from_sleep(void);
-enum arch_main_loop_callback_ret user_app_ble_powered(void);
 
 #endif //_USER_BAREBONE_H_

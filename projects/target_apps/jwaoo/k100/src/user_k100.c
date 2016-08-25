@@ -33,23 +33,7 @@
 #include "gap.h"
 #include "jwaoo_hw.h"
 #include "jwaoo_key.h"
-#include "jwaoo_task.h"
-#include "rwip.h"
-#include "wkupct_quadec.h"
-
-/*
- * TYPE DEFINITIONS
- ****************************************************************************************
- */
-
-// Manufacturer Specific Data ADV structure type
-struct mnf_specific_data_ad_structure
-{
-    uint8_t ad_structure_size;
-    uint8_t ad_structure_type;
-    uint8_t company_id[APP_AD_MSD_COMPANY_ID_LEN];
-    uint8_t proprietary_data[APP_AD_MSD_DATA_LEN];
-};
+#include "jwaoo_app.h"
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -59,64 +43,6 @@ struct mnf_specific_data_ad_structure
 uint8_t app_connection_idx;
 ke_msg_id_t app_adv_data_update_timer_used;
 ke_msg_id_t app_param_update_request_timer_used;
-
-// Manufacturer Specific Data
-struct mnf_specific_data_ad_structure mnf_data __attribute__((section("retention_mem_area0"),zero_init)); //@RETENTION MEMORY
-
-/*
- * FUNCTION DEFINITIONS
- ****************************************************************************************
-*/
-
-/**
- ****************************************************************************************
- * @brief Initialize Manufacturer Specific Data
- * @return void
- ****************************************************************************************
- */
-static void mnf_data_init()
-{
-    mnf_data.ad_structure_size = sizeof(struct mnf_specific_data_ad_structure ) - sizeof(uint8_t); // minus the size of the ad_structure_size field
-    mnf_data.ad_structure_type = GAP_AD_TYPE_MANU_SPECIFIC_DATA;
-    mnf_data.company_id[0] = APP_AD_MSD_COMPANY_ID & 0xFF; // LSB
-    mnf_data.company_id[1] = (APP_AD_MSD_COMPANY_ID >> 8 )& 0xFF; // MSB
-    mnf_data.proprietary_data[0] = 0;
-    mnf_data.proprietary_data[1] = 0;
-}
-
-/**
- ****************************************************************************************
- * @brief Update Manufacturer Specific Data
- * @return void
- ****************************************************************************************
- */
-static void mnf_data_update()
-{
-    uint16_t data;
-
-    data = mnf_data.proprietary_data[0] | (mnf_data.proprietary_data[1] << 8);
-    data += 1;
-    mnf_data.proprietary_data[0] = data & 0xFF;
-    mnf_data.proprietary_data[1] = (data >> 8) & 0xFF;
-
-    if (data == 0xFFFF) {
-         mnf_data.proprietary_data[0] = 0;
-         mnf_data.proprietary_data[1] = 0;
-    }
-}
-
-/**
- ****************************************************************************************
- * @brief Advertisement data update timer callback function.
- * @return void
- ****************************************************************************************
-*/
-static void adv_data_update_timer_cb()
-{
-    app_adv_data_update_timer_used = 0xFFFF;
-
-    app_easy_gap_advertise_stop();
-}
 
 /**
  ****************************************************************************************
@@ -133,61 +59,8 @@ static void param_update_request_timer_cb()
 
 void user_app_init(void)
 {
-    // Initialize Manufacturer Specific Data
-    mnf_data_init();
-
+	jwaoo_app_init();
     default_app_on_init();
-}
-
-/**
- * @brief Add an AD structure in the Advertising or Scan Response Data of the GAPM_START_ADVERTISE_CMD parameter struct
- * @param[in] cmd               GAPM_START_ADVERTISE_CMD parameter struct.
- * @param[in] ad_struct_data    AD structure buffer.
- * @param[in] ad_struct_len     AD structure length.
- * @return void.
- */
-static void app_add_ad_struct(struct gapm_start_advertise_cmd *cmd, void *ad_struct_data, uint8_t ad_struct_len)
-{
-    if ( (APP_ADV_DATA_MAX_SIZE - cmd->info.host.adv_data_len) >= ad_struct_len)
-    {
-        // Copy data
-        memcpy(&cmd->info.host.adv_data[cmd->info.host.adv_data_len], ad_struct_data, ad_struct_len);
-
-        // Update Advertising Data Length
-        cmd->info.host.adv_data_len += ad_struct_len;
-    }
-    else if ( (APP_SCAN_RESP_DATA_MAX_SIZE - cmd->info.host.scan_rsp_data_len) >= ad_struct_len)
-    {
-        // Copy data
-        memcpy(&cmd->info.host.scan_rsp_data[cmd->info.host.scan_rsp_data_len], ad_struct_data, ad_struct_len);
-
-        // Update Scan Responce Data Length
-        cmd->info.host.scan_rsp_data_len += ad_struct_len;
-    }
-    else
-    {
-        // Manufacturer Specific Data do not fit in either Advertising Data or Scan Response Data
-        ASSERT_ERROR(0);
-    }
-}
-
-void user_app_adv_start(void)
-{
-	if (jwaoo_suspended) {
-		return;
-	}
-
-    // Schedule the next advertising data update
-    app_adv_data_update_timer_used = app_easy_timer(APP_ADV_DATA_UPDATE_TO, adv_data_update_timer_cb);
-
-    struct gapm_start_advertise_cmd* cmd;
-    cmd = app_easy_gap_undirected_advertise_get_active();
-
-    // add manufacturer specific data dynamically
-    mnf_data_update();
-    app_add_ad_struct(cmd, &mnf_data, sizeof(struct mnf_specific_data_ad_structure));
-
-    app_easy_gap_undirected_advertise_start();
 }
 
 void user_app_connection(uint8_t connection_idx, struct gapc_connection_req_ind const *param)
@@ -213,7 +86,7 @@ void user_app_connection(uint8_t connection_idx, struct gapc_connection_req_ind 
     else
     {
         // No connection has been established, restart advertising
-        user_app_adv_start();
+        jwaoo_app_adv_start();
     }
 
     default_app_on_connection(connection_idx, param);
@@ -224,7 +97,7 @@ void user_app_adv_undirect_complete(uint8_t status)
     // If advertising was canceled then update advertising data and start advertising again
     if (status == GAP_ERR_CANCELED)
     {
-        user_app_adv_start();
+        jwaoo_app_adv_start();
     }
 }
 
@@ -237,7 +110,7 @@ void user_app_disconnect(struct gapc_disconnect_ind const *param)
         (state == APP_PARAM_UPD))
     {
         // Restart Advertising
-        user_app_adv_start();
+        jwaoo_app_adv_start();
     }
     else
     {
@@ -271,58 +144,4 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
             break;
     }
 }
-
-// ================================================================================
-
-void user_app_before_sleep(void)
-{
-	LED1_CLOSE;
-
-	rwip_env.ext_wakeup_enable = 2;
-	wkupct_enable_irq(WAKEUP_KEY_SEL_MASK, WAKEUP_KEY_POL_MASK, 1, 0);
-}
-
-static bool user_app_wait_key_release(GPIO_PORT port, GPIO_PIN pin)
-{
-	bool active = KEY_IS_ACTIVE(port, pin);
-
-	if (active) {
-		LED2_OPEN;
-		while (KEY_IS_ACTIVE(port, pin));
-		LED2_CLOSE;
-	}
-
-	return active;
-}
-
-void user_app_resume_from_sleep(void)
-{
-	if (KEY_IS_ACTIVE(WAKEUP_KEY_PORT, WAKEUP_KEY_PIN)) {
-		jwaoo_set_suspend_enable(false, true);
-	}
-
-	user_app_wait_key_release(SUSPEND_KEY_PORT, SUSPEND_KEY_PIN);
-
-	SetWord16(WKUP_RESET_IRQ_REG, 1); // Acknowledge it
-	SetBits16(WKUP_CTRL_REG, WKUP_ENABLE_IRQ, 0); // No more interrupts of this kind
-
-	LED1_OPEN;
-}
-
-enum arch_main_loop_callback_ret user_app_ble_powered(void)
-{
-	LED1_OPEN;
-
-	if (user_app_wait_key_release(SUSPEND_KEY_PORT, SUSPEND_KEY_PIN)) {
-		jwaoo_set_suspend_enable(true, true);
-		return GOTO_SLEEP;
-	}
-
-	if (jwaoo_suspended) {
-		return GOTO_SLEEP;
-	}
-
-	return KEEP_POWERED;
-}
-
 /// @} APP

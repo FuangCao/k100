@@ -40,8 +40,6 @@
 #include "gapc.h"
 #include "app_prf_types.h"
 
-#include "jwaoo_task.h"
-
 #if (BLE_CUSTOM_SERVER)
 #include "user_custs_config.h"
 #endif // (BLE_CUSTOM_SERVER)
@@ -1163,7 +1161,6 @@ uint8_t prf_unpack_date_time(uint8_t *packed_date, struct prf_date_time* date_ti
 
 void prf_init_func(void)
 {
-	jwaoo_task_init();
     #if (BLE_ACCEL)
     accel_init();
     #endif // (BLE_ACCEL)

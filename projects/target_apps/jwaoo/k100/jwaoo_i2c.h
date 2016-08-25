@@ -21,9 +21,7 @@ struct jwaoo_i2c_message
 	uint8_t read;
 };
 
-void jwaoo_i2c_init(uint8_t speed, uint8_t address_mode);
-void jwaoo_i2c_release(void);
-
+void jwaoo_i2c_set_enable(bool enable);
 int jwaoo_i2c_transfer(uint8_t client, struct jwaoo_i2c_message *msgs, int count);
 int jwaoo_i2c_read_data(uint8_t client, uint8_t addr, uint8_t *data, int size);
 int jwaoo_i2c_write_data(uint8_t client, uint8_t addr, const uint8_t *data, int size);

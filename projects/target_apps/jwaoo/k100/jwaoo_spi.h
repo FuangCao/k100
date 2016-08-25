@@ -4,4 +4,4 @@
 #include "spi.h"
 #include "spi_flash.h"
 
-void jwaoo_spi_init(void);
+void jwaoo_spi_set_enable(bool enable);

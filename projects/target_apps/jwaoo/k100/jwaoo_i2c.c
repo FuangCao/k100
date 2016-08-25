@@ -2,6 +2,8 @@
 #include "jwaoo_i2c.h"
 
 #define JWAOO_I2C_AUTO_POWER_DOWN		1
+#define JWAOO_I2C_SPEED					JWAOO_I2C_SPEED_400K
+#define JWAOO_I2C_ADDRESS_MODE			JWAOO_I2C_ADDRESS_MODE_7BIT
 
 static int jwaoo_i2c_wait_while_tx_fifo_full()
 {
@@ -68,26 +70,6 @@ static int jwaoo_i2c_wait_until_idle()
 	}
 
 	return -1;
-}
-
-void jwaoo_i2c_init(uint8_t speed, uint8_t address_mode)
-{
-	SetBits16(CLK_PER_REG, I2C_ENABLE, 1);                                        // enable  clock for I2C
-	SetWord16(I2C_ENABLE_REG, 0x0);                                               // Disable the I2C controller
-	SetWord16(I2C_CON_REG, I2C_MASTER_MODE | I2C_SLAVE_DISABLE | I2C_RESTART_EN); // Slave is disabled
-	SetBits16(I2C_CON_REG, I2C_SPEED, speed);                                     // Set speed
-	SetBits16(I2C_CON_REG, I2C_10BITADDR_MASTER, address_mode);                   // Set addressing mode
-
-#if JWAOO_I2C_AUTO_POWER_DOWN == 0
-	SetWord16(I2C_ENABLE_REG, 1);
-	jwaoo_i2c_wait_until_idle();
-#endif
-}
-
-void jwaoo_i2c_release(void)
-{
-    SetWord16(I2C_ENABLE_REG, 0x0);                             // Disable the I2C controller
-    SetBits16(CLK_PER_REG, I2C_ENABLE, 0);                      // Disable clock for I2C
 }
 
 int jwaoo_i2c_transfer(uint8_t slave, struct jwaoo_i2c_message *msgs, int count)
@@ -179,7 +161,7 @@ int jwaoo_i2c_transfer(uint8_t slave, struct jwaoo_i2c_message *msgs, int count)
 out_enable_irq:
 	GLOBAL_INT_RESTORE();
 out_i2c_disable:
-#if JWAOO_I2C_AUTO_POWER_DOWN
+#if JWAOO_I2C_JWAOO_I2C_AUTO_POWER_DOWN
 	SetWord16(I2C_ENABLE_REG, 0);
 #endif
 
@@ -277,4 +259,29 @@ int jwaoo_i2c_update_u32(uint8_t slave, uint8_t addr, uint32_t value, uint32_t m
 	}
 
 	return jwaoo_i2c_write_u32(slave, addr, value | (value_old & (~mask)));
+}
+
+void jwaoo_i2c_set_enable(bool enable)
+{
+	if (enable) {
+		GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SCL_GPIO_PIN, OUTPUT, PID_I2C_SCL, false);
+		GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SDA_GPIO_PIN, OUTPUT, PID_I2C_SDA, false);
+
+		SetBits16(CLK_PER_REG, I2C_ENABLE, 1);										  // enable  clock for I2C
+		SetWord16(I2C_ENABLE_REG, 0x0); 											  // Disable the I2C controller
+		SetWord16(I2C_CON_REG, I2C_MASTER_MODE | I2C_SLAVE_DISABLE | I2C_RESTART_EN); // Slave is disabled
+		SetBits16(I2C_CON_REG, I2C_SPEED, JWAOO_I2C_SPEED);									  // Set speed
+		SetBits16(I2C_CON_REG, I2C_10BITADDR_MASTER, JWAOO_I2C_ADDRESS_MODE); 				  // Set addressing mode
+
+#if JWAOO_I2C_AUTO_POWER_DOWN == 0
+		SetWord16(I2C_ENABLE_REG, 1);
+		jwaoo_i2c_wait_until_idle();
+#endif
+	} else {
+		SetWord16(I2C_ENABLE_REG, 0x0); 							// Disable the I2C controller
+		SetBits16(CLK_PER_REG, I2C_ENABLE, 0);						// Disable clock for I2C
+
+		GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SCL_GPIO_PIN, INPUT, PID_GPIO, false);
+		GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SDA_GPIO_PIN, INPUT, PID_GPIO, false);
+	}
 }

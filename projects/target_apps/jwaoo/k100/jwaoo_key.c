@@ -1,4 +1,4 @@
-#include "jwaoo_task.h"
+#include "jwaoo_app.h"
 #include "jwaoo_key.h"
 
 struct jwaoo_key_device jwaoo_keys[JWAOO_KEY_COUNT] = {

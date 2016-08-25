@@ -1,17 +1,42 @@
 #include "jwaoo_pwm.h"
 
+static uint8_t jwaoo_pwm_enable_mask;
+
+static void jwaoo_pwm_set_enable(uint8_t pwm, bool enable)
+{
+	if (enable) {
+		if (jwaoo_pwm_enable_mask == 0) {
+			set_tmr_enable(CLK_PER_REG_TMR_ENABLED);
+			set_tmr_div(CLK_PER_REG_TMR_DIV_1);
+			timer2_init(HW_CAN_NOT_PAUSE_PWM_2_3_4, PWM_2_3_4_SW_PAUSE_ENABLED, PWM_LEVEL_MAX);
+		}
+
+		jwaoo_pwm_enable_mask |= 1 << pwm;
+	} else {
+		jwaoo_pwm_enable_mask &= ~(1 << pwm);
+		if (jwaoo_pwm_enable_mask == 0) {
+			timer2_stop();
+			set_tmr_enable(CLK_PER_REG_TMR_DISABLED);
+		}
+	}
+}
+
 bool jwaoo_pwm_set_level(struct jwaoo_pwm_device *device, uint8_t level)
 {
+	uint8_t pwm = device->pwm;
+
 	if (device->active_low) {
 		level = PWM_LEVEL_MAX - level;
 	}
 
 	if (level < 1) {
+		jwaoo_pwm_set_enable(pwm, false);
 		GPIO_ConfigurePin(device->port, device->pin, OUTPUT, PID_GPIO, false);
 	} else if (level > PWM_LEVEL_MAX) {
+		jwaoo_pwm_set_enable(pwm, false);
 		GPIO_ConfigurePin(device->port, device->pin, OUTPUT, PID_GPIO, true);
 	} else {
-		uint8_t pwm = device->pwm;
+		jwaoo_pwm_set_enable(pwm, true);
 
 		timer2_set_sw_pause(PWM_2_3_4_SW_PAUSE_ENABLED);
 		SetWord16(PWM2_DUTY_CYCLE + (pwm * 2), level);
@@ -112,11 +137,4 @@ void jwaoo_pwm_blink_square(struct jwaoo_pwm_device *device, uint8_t min, uint8_
 	}
 
 	jwaoo_pwm_blink_set(device, min, max, max - min, delay, count);
-}
-
-void jwaoo_pwm_init(void)
-{
-	set_tmr_enable(CLK_PER_REG_TMR_ENABLED);
-	set_tmr_div(CLK_PER_REG_TMR_DIV_1);
-	timer2_init(HW_CAN_NOT_PAUSE_PWM_2_3_4, PWM_2_3_4_SW_PAUSE_ENABLED, PWM_LEVEL_MAX);
 }
