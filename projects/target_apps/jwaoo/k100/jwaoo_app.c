@@ -1,5 +1,6 @@
 #include "jwaoo_app.h"
 #include "jwaoo_key.h"
+#include "jwaoo_battery.h"
 
 struct mnf_specific_data_ad_structure
 {
@@ -38,27 +39,22 @@ static void jwaoo_app_mnf_data_update(void)
 
 static void jwaoo_app_add_ad_struct(struct gapm_start_advertise_cmd *cmd, void *ad_struct_data, uint8_t ad_struct_len)
 {
-    if ( (APP_ADV_DATA_MAX_SIZE - cmd->info.host.adv_data_len) >= ad_struct_len)
-    {
-        // Copy data
+    if ( (APP_ADV_DATA_MAX_SIZE - cmd->info.host.adv_data_len) >= ad_struct_len) {
         memcpy(&cmd->info.host.adv_data[cmd->info.host.adv_data_len], ad_struct_data, ad_struct_len);
-
-        // Update Advertising Data Length
         cmd->info.host.adv_data_len += ad_struct_len;
-    }
-    else if ( (APP_SCAN_RESP_DATA_MAX_SIZE - cmd->info.host.scan_rsp_data_len) >= ad_struct_len)
-    {
-        // Copy data
+    } else if ( (APP_SCAN_RESP_DATA_MAX_SIZE - cmd->info.host.scan_rsp_data_len) >= ad_struct_len) {
         memcpy(&cmd->info.host.scan_rsp_data[cmd->info.host.scan_rsp_data_len], ad_struct_data, ad_struct_len);
-
-        // Update Scan Responce Data Length
         cmd->info.host.scan_rsp_data_len += ad_struct_len;
     }
-    else
-    {
-        // Manufacturer Specific Data do not fit in either Advertising Data or Scan Response Data
-        ASSERT_ERROR(0);
-    }
+}
+
+static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	ke_timer_set(msgid, dest_id, 50);
+
+	LED2_BLINK;
+
+	return KE_MSG_CONSUMED;
 }
 
 static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
@@ -69,6 +65,19 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 	jwaoo_app_add_ad_struct(cmd, &mnf_data, sizeof(struct mnf_specific_data_ad_structure));
 
 	app_easy_gap_undirected_advertise_start();
+
+	LED2_OPEN;
+	ke_timer_set(JWAOO_BT_LED_BLINK, dest_id, 1);
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_adv_stop_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	app_easy_gap_advertise_stop();
+
+	ke_timer_clear(JWAOO_BT_LED_BLINK, dest_id);
+	LED2_CLOSE;
 
 	return KE_MSG_CONSUMED;
 }
@@ -88,12 +97,7 @@ static int jwaoo_shutdown_handler(ke_msg_id_t const msgid, void const *param, ke
 	return KE_MSG_CONSUMED;
 }
 
-static int jwaoo_led1_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
-{
-	return KE_MSG_CONSUMED;
-}
-
-static int jwaoo_led2_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+static int jwaoo_battery_led_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	return KE_MSG_CONSUMED;
 }
@@ -128,11 +132,20 @@ static int jwaoo_key_multi_click_handler(ke_msg_id_t const msgid, void const *pa
 	return KE_MSG_CONSUMED;
 }
 
+static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	return KE_MSG_CONSUMED;
+}
+
 // ================================================================================
 
 static int jwaoo_active_to_suspend_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
+	if (jwaoo_battery_env.charge_online) {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
+	} else {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
+	}
 
 	jwaoo_hw_set_suspend(true);
 
@@ -141,10 +154,33 @@ static int jwaoo_active_to_suspend_handler(ke_msg_id_t const msgid, void const *
 
 static int jwaoo_active_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
+	if (jwaoo_battery_env.charge_online) {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
+		jwaoo_hw_set_suspend(true);
+	} else {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
+		jwaoo_hw_set_suspend(true);
+		jwaoo_hw_set_deep_sleep(true);
+	}
 
-	jwaoo_hw_set_suspend(true);
-	jwaoo_hw_set_deep_sleep(true);
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_charging_to_suspend_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	if (!jwaoo_battery_env.charge_online) {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
+	}
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_charging_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	if (!jwaoo_battery_env.charge_online) {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
+		jwaoo_hw_set_deep_sleep(true);
+	}
 
 	return KE_MSG_CONSUMED;
 }
@@ -160,16 +196,23 @@ static int jwaoo_suspend_to_active_handler(ke_msg_id_t const msgid, void const *
 
 static int jwaoo_suspend_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
-
-	jwaoo_hw_set_deep_sleep(true);
+	if (jwaoo_battery_env.charge_online) {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
+	} else {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
+		jwaoo_hw_set_deep_sleep(true);
+	}
 
 	return KE_MSG_CONSUMED;
 }
 
 static int jwaoo_deep_sleep_to_suspend_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
+	if (jwaoo_battery_env.charge_online) {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
+	} else {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
+	}
 
 	// jwaoo_hw_set_deep_sleep(false);
 
@@ -187,14 +230,16 @@ static int jwaoo_deep_sleep_to_active_handler(ke_msg_id_t const msgid, void cons
 }
 
 static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
+	{ KE_MSG_DEFAULT_HANDLER,			(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_SUSPEND, 				(ke_msg_func_t) jwaoo_active_to_suspend_handler },
 	{ JWAOO_SET_DEEP_SLEEP, 			(ke_msg_func_t) jwaoo_active_to_deep_sleep_handler },
 	{ JWAOO_ADV_START,					(ke_msg_func_t) jwaoo_adv_start_handler },
+	{ JWAOO_ADV_STOP,					(ke_msg_func_t) jwaoo_adv_stop_handler },
 	{ JWAOO_BATT_POLL,					(ke_msg_func_t) jwaoo_battery_poll_handler },
 	{ JWAOO_REBOOT,						(ke_msg_func_t) jwaoo_reboot_handler },
 	{ JWAOO_SHUTDOWN,					(ke_msg_func_t) jwaoo_shutdown_handler },
-	{ JWAOO_LED1_BLINK,					(ke_msg_func_t) jwaoo_led1_blink_handler },
-	{ JWAOO_LED2_BLINK,					(ke_msg_func_t) jwaoo_led2_blink_handler },
+	{ JWAOO_BT_LED_BLINK,				(ke_msg_func_t) jwaoo_bt_led_blink_handler },
+	{ JWAOO_BATT_LED_BLINK,				(ke_msg_func_t) jwaoo_battery_led_blink_handler },
 	{ JWAOO_MOTO_BLINK,					(ke_msg_func_t) jwaoo_moto_blink_handler },
 	{ JWAOO_MOTO_BOOST,					(ke_msg_func_t) jwaoo_moto_boost_handler },
 	{ JWAOO_KEY_LOCK,					(ke_msg_func_t) jwaoo_key_lock_handler },
@@ -212,19 +257,33 @@ static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 	{ JWAOO_KEY4_MULTI_CLICK_TIMER,		(ke_msg_func_t) jwaoo_key_multi_click_handler },
 };
 
+static const struct ke_msg_handler jwaoo_app_charging_handlers[] = {
+	{ KE_MSG_DEFAULT_HANDLER,			(ke_msg_func_t) jwaoo_default_handler },
+	{ JWAOO_SET_ACTIVE, 				(ke_msg_func_t) jwaoo_suspend_to_active_handler },
+	{ JWAOO_SET_SUSPEND, 				(ke_msg_func_t) jwaoo_charging_to_suspend_handler },
+	{ JWAOO_SET_DEEP_SLEEP, 			(ke_msg_func_t) jwaoo_charging_to_deep_sleep_handler },
+	{ JWAOO_ADV_STOP,					(ke_msg_func_t) jwaoo_adv_stop_handler },
+	{ JWAOO_BATT_POLL,					(ke_msg_func_t) jwaoo_battery_poll_handler },
+	{ JWAOO_BATT_LED_BLINK, 			(ke_msg_func_t) jwaoo_battery_led_blink_handler },
+};
+
 static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
+	{ KE_MSG_DEFAULT_HANDLER,			(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_ACTIVE, 				(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_SET_DEEP_SLEEP,				(ke_msg_func_t) jwaoo_suspend_to_deep_sleep_handler },
-	{ JWAOO_BATT_POLL,					(ke_msg_func_t) jwaoo_battery_poll_handler },
+	{ JWAOO_ADV_STOP,					(ke_msg_func_t) jwaoo_adv_stop_handler },
 };
 
 static const struct ke_msg_handler jwaoo_app_deep_sleep_handlers[] = {
+	{ KE_MSG_DEFAULT_HANDLER,			(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_ACTIVE, 				(ke_msg_func_t) jwaoo_deep_sleep_to_active_handler },
 	{ JWAOO_SET_SUSPEND, 				(ke_msg_func_t) jwaoo_deep_sleep_to_suspend_handler },
+	{ JWAOO_ADV_STOP,					(ke_msg_func_t) jwaoo_adv_stop_handler },
 };
 
 static const struct ke_state_handler jwaoo_app_state_handler[JWAOO_APP_STATE_MAX] = {
     [JWAOO_APP_STATE_ACTIVE]		= KE_STATE_HANDLER(jwaoo_app_active_handlers),
+	[JWAOO_APP_STATE_CHARGING]		= KE_STATE_HANDLER(jwaoo_app_charging_handlers),
     [JWAOO_APP_STATE_SUSPEND]		= KE_STATE_HANDLER(jwaoo_app_suspend_handlers),
 	[JWAOO_APP_STATE_DEEP_SLEEP] 	= KE_STATE_HANDLER(jwaoo_app_deep_sleep_handlers),
 };
@@ -273,6 +332,11 @@ void jwaoo_app_goto_deep_sleep_mode(void)
 void jwaoo_app_adv_start(void)
 {
 	ke_msg_send(ke_msg_alloc(JWAOO_ADV_START, TASK_JWAOO_APP, 0, 0));
+}
+
+void jwaoo_app_adv_stop(void)
+{
+	ke_msg_send(ke_msg_alloc(JWAOO_ADV_STOP, TASK_JWAOO_APP, 0, 0));
 }
 
 // ================================================================================

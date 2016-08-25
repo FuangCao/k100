@@ -26,6 +26,15 @@
 #define PWM_LEVEL_MAX			100
 #define KEY_ACTIVE_LOW			0
 
+#define GPIO_BLINK(port, pin) \
+	do { \
+		if (GPIO_GetPinStatus(port, pin)) { \
+			GPIO_SetInactive(port, pin) ; \
+		} else { \
+			GPIO_SetActive(port, pin); \
+		} \
+	} while (0)
+
 #define MOTO_GPIO_PORT			GPIO_PORT_2
 #define MOTO_GPIO_PIN			GPIO_PIN_0
 #define MOTO_GPIO_RESERVE		RESERVE_GPIO(MOTO, MOTO_GPIO_PORT, MOTO_GPIO_PIN, PID_GPIO)
@@ -39,6 +48,7 @@
 #define LED1_GPIO_CONFIG 		GPIO_ConfigurePin(LED1_GPIO_PORT, LED1_GPIO_PIN, OUTPUT, PID_GPIO, false)
 #define LED1_OPEN				GPIO_SetActive(LED1_GPIO_PORT, LED1_GPIO_PIN)
 #define LED1_CLOSE				GPIO_SetInactive(LED1_GPIO_PORT, LED1_GPIO_PIN)
+#define LED1_BLINK				GPIO_BLINK(LED1_GPIO_PORT, LED1_GPIO_PIN)
 
 #define LED2_GPIO_PORT			GPIO_PORT_2
 #define LED2_GPIO_PIN			GPIO_PIN_9
@@ -46,6 +56,7 @@
 #define LED2_GPIO_CONFIG 		GPIO_ConfigurePin(LED2_GPIO_PORT, LED2_GPIO_PIN, OUTPUT, PID_GPIO, false)
 #define LED2_OPEN				GPIO_SetActive(LED2_GPIO_PORT, LED2_GPIO_PIN)
 #define LED2_CLOSE				GPIO_SetInactive(LED2_GPIO_PORT, LED2_GPIO_PIN)
+#define LED2_BLINK				GPIO_BLINK(LED2_GPIO_PORT, LED2_GPIO_PIN)
 
 #define BATT_ADC_GPIO_PORT		GPIO_PORT_0
 #define BATT_ADC_GPIO_PIN		GPIO_PIN_1

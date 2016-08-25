@@ -16,13 +16,14 @@ enum
 	JWAOO_SET_DEEP_SLEEP,
 
 	JWAOO_ADV_START,
+	JWAOO_ADV_STOP,
 	JWAOO_BATT_POLL,
 	JWAOO_REBOOT,
 	JWAOO_SHUTDOWN,
 	JWAOO_KEY_LOCK,
 
-	JWAOO_LED1_BLINK,
-	JWAOO_LED2_BLINK,
+	JWAOO_BT_LED_BLINK,
+	JWAOO_BATT_LED_BLINK,
 	JWAOO_MOTO_BLINK,
 	JWAOO_MOTO_BOOST,
 
@@ -46,6 +47,7 @@ enum
 enum
 {
 	JWAOO_APP_STATE_ACTIVE,
+	JWAOO_APP_STATE_CHARGING,
 	JWAOO_APP_STATE_SUSPEND,
 	JWAOO_APP_STATE_DEEP_SLEEP,
 	JWAOO_APP_STATE_MAX
@@ -53,6 +55,7 @@ enum
 
 void jwaoo_app_init(void);
 void jwaoo_app_adv_start(void);
+void jwaoo_app_adv_stop(void);
 void jwaoo_app_goto_active_mode(void);
 void jwaoo_app_goto_suspend_mode(void);
 void jwaoo_app_goto_deep_sleep_mode(void);

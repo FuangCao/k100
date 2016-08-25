@@ -9,7 +9,7 @@
 void jwaoo_hw_set_suspend(bool enable)
 {
 	if (enable) {
-		app_easy_gap_advertise_stop();
+		jwaoo_app_adv_stop();
 	} else {
 		jwaoo_app_adv_start();
 	}
