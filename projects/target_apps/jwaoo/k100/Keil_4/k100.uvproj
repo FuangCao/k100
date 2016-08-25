@@ -1051,14 +1051,14 @@
               <FilePath>..\jwaoo_spi.c</FilePath>
             </File>
             <File>
-              <FileName>jwaoo_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\jwaoo_task.c</FilePath>
-            </File>
-            <File>
               <FileName>jwaoo_hw.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\jwaoo_hw.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_app.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2109,14 +2109,14 @@
               <FilePath>..\jwaoo_spi.c</FilePath>
             </File>
             <File>
-              <FileName>jwaoo_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\jwaoo_task.c</FilePath>
-            </File>
-            <File>
               <FileName>jwaoo_hw.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\jwaoo_hw.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_app.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3167,14 +3167,14 @@
               <FilePath>..\jwaoo_spi.c</FilePath>
             </File>
             <File>
-              <FileName>jwaoo_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\jwaoo_task.c</FilePath>
-            </File>
-            <File>
               <FileName>jwaoo_hw.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\jwaoo_hw.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_app.c</FilePath>
             </File>
           </Files>
         </Group>

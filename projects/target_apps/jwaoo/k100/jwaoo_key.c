@@ -66,3 +66,16 @@ void jwaoo_key_init(void)
 	jwaoo_hw_config_irq(KEY3_GPIO_IRQ, jwaoo_key3_isr, KEY3_GPIO_PORT, KEY3_GPIO_PIN);
 	jwaoo_hw_config_irq(KEY4_GPIO_IRQ, jwaoo_key4_isr, KEY4_GPIO_PORT, KEY4_GPIO_PIN);
 }
+
+void jwaoo_key_repeat_fire(uint8_t key)
+{
+}
+
+void jwaoo_key_long_click_fire(uint8_t key)
+{
+}
+
+void jwaoo_key_multi_click_fire(uint8_t key)
+{
+}
+

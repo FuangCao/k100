@@ -61,12 +61,12 @@ i.e.
 	MOTO_GPIO_RESERVE;
 #endif
 
-#ifdef LED1_GPIO_RESERVE
-	LED1_GPIO_RESERVE;
+#ifdef BATT_LED_GPIO_RESERVE
+	BATT_LED_GPIO_RESERVE;
 #endif
 
-#ifdef LED2_GPIO_RESERVE
-	LED2_GPIO_RESERVE;
+#ifdef BT_LED_GPIO_RESERVE
+	BT_LED_GPIO_RESERVE;
 #endif
 
 #ifdef BATT_ADC_GPIO_RESERVE
@@ -108,12 +108,12 @@ void set_pad_functions(void)        // set gpio port function mode
 	MOTO_GPIO_CONFIG;
 #endif
 
-#ifdef LED1_GPIO_CONFIG
-	LED1_GPIO_CONFIG;
+#ifdef BATT_LED_GPIO_CONFIG
+	BATT_LED_GPIO_CONFIG;
 #endif
 
-#ifdef LED2_GPIO_CONFIG
-	LED2_GPIO_CONFIG;
+#ifdef BT_LED_GPIO_CONFIG
+	BT_LED_GPIO_CONFIG;
 #endif
 
 #ifdef BATT_ADC_GPIO_CONFIG

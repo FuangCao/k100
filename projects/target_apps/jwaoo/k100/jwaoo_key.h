@@ -40,3 +40,7 @@ struct jwaoo_key_device
 };
 
 void jwaoo_key_init(void);
+void jwaoo_key_repeat_fire(uint8_t key);
+void jwaoo_key_long_click_fire(uint8_t key);
+void jwaoo_key_multi_click_fire(uint8_t key);
+
