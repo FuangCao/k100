@@ -32,13 +32,14 @@ struct jwaoo_pwm_device
 	uint8_t blink_delay;
 	uint8_t blink_count;
 
-	void (*set_level)(uint8_t pwm, uint8_t level);
+	void (*set_level)(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level);
+	void (*on_complete)(struct jwaoo_pwm_device *device);
 };
 
 extern struct jwaoo_pwm_device jwaoo_pwm_devices[];
 
 struct jwaoo_pwm_device *jwaoo_pwm_get_device(uint8_t pwm);
-bool jwaoo_pwm_blink_walk(uint8_t pwm);
+void jwaoo_pwm_blink_walk(uint8_t pwm);
 void jwaoo_pwm_blink_set(uint8_t pwm, uint8_t min, uint8_t max, uint8_t step, uint8_t delay, uint8_t count);
 void jwaoo_pwm_blink_sawtooth(uint8_t pwm, uint8_t min, uint8_t max, uint8_t step, uint32_t cycle, uint8_t count);
 void jwaoo_pwm_blink_square(uint8_t pwm, uint8_t min, uint8_t max, uint32_t cycle, uint8_t count);

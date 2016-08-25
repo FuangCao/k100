@@ -31,9 +31,7 @@
 #include "user_k100.h"
 #include "arch_api.h"
 #include "gap.h"
-#include "jwaoo_hw.h"
-#include "jwaoo_key.h"
-#include "jwaoo_app.h"
+#include "jwaoo_pwm.h"
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -82,6 +80,8 @@ void user_app_connection(uint8_t connection_idx, struct gapc_connection_req_ind 
             // Connection params are not these that we expect
             app_param_update_request_timer_used = app_easy_timer(APP_PARAM_UPDATE_REQUEST_TO, param_update_request_timer_cb);
         }
+
+		jwaoo_pwm_open(JWAOO_PWM_BT_LED);
     }
     else
     {
@@ -104,6 +104,8 @@ void user_app_adv_undirect_complete(uint8_t status)
 void user_app_disconnect(struct gapc_disconnect_ind const *param)
 {
      uint8_t state = ke_state_get(TASK_APP);
+
+	jwaoo_pwm_close(JWAOO_PWM_BT_LED);
 
     if ((state == APP_SECURITY) ||
         (state == APP_CONNECTED) ||

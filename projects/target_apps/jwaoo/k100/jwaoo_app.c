@@ -134,7 +134,11 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 	case JWAOO_PWM1_BLINK_TIMER:
 	case JWAOO_PWM2_BLINK_TIMER:
 	case JWAOO_PWM3_BLINK_TIMER:
-		jwaoo_pwm_set_level(msgid - JWAOO_PWM1_BLINK_TIMER, 0);
+		jwaoo_pwm_close(msgid - JWAOO_PWM1_BLINK_TIMER);
+		break;
+
+	case JWAOO_MOTO_BOOST:
+		jwaoo_pwm_close(JWAOO_PWM_MOTO);
 		break;
 	}
 

@@ -2,28 +2,6 @@
 
 static uint8_t jwaoo_pwm_enable_mask;
 
-static void jwaoo_pwm_set_level_base(uint8_t pwm, uint8_t level);
-static void jwaoo_led_set_level(uint8_t pwm, uint8_t level);
-static void jwaoo_moto_set_level(uint8_t pwm, uint8_t level);
-
-struct jwaoo_pwm_device jwaoo_pwm_devices[] = {
-	[JWAOO_PWM_MOTO] = {
-		.port = MOTO_GPIO_PORT,
-		.pin = MOTO_GPIO_PIN,
-		.set_level = jwaoo_moto_set_level,
-	},
-	[JWAOO_PWM_BT_LED] = {
-		.port = BT_LED_GPIO_PORT,
-		.pin = BT_LED_GPIO_PIN,
-		.set_level = jwaoo_led_set_level,
-	},
-	[JWAOO_PWM_BATT_LED] = {
-		.port = BATT_LED_GPIO_PORT,
-		.pin = BATT_LED_GPIO_PIN,
-		.set_level = jwaoo_led_set_level,
-	},
-};
-
 static void jwaoo_pwm_set_enable(uint8_t pwm, bool enable)
 {
 	if (enable) {
@@ -43,10 +21,8 @@ static void jwaoo_pwm_set_enable(uint8_t pwm, bool enable)
 	}
 }
 
-static void jwaoo_pwm_set_level_base(uint8_t pwm, uint8_t level)
+static void jwaoo_pwm_device_set_level(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level)
 {
-	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(pwm);
-
 	if (device->active_low) {
 		level = PWM_LEVEL_MAX - level;
 	}
@@ -67,26 +43,14 @@ static void jwaoo_pwm_set_level_base(uint8_t pwm, uint8_t level)
 	}
 }
 
-static void jwaoo_led_set_level(uint8_t pwm, uint8_t level)
+static void jwaoo_moto_device_set_level(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level)
 {
-	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(pwm);
-
-	jwaoo_pwm_set_level_base(pwm, level);
-	device->level = level;
-}
-
-static void jwaoo_moto_set_level(uint8_t pwm, uint8_t level)
-{
-	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(pwm);
-
 	if (level > 0 && device->level == 0) {
-		jwaoo_pwm_set_level(pwm, JWAOO_MOTO_BOOST_LEVEL);
+		jwaoo_pwm_device_set_level(device, pwm, JWAOO_MOTO_BOOST_LEVEL);
 		ke_timer_set(JWAOO_MOTO_BOOST, TASK_JWAOO_APP, JWAOO_MOTO_BOOST_TIME);
 	} else {
-		jwaoo_pwm_set_level(pwm, level);
+		jwaoo_pwm_device_set_level(device, pwm, level);
 	}
-
-	device->level = level;
 }
 
 static bool jwaoo_pwm_set_blink_direction(struct jwaoo_pwm_device *device, bool add)
@@ -104,9 +68,20 @@ static bool jwaoo_pwm_set_blink_direction(struct jwaoo_pwm_device *device, bool 
 	device->blink_delay = 0;
 
 	return true;
- }
+}
 
-bool jwaoo_pwm_blink_walk(uint8_t pwm)
+static void jwaoo_pwm_device_set_level_proc(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level)
+{
+	if (device->set_level) {
+		device->set_level(device, pwm, level);
+	} else {
+		jwaoo_pwm_device_set_level(device, pwm, level);
+	}
+
+	device->level = level;
+}
+
+void jwaoo_pwm_blink_walk(uint8_t pwm)
 {
 	uint8_t level;
 	bool complete;
@@ -137,26 +112,28 @@ bool jwaoo_pwm_blink_walk(uint8_t pwm)
 		}
 	}
 
-	device->set_level(pwm, level);
+	jwaoo_pwm_device_set_level_proc(device, pwm, level);
 
-	return complete;
+	if (complete && device->on_complete) {
+		device->on_complete(device);
+	}
 }
 
 void jwaoo_pwm_blink_set(uint8_t pwm, uint8_t min, uint8_t max, uint8_t step, uint8_t delay, uint8_t count)
 {
 	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(pwm);
 
-	device->set_level(pwm, min);
+	jwaoo_pwm_device_set_level_proc(device, pwm, min);
 
 	if (min < max && step > 0) {
+		jwaoo_pwm_timer_set(pwm, delay);
+
 		device->blink_add = true;
 		device->blink_min = min;
 		device->blink_max = max;
 		device->blink_step = step;
 		device->blink_delay = delay;
 		device->blink_count = count;
-
-		jwaoo_pwm_timer_set(pwm, delay);
 	} else {
 		jwaoo_pwm_timer_clear(pwm);
 
@@ -184,3 +161,19 @@ void jwaoo_pwm_blink_square(uint8_t pwm, uint8_t min, uint8_t max, uint32_t cycl
 
 	jwaoo_pwm_blink_set(pwm, min, max, max - min, delay, count);
 }
+
+struct jwaoo_pwm_device jwaoo_pwm_devices[] = {
+	[JWAOO_PWM_MOTO] = {
+		.port = MOTO_GPIO_PORT,
+		.pin = MOTO_GPIO_PIN,
+		.set_level = jwaoo_moto_device_set_level,
+	},
+	[JWAOO_PWM_BT_LED] = {
+		.port = BT_LED_GPIO_PORT,
+		.pin = BT_LED_GPIO_PIN,
+	},
+	[JWAOO_PWM_BATT_LED] = {
+		.port = BATT_LED_GPIO_PORT,
+		.pin = BATT_LED_GPIO_PIN,
+	},
+};
