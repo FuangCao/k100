@@ -46,7 +46,6 @@ enum
 enum
 {
 	JWAOO_APP_STATE_ACTIVE,
-	JWAOO_APP_STATE_CHARGING,
 	JWAOO_APP_STATE_SUSPEND,
 	JWAOO_APP_STATE_DEEP_SLEEP,
 	JWAOO_APP_STATE_MAX
@@ -61,7 +60,6 @@ void jwaoo_app_goto_deep_sleep_mode(void);
 
 void jwaoo_app_before_sleep(void);
 void jwaoo_app_resume_from_sleep(void);
-enum arch_main_loop_callback_ret jwaoo_app_ble_powered(void);
 
 static inline ke_state_t jwaoo_app_get_state(void)
 {

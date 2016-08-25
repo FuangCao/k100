@@ -64,6 +64,10 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 	jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BT_LED, 5, 1000, 0);
 #endif
 
+	if (!ke_timer_active(JWAOO_BATT_POLL, dest_id)) {
+		ke_timer_set(JWAOO_BATT_POLL, dest_id, 1);
+	}
+
 	return KE_MSG_CONSUMED;
 }
 
@@ -77,6 +81,8 @@ static int jwaoo_adv_stop_handler(ke_msg_id_t const msgid, void const *param, ke
 
 static int jwaoo_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+	ke_timer_set(msgid, dest_id, 100);
+
 	return KE_MSG_CONSUMED;
 }
 
@@ -153,11 +159,7 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 
 static int jwaoo_active_to_suspend_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	if (jwaoo_battery_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
-	} else {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
-	}
+	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
 
 	jwaoo_hw_set_suspend(true);
 
@@ -167,30 +169,11 @@ static int jwaoo_active_to_suspend_handler(ke_msg_id_t const msgid, void const *
 static int jwaoo_active_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	if (jwaoo_battery_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
 		jwaoo_hw_set_suspend(true);
 	} else {
 		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
 		jwaoo_hw_set_suspend(true);
-		jwaoo_hw_set_deep_sleep(true);
-	}
-
-	return KE_MSG_CONSUMED;
-}
-
-static int jwaoo_charging_to_suspend_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
-{
-	if (!jwaoo_battery_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
-	}
-
-	return KE_MSG_CONSUMED;
-}
-
-static int jwaoo_charging_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
-{
-	if (!jwaoo_battery_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
 		jwaoo_hw_set_deep_sleep(true);
 	}
 
@@ -208,9 +191,7 @@ static int jwaoo_suspend_to_active_handler(ke_msg_id_t const msgid, void const *
 
 static int jwaoo_suspend_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	if (jwaoo_battery_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
-	} else {
+	if (!jwaoo_battery_env.charge_online) {
 		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
 		jwaoo_hw_set_deep_sleep(true);
 	}
@@ -220,11 +201,7 @@ static int jwaoo_suspend_to_deep_sleep_handler(ke_msg_id_t const msgid, void con
 
 static int jwaoo_deep_sleep_to_suspend_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	if (jwaoo_battery_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_CHARGING);
-	} else {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
-	}
+	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
 
 	// jwaoo_hw_set_deep_sleep(false);
 
@@ -273,21 +250,13 @@ static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 	{ JWAOO_KEY4_MULTI_CLICK_TIMER,				(ke_msg_func_t) jwaoo_key_multi_click_handler },
 };
 
-static const struct ke_msg_handler jwaoo_app_charging_handlers[] = {
-	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
-	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
-	{ JWAOO_SET_SUSPEND, 						(ke_msg_func_t) jwaoo_charging_to_suspend_handler },
-	{ JWAOO_SET_DEEP_SLEEP, 					(ke_msg_func_t) jwaoo_charging_to_deep_sleep_handler },
-	{ JWAOO_ADV_STOP,							(ke_msg_func_t) jwaoo_adv_stop_handler },
-	{ JWAOO_BATT_POLL,							(ke_msg_func_t) jwaoo_battery_poll_handler },
-	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler}
-};
-
 static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_SET_DEEP_SLEEP,						(ke_msg_func_t) jwaoo_suspend_to_deep_sleep_handler },
 	{ JWAOO_ADV_STOP,							(ke_msg_func_t) jwaoo_adv_stop_handler },
+	{ JWAOO_BATT_POLL,							(ke_msg_func_t) jwaoo_battery_poll_handler },
+	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler}
 };
 
 static const struct ke_msg_handler jwaoo_app_deep_sleep_handlers[] = {
@@ -299,7 +268,6 @@ static const struct ke_msg_handler jwaoo_app_deep_sleep_handlers[] = {
 
 static const struct ke_state_handler jwaoo_app_state_handler[JWAOO_APP_STATE_MAX] = {
     [JWAOO_APP_STATE_ACTIVE]					= KE_STATE_HANDLER(jwaoo_app_active_handlers),
-	[JWAOO_APP_STATE_CHARGING]					= KE_STATE_HANDLER(jwaoo_app_charging_handlers),
     [JWAOO_APP_STATE_SUSPEND]					= KE_STATE_HANDLER(jwaoo_app_suspend_handlers),
 	[JWAOO_APP_STATE_DEEP_SLEEP] 				= KE_STATE_HANDLER(jwaoo_app_deep_sleep_handlers),
 };
@@ -324,19 +292,11 @@ static void jwaoo_app_set_mode(ke_msg_id_t const msgid)
 
 void jwaoo_app_goto_active_mode(void)
 {
-	if (jwaoo_app_is_deep_sleep()) {
-		jwaoo_hw_set_deep_sleep(false);
-	}
-
 	jwaoo_app_set_mode(JWAOO_SET_ACTIVE);
 }
 
 void jwaoo_app_goto_suspend_mode(void)
 {
-	if (jwaoo_app_is_deep_sleep()) {
-		jwaoo_hw_set_deep_sleep(false);
-	}
-
 	jwaoo_app_set_mode(JWAOO_SET_SUSPEND);
 }
 
@@ -359,41 +319,23 @@ void jwaoo_app_adv_stop(void)
 
 void jwaoo_app_before_sleep(void)
 {
-	BATT_LED_CLOSE;
-
 	rwip_env.ext_wakeup_enable = 2;
 	wkupct_enable_irq(WAKEUP_KEY_SEL_MASK, WAKEUP_KEY_POL_MASK, 1, 60);
 }
 
-static bool jwaoo_app_wait_key_release(GPIO_PORT port, GPIO_PIN pin)
-{
-	bool active = KEY_IS_ACTIVE(port, pin);
-
-	while (KEY_IS_ACTIVE(port, pin));
-
-	return active;
-}
-
 void jwaoo_app_resume_from_sleep(void)
 {
-	if (KEY_IS_ACTIVE(WAKEUP_KEY_PORT, WAKEUP_KEY_PIN)) {
+	wkupct_disable_irq();
+
+	jwaoo_hw_set_deep_sleep(false);
+
+	jwaoo_battery_env.charge_online = CHG_ONLINE;
+
+	if (WAKEUP_KEY_ACTIVE) {
 		jwaoo_app_goto_active_mode();
+	} else if (jwaoo_battery_env.charge_online) {
+		jwaoo_app_goto_suspend_mode();
+	} else {
+		jwaoo_hw_set_deep_sleep(true);
 	}
-
-	jwaoo_app_wait_key_release(SUSPEND_KEY_PORT, SUSPEND_KEY_PIN);
-
-	SetWord16(WKUP_RESET_IRQ_REG, 1); // Acknowledge it
-	SetBits16(WKUP_CTRL_REG, WKUP_ENABLE_IRQ, 0); // No more interrupts of this kind
 }
-
-enum arch_main_loop_callback_ret jwaoo_app_ble_powered(void)
-{
-	BATT_LED_OPEN;
-
-	if (jwaoo_app_wait_key_release(SUSPEND_KEY_PORT, SUSPEND_KEY_PIN)) {
-		jwaoo_app_goto_deep_sleep_mode();
-	}
-
-	return GOTO_SLEEP;
-}
-

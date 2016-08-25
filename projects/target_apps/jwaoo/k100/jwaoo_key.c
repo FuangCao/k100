@@ -34,6 +34,14 @@ static void jwaoo_key_process(IRQn_Type irq, uint8_t code, GPIO_PORT port, GPIO_
 #if KEY_ACTIVE_LOW
 	status = !status;
 #endif
+
+	if (code == JWAOO_KEYCODE_DOWN && status == 0) {
+		jwaoo_app_goto_deep_sleep_mode();
+	}
+
+	if (code == JWAOO_KEYCODE_UP && status) {
+		jwaoo_app_goto_active_mode();
+	}
 }
 
 static void jwaoo_key1_isr(void)
