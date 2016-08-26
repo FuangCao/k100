@@ -51,7 +51,6 @@ struct jwaoo_key_device {
 	uint8_t value;
 	uint8_t count;
 	uint8_t repeat;
-	uint8_t skip;
 	uint8_t last_value;
 	bool lock_enable;
 	bool repeat_enable;
@@ -62,6 +61,7 @@ struct jwaoo_key_device {
 extern struct jwaoo_key_device jwaoo_keys[];
 
 void jwaoo_key_init(void);
+void jwaoo_key_lock_fire(void);
 void jwaoo_key_repeat_fire(ke_msg_id_t const msgid, uint8_t keycode);
 void jwaoo_key_long_click_fire(ke_msg_id_t const msgid, uint8_t keycode);
 void jwaoo_key_multi_click_fire(ke_msg_id_t const msgid, uint8_t keycode);

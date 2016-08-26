@@ -39,21 +39,21 @@ static bool jwaoo_key_check_lock_state(void)
 {
 	struct jwaoo_key_device *key, *key_end;
 
-	if (jwaoo_app_env.key_locked) {
-		return true;
-	}
-
 	key_end = jwaoo_keys + NELEM(jwaoo_keys);
 
 	for (key = jwaoo_keys; key < key_end; key++) {
 		if (key->lock_enable && key->value == 0) {
 			if (jwaoo_app_env.key_lock_pending) {
-				jwaoo_app_timer_clear(JWAOO_KEY_LOCK);
 				jwaoo_app_env.key_lock_pending = false;
+				jwaoo_app_timer_clear(JWAOO_KEY_LOCK);
 				jwaoo_battery_led_release();
+
+				for (key = jwaoo_keys; key < key_end; key++) {
+					key->value = 0;
+				}
 			}
 
-			return false;
+			return jwaoo_app_env.key_locked;
 		}
 	}
 
@@ -65,10 +65,6 @@ static bool jwaoo_key_check_lock_state(void)
 
 	for (key = jwaoo_keys; key < key_end; key++) {
 		jwaoo_key_timer_clear(key->code);
-
-		if (key->lock_enable) {
-			key->skip = 1;
-		}
 	}
 
 	jwaoo_app_env.battery_led_locked = 2;
@@ -93,14 +89,6 @@ static void jwaoo_key_process_active(struct jwaoo_key_device *key)
 	}
 
 	jwaoo_app_update_suspend_timer();
-
-	if (key->skip > 0) {
-		if (key->value == 0) {
-			key->skip--;
-		}
-
-		return;
-	}
 
 	if (key->value > 0) {
 		key->count++;
@@ -143,20 +131,24 @@ static void jwaoo_key_process_factory(struct jwaoo_key_device *key)
 
 static void jwaoo_key_process_suspend(struct jwaoo_key_device *key)
 {
-	if (key->code == JWAOO_KEY_UP && key->irq_desc.status) {
+	if (key->code == JWAOO_KEY_UP && key->value) {
 		jwaoo_app_goto_active_mode();
 	}
 }
 
-static void jwaoo_key_isr(struct jwaoo_irq_desc *desc)
+static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 {
 	struct jwaoo_key_device *key = (struct jwaoo_key_device *) desc;
 
-	if (desc->status) {
+	if (status == key->value) {
+		return;
+	}
+
+	if (status) {
 		key->last_value = key->value;
 	}
 
-	key->value = desc->status;
+	key->value = status;
 
 	switch (jwaoo_app_state_get()) {
 	case JWAOO_APP_STATE_ACTIVE:
@@ -190,11 +182,24 @@ void jwaoo_key_init(void)
 		struct jwaoo_irq_desc *desc = &key->irq_desc;
 
 		key->code = i;
+		key->value = 0;
 		desc->handler = jwaoo_key_isr;
 
 		KEY_GPIO_CONFIG(desc->port, desc->pin);
-		key->value = KEY_GET_STATUS(desc->port, desc->pin);
 		jwaoo_hw_irq_enable((IRQn_Type) (GPIO0_IRQn + i), desc, KEY_ACTIVE_LOW);
+	}
+}
+
+// ================================================================================
+
+void jwaoo_key_lock_fire(void)
+{
+	if (jwaoo_app_env.key_locked) {
+		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
+		jwaoo_app_env.key_locked = false;
+	} else {
+		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+		jwaoo_app_env.key_locked = true;
 	}
 }
 

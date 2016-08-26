@@ -23,10 +23,9 @@ struct jwaoo_irq_desc
 {
 	GPIO_PORT port;
 	GPIO_PIN pin;
-	bool status;
 	bool active_low;
 
-	void (*handler)(struct jwaoo_irq_desc *desc);
+	void (*handler)(struct jwaoo_irq_desc *desc, bool status);
 };
 
 extern struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
@@ -35,9 +34,9 @@ bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc, bool active
 bool jwaoo_hw_irq_disable(IRQn_Type irq);
 
 void jwaoo_hw_init(void);
-void jwaoo_hw_set_enable(bool enable);
 void jwaoo_hw_set_suspend(bool enable);
 void jwaoo_hw_set_deep_sleep(bool enable);
+void jwaoo_hw_set_device_enable(bool enable);
 
 static bool jwaoo_hw_irq_invalid(IRQn_Type irq)
 {

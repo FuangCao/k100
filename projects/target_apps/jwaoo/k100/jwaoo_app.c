@@ -1,6 +1,7 @@
 #include "jwaoo_app.h"
 #include "jwaoo_key.h"
 #include "jwaoo_pwm.h"
+#include "jwaoo_moto.h"
 #include "jwaoo_battery.h"
 
 struct mnf_specific_data_ad_structure
@@ -106,6 +107,8 @@ static int jwaoo_pwm_blink_handler(ke_msg_id_t const msgid, void const *param, k
 
 static int jwaoo_key_lock_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+	jwaoo_key_lock_fire();
+
 	return KE_MSG_CONSUMED;
 }
 
@@ -113,6 +116,13 @@ static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, 
 {
 	jwaoo_app_env.moto_boost_busy = false;
 	jwaoo_pwm_sync(JWAOO_PWM_MOTO);
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_moto_rand_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	jwaoo_moto_rand_fire();
 
 	return KE_MSG_CONSUMED;
 }
@@ -229,6 +239,7 @@ static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 	{ JWAOO_REBOOT,								(ke_msg_func_t) jwaoo_reboot_handler },
 	{ JWAOO_SHUTDOWN,							(ke_msg_func_t) jwaoo_shutdown_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
+	{ JWAOO_MOTO_RAND,							(ke_msg_func_t) jwaoo_moto_rand_handler },
 	{ JWAOO_KEY_LOCK,							(ke_msg_func_t) jwaoo_key_lock_handler },
 
 	{ JWAOO_PWM1_BLINK_TIMER,					(ke_msg_func_t) jwaoo_pwm_blink_handler },
@@ -334,6 +345,9 @@ void jwaoo_app_init(void)
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_ACTIVE);
 
 	jwaoo_app_env.initialized = true;
+
+	jwaoo_hw_set_deep_sleep(false);
+	jwaoo_hw_set_suspend(false);
 }
 
 static void jwaoo_app_set_mode(ke_msg_id_t const msgid)

@@ -21,6 +21,7 @@ enum {
 	JWAOO_SHUTDOWN,
 	JWAOO_KEY_LOCK,
 	JWAOO_MOTO_BOOST,
+	JWAOO_MOTO_RAND,
 
 	JWAOO_PWM1_BLINK_TIMER,
 	JWAOO_PWM2_BLINK_TIMER,
@@ -53,6 +54,10 @@ enum {
 
 struct jwaoo_app_data {
 	bool initialized;
+	bool device_enabled;
+	bool deep_sleep_enabled;
+
+	uint8_t moto_mode;
 	bool moto_boost_busy;
 
 	bool charge_online;

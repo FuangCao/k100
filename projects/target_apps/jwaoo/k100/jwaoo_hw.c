@@ -8,11 +8,6 @@
 
 struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
 
-static inline bool jwaoo_hw_irq_get_status(struct jwaoo_irq_desc *desc, bool status)
-{
-	return status ^ desc->active_low;
-}
-
 static void jwaoo_hw_gpio_isr(IRQn_Type irq)
 {
 	struct jwaoo_irq_desc *desc;
@@ -22,13 +17,9 @@ static void jwaoo_hw_gpio_isr(IRQn_Type irq)
 	desc = jwaoo_hw_get_irq_desc(irq);
 	if (desc != NULL) {
 		bool status = GPIO_GetPinStatus(desc->port, desc->pin);
-		GPIO_SetIRQInputLevel(irq, (GPIO_IRQ_INPUT_LEVEL) status);
 
-		status = jwaoo_hw_irq_get_status(desc, status);
-		if (status != desc->status) {
-			desc->status = status;
-			desc->handler(desc);
-		}
+		GPIO_SetIRQInputLevel(irq, (GPIO_IRQ_INPUT_LEVEL) status);
+		desc->handler(desc, status ^ desc->active_low);
 	} else {
 		NVIC_ClearPendingIRQ(irq);	   
 	}
@@ -50,7 +41,6 @@ bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc, bool active
 	jwaoo_hw_set_irq_desc(irq, desc);
 
 	status = GPIO_GetPinStatus(desc->port, desc->pin);
-	desc->status = jwaoo_hw_irq_get_status(desc, status);
 	GPIO_EnableIRQ(desc->port, desc->pin, irq, status, false, 60);
 
 	return true;
@@ -81,6 +71,8 @@ void jwaoo_hw_set_suspend(bool enable)
 
 void jwaoo_hw_set_deep_sleep(bool enable)
 {
+	jwaoo_app_env.deep_sleep_enabled = enable;
+
 	if (enable) {
 		jwaoo_app_timer_clear(JWAOO_BATT_POLL);
 
@@ -92,16 +84,16 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 		arch_set_sleep_mode(ARCH_DEEP_SLEEP_ON);
 #endif
 
-		jwaoo_hw_set_enable(false);
+		jwaoo_hw_set_device_enable(false);
 	} else {
 		arch_ble_ext_wakeup_off();
 		arch_set_sleep_mode(ARCH_SLEEP_OFF);
 
 		if (GetBits16(SYS_STAT_REG, PER_IS_DOWN)) {
 			periph_init();
-		} else {
-			jwaoo_hw_set_enable(true);
 		}
+
+		jwaoo_hw_set_device_enable(true);
 
 		arch_ble_force_wakeup();
 		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
@@ -110,17 +102,26 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 	}
 }
 
-void jwaoo_hw_set_enable(bool enable)
+void jwaoo_hw_set_device_enable(bool enable)
 {
+	if (jwaoo_app_env.device_enabled && enable) {
+		return;
+	}
+
+	jwaoo_app_env.device_enabled = enable;
+
+	if (enable) {
+		jwaoo_key_init();
+		jwaoo_battery_init();
+	}
+
 	jwaoo_spi_set_enable(enable);
 	jwaoo_i2c_set_enable(enable);
 }
 
 void jwaoo_hw_init(void)
 {
-	jwaoo_key_init();
-	jwaoo_battery_init();
-	jwaoo_hw_set_enable(jwaoo_app_not_deep_sleep());
+	jwaoo_hw_set_device_enable(false);
 }
 
 // ================================================================================

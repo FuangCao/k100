@@ -1,9 +1,10 @@
 #include "jwaoo_app.h"
+#include "jwaoo_pwm.h"
 #include "jwaoo_battery.h"
 
-static void jwaoo_charge_isr(struct jwaoo_irq_desc *desc)
+static void jwaoo_charge_isr(struct jwaoo_irq_desc *desc, bool status)
 {
-	jwaoo_app_env.charge_online = desc->status;
+	jwaoo_app_env.charge_online = status;
 
 	if (!jwaoo_app_timer_active(JWAOO_BATT_POLL)) {
 		jwaoo_app_timer_set(JWAOO_BATT_POLL, 1);
@@ -24,4 +25,5 @@ void jwaoo_battery_init(void)
 
 void jwaoo_battery_led_release(void)
 {
+	jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 }

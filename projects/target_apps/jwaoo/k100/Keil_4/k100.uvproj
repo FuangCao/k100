@@ -1060,6 +1060,16 @@
               <FileType>1</FileType>
               <FilePath>..\jwaoo_app.c</FilePath>
             </File>
+            <File>
+              <FileName>jwaoo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_moto.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_moto.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -2118,6 +2128,16 @@
               <FileType>1</FileType>
               <FilePath>..\jwaoo_app.c</FilePath>
             </File>
+            <File>
+              <FileName>jwaoo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_moto.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_moto.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -3175,6 +3195,16 @@
               <FileName>jwaoo_app.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\jwaoo_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_event.c</FilePath>
+            </File>
+            <File>
+              <FileName>jwaoo_moto.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\jwaoo_moto.c</FilePath>
             </File>
           </Files>
         </Group>

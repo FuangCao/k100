@@ -49,6 +49,11 @@ static inline struct jwaoo_pwm_device *jwaoo_pwm_get_device(uint8_t pwm)
 	return jwaoo_pwms + pwm;
 }
 
+static inline uint8_t jwaoo_pwm_get_level(uint8_t pwm)
+{
+	return jwaoo_pwm_get_device(pwm)->level;
+}
+
 static inline void jwaoo_pwm_timer_set(uint8_t pwm, uint32_t delay)
 {
 	jwaoo_app_timer_set(JWAOO_PWM_TIMER(pwm), delay);
