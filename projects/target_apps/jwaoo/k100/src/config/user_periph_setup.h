@@ -23,6 +23,7 @@
 #include "da1458x_periph_setup.h"
 #include "i2c_eeprom.h"
 
+#define USE_JWAOO_GPIO_ISR
 #define PWM_LEVEL_MAX			100
 #define KEY_ACTIVE_LOW			0
 #define CHG_DET_ACTIVE_LOW		1
@@ -90,34 +91,30 @@
 	RESERVE_GPIO(KEY##index, KEY##index##_GPIO_PORT, KEY##index##_GPIO_PIN, PID_GPIO)
 
 #if KEY_ACTIVE_LOW
-#define KEY_GPIO_CONFIG(index) \
-	GPIO_ConfigurePin(KEY##index##_GPIO_PORT, KEY##index##_GPIO_PIN, INPUT_PULLUP, PID_GPIO, true)
+#define KEY_GPIO_CONFIG(port, pin) \
+	GPIO_ConfigurePin(port, pin, INPUT_PULLUP, PID_GPIO, true)
 
-#define KEY_IS_ACTIVE(port, pin) \
+#define KEY_GET_STATUS(port, pin) \
 	(GPIO_GetPinStatus(port, pin) == 0)
 #else
-#define KEY_GPIO_CONFIG(index) \
-	GPIO_ConfigurePin(KEY##index##_GPIO_PORT, KEY##index##_GPIO_PIN, INPUT_PULLDOWN, PID_GPIO, true)
+#define KEY_GPIO_CONFIG(port, pin) \
+	GPIO_ConfigurePin(port, pin, INPUT_PULLDOWN, PID_GPIO, true)
 
-#define KEY_IS_ACTIVE(port, pin) \
+#define KEY_GET_STATUS(port, pin) \
 	GPIO_GetPinStatus(port, pin)
 #endif
 
 #define KEY1_GPIO_PORT			GPIO_PORT_2
 #define KEY1_GPIO_PIN			GPIO_PIN_1
-#define KEY1_GPIO_IRQ			GPIO0_IRQn
 
 #define KEY2_GPIO_PORT			GPIO_PORT_2
 #define KEY2_GPIO_PIN			GPIO_PIN_2
-#define KEY2_GPIO_IRQ			GPIO1_IRQn
 
 #define KEY3_GPIO_PORT			GPIO_PORT_2
 #define KEY3_GPIO_PIN			GPIO_PIN_3
-#define KEY3_GPIO_IRQ			GPIO2_IRQn
 
 #define KEY4_GPIO_PORT			GPIO_PORT_2
 #define KEY4_GPIO_PIN			GPIO_PIN_4
-#define KEY4_GPIO_IRQ			GPIO3_IRQn
 
 /****************************************************************************************/
 /* i2c eeprom configuration                                                             */

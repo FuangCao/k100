@@ -21,6 +21,7 @@ enum
 	JWAOO_REBOOT,
 	JWAOO_SHUTDOWN,
 	JWAOO_KEY_LOCK,
+	JWAOO_KEY_REPORT,
 	JWAOO_MOTO_BOOST,
 
 	JWAOO_PWM1_BLINK_TIMER,
@@ -51,6 +52,12 @@ enum
 	JWAOO_APP_STATE_MAX
 };
 
+struct jwaoo_app_data {
+	bool click_enable;
+	bool multi_click_enable;
+	bool long_click_enable;
+};
+
 void jwaoo_app_init(void);
 void jwaoo_app_adv_start(void);
 void jwaoo_app_adv_stop(void);
@@ -60,6 +67,7 @@ void jwaoo_app_goto_deep_sleep_mode(void);
 
 void jwaoo_app_before_sleep(void);
 void jwaoo_app_resume_from_sleep(void);
+void jwaoo_app_update_suspend_timer(void);
 
 static inline ke_state_t jwaoo_app_get_state(void)
 {

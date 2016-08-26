@@ -6,6 +6,59 @@
 #include "jwaoo_battery.h"
 #include "jwaoo_app.h"
 
+struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
+
+static void jwaoo_hw_gpio_isr(IRQn_Type irq)
+{
+	struct jwaoo_irq_desc *desc;
+
+	GPIO_ResetIRQ(irq);
+
+	desc = jwaoo_hw_get_irq_desc(irq);
+	if (desc != NULL) {
+		bool status = GPIO_GetPinStatus(desc->port, desc->pin);
+		GPIO_SetIRQInputLevel(irq, (GPIO_IRQ_INPUT_LEVEL) status);
+
+		if (status != desc->status) {
+			desc->status = status;
+			desc->handler(desc);
+		}
+	} else {
+		NVIC_ClearPendingIRQ(irq);	   
+	}
+}
+
+bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc)
+{
+	if (jwaoo_hw_irq_invalid(irq)) {
+		return false;
+	}
+
+	if (desc->handler == NULL) {
+		return false;
+	}
+
+	jwaoo_irqs[irq - GPIO0_IRQn] = desc;
+	desc->status = GPIO_GetPinStatus(desc->port, desc->pin);
+	GPIO_EnableIRQ(desc->port, desc->pin, irq, desc->status, false, 60);
+
+	return true;
+}
+
+bool jwaoo_hw_irq_disable(IRQn_Type irq)
+{
+	if (jwaoo_hw_irq_invalid(irq)) {
+		return false;
+	}
+
+	NVIC_DisableIRQ(irq);
+	jwaoo_hw_set_irq_desc(irq, NULL);
+
+	return true;
+}
+
+// ================================================================================
+
 void jwaoo_hw_set_suspend(bool enable)
 {
 	if (enable) {
@@ -46,12 +99,6 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 	}
 }
 
-void jwaoo_hw_config_irq(IRQn_Type irq, GPIO_handler_function_t isr, GPIO_PORT port, GPIO_PIN pin)
-{
-	GPIO_RegisterCallback(irq, isr);
-	GPIO_EnableIRQ(port, pin, irq, GPIO_GetPinStatus(port, pin), false, 60);
-}
-
 void jwaoo_hw_set_enable(bool enable)
 {
 	jwaoo_spi_set_enable(enable);
@@ -63,4 +110,31 @@ void jwaoo_hw_init(void)
 	jwaoo_key_init();
 	jwaoo_battery_init();
 	jwaoo_hw_set_enable(jwaoo_app_not_deep_sleep());
+}
+
+// ================================================================================
+
+void GPIO0_Handler(void)
+{
+	jwaoo_hw_gpio_isr(GPIO0_IRQn);
+}
+
+void GPIO1_Handler(void)
+{
+	jwaoo_hw_gpio_isr(GPIO1_IRQn);
+}
+
+void GPIO2_Handler(void)
+{
+	jwaoo_hw_gpio_isr(GPIO2_IRQn);
+}
+
+void GPIO3_Handler(void)
+{
+	jwaoo_hw_gpio_isr(GPIO3_IRQn);
+}
+
+void GPIO4_Handler(void)
+{
+	jwaoo_hw_gpio_isr(GPIO4_IRQn);
 }

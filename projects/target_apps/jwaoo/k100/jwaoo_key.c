@@ -1,78 +1,56 @@
 #include "jwaoo_app.h"
 #include "jwaoo_key.h"
 
-struct jwaoo_key_device jwaoo_keys[JWAOO_KEY_COUNT] = {
+struct jwaoo_key_device jwaoo_keys[] = {
 	{
-		.code = 0,
-		.repeat_timer = JWAOO_KEY1_REPEAT_TIMER,
-		.long_click_timer = JWAOO_KEY1_LONG_CLICK_TIMER,
-		.multi_click_timer = JWAOO_KEY1_MULTI_CLICK_TIMER,
+		.irq_desc = {
+			.port = KEY1_GPIO_PORT,
+			.pin = KEY1_GPIO_PIN,
+		},
 	}, {
-		.code = 1,
-		.repeat_timer = JWAOO_KEY2_REPEAT_TIMER,
-		.long_click_timer = JWAOO_KEY2_LONG_CLICK_TIMER,
-		.multi_click_timer = JWAOO_KEY2_MULTI_CLICK_TIMER,
+		.irq_desc = {
+			.port = KEY2_GPIO_PORT,
+			.pin = KEY2_GPIO_PIN,
+		},
 	}, {
-		.code = 2,
-		.repeat_timer = JWAOO_KEY3_REPEAT_TIMER,
-		.long_click_timer = JWAOO_KEY3_LONG_CLICK_TIMER,
-		.multi_click_timer = JWAOO_KEY3_MULTI_CLICK_TIMER,
+		.irq_desc = {
+			.port = KEY3_GPIO_PORT,
+			.pin = KEY3_GPIO_PIN,
+		}
 	}, {
-		.code = 3,
-		.repeat_timer = JWAOO_KEY4_REPEAT_TIMER,
-		.long_click_timer = JWAOO_KEY4_LONG_CLICK_TIMER,
-		.multi_click_timer = JWAOO_KEY4_MULTI_CLICK_TIMER,
-	}
+		.irq_desc = {
+			.port = KEY4_GPIO_PORT,
+			.pin = KEY4_GPIO_PIN,
+		},
+	},
 };
 
-static void jwaoo_key_process(IRQn_Type irq, uint8_t code, GPIO_PORT port, GPIO_PIN pin)
+static void jwaoo_key_isr(struct jwaoo_irq_desc *desc)
 {
-	bool status = GPIO_GetPinStatus(port, pin);
-
-	GPIO_SetIRQInputLevel(irq, (GPIO_IRQ_INPUT_LEVEL) status);
-
-#if KEY_ACTIVE_LOW
-	status = !status;
-#endif
-
-	if (code == JWAOO_KEYCODE_DOWN && status == 0) {
-		jwaoo_app_goto_deep_sleep_mode();
+	if (desc->status) {
+		BATT_LED_OPEN;
+	} else {
+		BATT_LED_CLOSE;
 	}
-
-	if (code == JWAOO_KEYCODE_UP && status) {
-		jwaoo_app_goto_active_mode();
-	}
-}
-
-static void jwaoo_key1_isr(void)
-{
-	jwaoo_key_process(KEY1_GPIO_IRQ, 0, KEY1_GPIO_PORT, KEY1_GPIO_PIN);
-}
-
-static void jwaoo_key2_isr(void)
-{
-	jwaoo_key_process(KEY2_GPIO_IRQ, 1, KEY2_GPIO_PORT, KEY2_GPIO_PIN);
-}
-
-static void jwaoo_key3_isr(void)
-{
-	jwaoo_key_process(KEY3_GPIO_IRQ, 2, KEY3_GPIO_PORT, KEY3_GPIO_PIN);
-}
-
-static void jwaoo_key4_isr(void)
-{
-	jwaoo_key_process(KEY4_GPIO_IRQ, 3, KEY4_GPIO_PORT, KEY4_GPIO_PIN);
 }
 
 void jwaoo_key_init(void)
 {
+	int i;
+
+	for (i = 0; i < NELEM(jwaoo_keys); i++) {
+		struct jwaoo_key_device *key = jwaoo_keys + i;
+		struct jwaoo_irq_desc *desc = &key->irq_desc;
+
+		key->code = i;
+		desc->handler = jwaoo_key_isr;
+
+		KEY_GPIO_CONFIG(desc->port, desc->pin);
+		jwaoo_hw_irq_enable((IRQn_Type) (GPIO0_IRQn + i), desc);
+	}
+
 	jwaoo_keys[JWAOO_KEYCODE_UP].repeat_enable = true;
 	jwaoo_keys[JWAOO_KEYCODE_DOWN].repeat_enable = true;
-
-	jwaoo_hw_config_irq(KEY1_GPIO_IRQ, jwaoo_key1_isr, KEY1_GPIO_PORT, KEY1_GPIO_PIN);
-	jwaoo_hw_config_irq(KEY2_GPIO_IRQ, jwaoo_key2_isr, KEY2_GPIO_PORT, KEY2_GPIO_PIN);
-	jwaoo_hw_config_irq(KEY3_GPIO_IRQ, jwaoo_key3_isr, KEY3_GPIO_PORT, KEY3_GPIO_PIN);
-	jwaoo_hw_config_irq(KEY4_GPIO_IRQ, jwaoo_key4_isr, KEY4_GPIO_PORT, KEY4_GPIO_PIN);
 }
 
 void jwaoo_key_repeat_fire(uint8_t key)
@@ -87,3 +65,75 @@ void jwaoo_key_multi_click_fire(uint8_t key)
 {
 }
 
+static void jwaoo_key_timer_clear(uint8_t code)
+{
+	ke_timer_clear(jwaoo_key_get_repeat_timer(code), TASK_JWAOO_APP);
+	ke_timer_clear(jwaoo_key_get_long_click_timer(code), TASK_JWAOO_APP);
+	ke_timer_clear(jwaoo_key_get_multi_click_timer(code), TASK_JWAOO_APP);
+}
+
+void jwaoo_key_process(const struct jwaoo_key_event *event)
+{
+#if 0
+	struct jwaoo_key_device *key = jwaoo_keys + event->code;
+
+	jwaoo_key_timer_clear(event->code);
+
+	if (event->value) {
+		key->last_value = key->value;
+	}
+
+	key->value = event->value;
+
+	jwaoo_app_update_suspend_timer();
+
+	if (jwaoo_toy_process_key_lock()) {
+		return;
+	}
+
+	if (jwaoo_toy_env.key_locked) {
+		return;
+	}
+
+	if (key->skip > 0) {
+		if (value == 0) {
+			key->skip--;
+		}
+
+		return;
+	}
+
+	if (value > 0) {
+		key->count++;
+		key->repeat = 0;
+		ke_timer_set(key->repeat_timer, TASK_APP, JWAOO_TOY_KEY_REPEAT_LONG);
+		ke_timer_set(key->long_click_timer, TASK_APP, jwaoo_toy_env.key_long_click_delay);
+	} else {
+		ke_timer_set(key->multi_click_timer, TASK_APP, jwaoo_toy_env.key_multi_click_delay);
+	}
+
+	if (key->multi_click_enable == false && (key->repeat_enable == false || key->repeat == 0)) {
+		if (key->long_click_enable || key->lock_enable) {
+			if (value == 0 && key->last_value != JWAOO_TOY_KEY_VALUE_LONG) {
+				jwaoo_toy_on_key_clicked(key, 1);
+			}
+		} else if (value > 0) {
+			jwaoo_toy_on_key_clicked(key, 1);
+		}
+	}
+
+	if (!jwaoo_toy_env.key_multi_click_enable) {
+		if (jwaoo_toy_env.key_long_click_enable) {
+			if (value == 0 && key->last_value != JWAOO_TOY_KEY_VALUE_LONG) {
+				jwaoo_toy_report_key_click(key, 1);
+			}
+		} else if (jwaoo_toy_env.key_click_enable) {
+			if (value > 0) {
+				jwaoo_toy_report_key_click(key, 1);
+			}
+		} else {
+			jwaoo_toy_report_key_state(key, value);
+		}
+	}
+#endif
+}

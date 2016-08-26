@@ -36,8 +36,10 @@ volatile uint64_t GPIO_status;
     #endif //GPIO_DRV_PIN_ALLOC_MON_DISABLED
 #endif //DEVELOPMENT_DEBUG
 
+#ifndef USE_JWAOO_GPIO_ISR
 #define NO_OF_IRQS (GPIO4_IRQn - GPIO0_IRQn + 1)
 GPIO_handler_function_t GPIOHandlerFunction[NO_OF_IRQS];
+#endif
 
 /*
  * FUNCTION DEFINITIONS
@@ -427,7 +429,7 @@ void GPIO_ResetIRQ( IRQn_Type irq )
 	GPIOSetBits16(GPIO_RESET_IRQ_REG, RESET_GPIO0_IRQ << (irq-GPIO0_IRQn), 1);
 }
 
-
+#ifndef USE_JWAOO_GPIO_ISR
 /**
  ****************************************************************************************
  * @brief Register Callback function for GPIO IRQ.
@@ -532,5 +534,5 @@ void GPIO4_Handler(void)
 {
 	GPIOn_Handler(GPIO4_IRQn);
 } 
-
+#endif
 #endif //GPIO_DRV_IRQ_HANDLING_DISABLED

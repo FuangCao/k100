@@ -108,6 +108,24 @@ static int jwaoo_key_lock_handler(ke_msg_id_t const msgid, void const *param, ke
 	return KE_MSG_CONSUMED;
 }
 
+static int jwaoo_active_key_report_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	jwaoo_key_process(param);
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_suspend_key_report_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	const struct jwaoo_key_event *event = param;
+
+	if (event->code == JWAOO_KEYCODE_UP && event->value) {
+		jwaoo_app_goto_active_mode();
+	}
+
+	return KE_MSG_CONSUMED;
+}
+
 static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	jwaoo_moto_boost_busy = false;
@@ -229,6 +247,7 @@ static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 	{ JWAOO_SHUTDOWN,							(ke_msg_func_t) jwaoo_shutdown_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
 	{ JWAOO_KEY_LOCK,							(ke_msg_func_t) jwaoo_key_lock_handler },
+	{ JWAOO_KEY_REPORT,							(ke_msg_func_t) jwaoo_active_key_report_handler },
 
 	{ JWAOO_PWM1_BLINK_TIMER,					(ke_msg_func_t) jwaoo_pwm_blink_handler },
 	{ JWAOO_PWM2_BLINK_TIMER,					(ke_msg_func_t) jwaoo_pwm_blink_handler },
@@ -255,6 +274,7 @@ static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_SET_DEEP_SLEEP,						(ke_msg_func_t) jwaoo_suspend_to_deep_sleep_handler },
 	{ JWAOO_ADV_STOP,							(ke_msg_func_t) jwaoo_adv_stop_handler },
+	{ JWAOO_KEY_REPORT, 						(ke_msg_func_t) jwaoo_suspend_key_report_handler },
 	{ JWAOO_BATT_POLL,							(ke_msg_func_t) jwaoo_battery_poll_handler },
 	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler}
 };
@@ -338,4 +358,8 @@ void jwaoo_app_resume_from_sleep(void)
 	} else {
 		jwaoo_hw_set_deep_sleep(true);
 	}
+}
+
+void jwaoo_app_update_suspend_timer(void)
+{
 }

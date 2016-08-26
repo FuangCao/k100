@@ -120,22 +120,6 @@ void set_pad_functions(void)        // set gpio port function mode
 	BATT_ADC_GPIO_CONFIG;
 #endif
 
-#ifdef KEY1_GPIO_PORT
-	KEY_GPIO_CONFIG(1);
-#endif
-
-#ifdef KEY2_GPIO_PORT
-	KEY_GPIO_CONFIG(2);
-#endif
-
-#ifdef KEY3_GPIO_PORT
-	KEY_GPIO_CONFIG(3);
-#endif
-
-#ifdef KEY4_GPIO_PORT
-	KEY_GPIO_CONFIG(4);
-#endif
-
 #ifdef CHG_DET_GPIO_CONFIG
 	CHG_DET_GPIO_CONFIG;
 #endif
@@ -169,7 +153,6 @@ void periph_init(void)
 #endif
 
 	jwaoo_hw_init();
-
 
    // Enable the pads
     SetBits16(SYS_CTRL_REG, PAD_LATCH_EN, 1);
