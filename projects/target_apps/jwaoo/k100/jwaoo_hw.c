@@ -8,6 +8,11 @@
 
 struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
 
+static inline bool jwaoo_hw_irq_get_status(struct jwaoo_irq_desc *desc, bool status)
+{
+	return status ^ desc->active_low;
+}
+
 static void jwaoo_hw_gpio_isr(IRQn_Type irq)
 {
 	struct jwaoo_irq_desc *desc;
@@ -19,6 +24,7 @@ static void jwaoo_hw_gpio_isr(IRQn_Type irq)
 		bool status = GPIO_GetPinStatus(desc->port, desc->pin);
 		GPIO_SetIRQInputLevel(irq, (GPIO_IRQ_INPUT_LEVEL) status);
 
+		status = jwaoo_hw_irq_get_status(desc, status);
 		if (status != desc->status) {
 			desc->status = status;
 			desc->handler(desc);
@@ -28,8 +34,10 @@ static void jwaoo_hw_gpio_isr(IRQn_Type irq)
 	}
 }
 
-bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc)
+bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc, bool active_low)
 {
+	bool status;
+
 	if (jwaoo_hw_irq_invalid(irq)) {
 		return false;
 	}
@@ -38,9 +46,12 @@ bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc)
 		return false;
 	}
 
-	jwaoo_irqs[irq - GPIO0_IRQn] = desc;
-	desc->status = GPIO_GetPinStatus(desc->port, desc->pin);
-	GPIO_EnableIRQ(desc->port, desc->pin, irq, desc->status, false, 60);
+	desc->active_low = active_low;
+	jwaoo_hw_set_irq_desc(irq, desc);
+
+	status = GPIO_GetPinStatus(desc->port, desc->pin);
+	desc->status = jwaoo_hw_irq_get_status(desc, status);
+	GPIO_EnableIRQ(desc->port, desc->pin, irq, status, false, 60);
 
 	return true;
 }
@@ -71,7 +82,7 @@ void jwaoo_hw_set_suspend(bool enable)
 void jwaoo_hw_set_deep_sleep(bool enable)
 {
 	if (enable) {
-		ke_timer_clear(JWAOO_BATT_POLL, TASK_JWAOO_APP);
+		jwaoo_app_timer_clear(JWAOO_BATT_POLL);
 
 		arch_ble_ext_wakeup_on();
 
@@ -95,7 +106,7 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 		arch_ble_force_wakeup();
 		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
 
-		ke_timer_set(JWAOO_BATT_POLL, TASK_JWAOO_APP, 1);
+		jwaoo_app_timer_set(JWAOO_BATT_POLL, 1);
 	}
 }
 

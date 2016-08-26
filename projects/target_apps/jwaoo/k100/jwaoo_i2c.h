@@ -2,20 +2,17 @@
 
 #include "jwaoo_hw.h"
 
-enum
-{
+enum {
 	JWAOO_I2C_SPEED_100K = 1,
 	JWAOO_I2C_SPEED_400K,
 };
 
-enum
-{
+enum {
 	JWAOO_I2C_ADDRESS_MODE_7BIT,
 	JWAOO_I2C_ADDRESS_MODE_10BIT,
 };
 
-struct jwaoo_i2c_message
-{
+struct jwaoo_i2c_message {
 	uint8_t *data;
 	uint8_t count;
 	uint8_t read;

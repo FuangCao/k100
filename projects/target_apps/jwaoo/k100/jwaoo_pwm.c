@@ -1,22 +1,20 @@
 #include "jwaoo_pwm.h"
 
-bool jwaoo_moto_boost_busy;
-
-static uint8_t jwaoo_pwm_enable_mask;
-
 static void jwaoo_pwm_set_enable(uint8_t pwm, bool enable)
 {
+	static uint8_t enable_mask;
+
 	if (enable) {
-		if (jwaoo_pwm_enable_mask == 0) {
+		if (enable_mask == 0) {
 			set_tmr_enable(CLK_PER_REG_TMR_ENABLED);
 			set_tmr_div(CLK_PER_REG_TMR_DIV_1);
 			timer2_init(HW_CAN_NOT_PAUSE_PWM_2_3_4, PWM_2_3_4_SW_PAUSE_ENABLED, PWM_LEVEL_MAX);
 		}
 
-		jwaoo_pwm_enable_mask |= 1 << pwm;
+		enable_mask |= 1 << pwm;
 	} else {
-		jwaoo_pwm_enable_mask &= ~(1 << pwm);
-		if (jwaoo_pwm_enable_mask == 0) {
+		enable_mask &= ~(1 << pwm);
+		if (enable_mask == 0) {
 			timer2_stop();
 			set_tmr_enable(CLK_PER_REG_TMR_DISABLED);
 		}
@@ -47,14 +45,14 @@ static void jwaoo_pwm_device_set_level_handler(struct jwaoo_pwm_device *device, 
 
 static void jwaoo_moto_device_set_level_handler(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level)
 {
-	if (jwaoo_moto_boost_busy) {
+	if (jwaoo_app_env.moto_boost_busy) {
 		return;
 	}
 
 	if (level > 0 && device->level == 0) {
-		jwaoo_moto_boost_busy = true;
+		jwaoo_app_env.moto_boost_busy = true;
 		jwaoo_pwm_device_set_level_handler(device, pwm, JWAOO_MOTO_BOOST_LEVEL);
-		ke_timer_set(JWAOO_MOTO_BOOST, TASK_JWAOO_APP, JWAOO_MOTO_BOOST_TIME);
+		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_BOOST_TIME);
 	} else {
 		jwaoo_pwm_device_set_level_handler(device, pwm, level);
 	}
@@ -178,7 +176,7 @@ void jwaoo_pwm_blink_square(uint8_t pwm, uint8_t min, uint8_t max, uint32_t cycl
 	jwaoo_pwm_blink_set(pwm, min, max, max - min, delay, count);
 }
 
-struct jwaoo_pwm_device jwaoo_pwm_devices[] = {
+struct jwaoo_pwm_device jwaoo_pwms[] = {
 	[JWAOO_PWM_MOTO] = {
 		.port = MOTO_GPIO_PORT,
 		.pin = MOTO_GPIO_PIN,

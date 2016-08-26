@@ -24,13 +24,14 @@ struct jwaoo_irq_desc
 	GPIO_PORT port;
 	GPIO_PIN pin;
 	bool status;
+	bool active_low;
 
 	void (*handler)(struct jwaoo_irq_desc *desc);
 };
 
 extern struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
 
-bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc);
+bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc, bool active_low);
 bool jwaoo_hw_irq_disable(IRQn_Type irq);
 
 void jwaoo_hw_init(void);
