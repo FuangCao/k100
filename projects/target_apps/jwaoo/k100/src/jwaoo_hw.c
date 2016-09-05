@@ -71,8 +71,6 @@ void jwaoo_hw_set_suspend(bool enable)
 
 void jwaoo_hw_set_deep_sleep(bool enable)
 {
-	jwaoo_app_env.deep_sleep_enabled = enable;
-
 	if (enable) {
 		jwaoo_app_timer_clear(JWAOO_BATT_POLL);
 
@@ -104,7 +102,7 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 
 void jwaoo_hw_set_device_enable(bool enable)
 {
-	if (jwaoo_app_env.device_enabled && enable) {
+	if (enable && jwaoo_app_env.device_enabled) {
 		return;
 	}
 
@@ -121,7 +119,13 @@ void jwaoo_hw_set_device_enable(bool enable)
 
 void jwaoo_hw_init(void)
 {
-	jwaoo_hw_set_device_enable(false);
+	GPIO_ConfigurePin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN, OUTPUT, PID_GPIO, true);
+	GPIO_ConfigurePin(SPI_CLK_GPIO_PORT, SPI_CLK_GPIO_PIN, INPUT, PID_GPIO, false);
+	GPIO_ConfigurePin(SPI_DO_GPIO_PORT, SPI_DO_GPIO_PIN, INPUT, PID_GPIO, false);
+	GPIO_ConfigurePin(SPI_DI_GPIO_PORT, SPI_DI_GPIO_PIN, INPUT, PID_GPIO, false);
+
+	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SCL_GPIO_PIN, INPUT, PID_GPIO, false);
+	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SDA_GPIO_PIN, INPUT, PID_GPIO, false);
 }
 
 // ================================================================================

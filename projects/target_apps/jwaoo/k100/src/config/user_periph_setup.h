@@ -138,16 +138,6 @@
 /* SPI FLASH configuration                                                              */
 /****************************************************************************************/
 
-#define SPI_FLASH_DEFAULT_SIZE	0x40000    // SPI Flash memory size in bytes
-#define SPI_FLASH_DEFAULT_PAGE	0x100
-#define SPI_SECTOR_SIZE			4096
-#define SPI_SECTOR_SIZE_MASK	((SPI_SECTOR_SIZE) - 1)
-
-#define SPI_CODE_SIZE			KB(32)
-#define SPI_PART_FRONT_CODE		0
-#define SPI_PART_BACK_CODE		(SPI_PART_FRONT_CODE + SPI_CODE_SIZE)
-#define SPI_PART_DEVICE_DATA	(SPI_PART_BACK_CODE + SPI_CODE_SIZE)
-
 #define SPI_CS_GPIO_PORT		GPIO_PORT_0
 #define SPI_CS_GPIO_PIN			GPIO_PIN_3
 

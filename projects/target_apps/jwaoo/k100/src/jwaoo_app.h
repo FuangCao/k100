@@ -4,6 +4,7 @@
 #include "app.h"
 #include "arch_api.h"
 #include "jwaoo_hw.h"
+#include "jwaoo_battery.h"
 
 #define APP_AD_MSD_COMPANY_ID		(0xABCD)
 #define APP_AD_MSD_COMPANY_ID_LEN	(2)
@@ -13,6 +14,10 @@ enum {
 	JWAOO_SET_ACTIVE = KE_FIRST_MSG(TASK_JWAOO_APP),
 	JWAOO_SET_SUSPEND,
 	JWAOO_SET_DEEP_SLEEP,
+	JWAOO_SET_UPGRADE_ENABLE,
+	JWAOO_SET_UPGRADE_DISABLE,
+	JWAOO_SET_FACTORY_ENABLE,
+	JWAOO_SET_FACTORY_DISABLE,
 
 	JWAOO_ADV_START,
 	JWAOO_ADV_STOP,
@@ -46,6 +51,7 @@ enum {
 enum {
 	JWAOO_APP_STATE_INVALID,
 	JWAOO_APP_STATE_ACTIVE,
+	JWAOO_APP_STATE_UPGRADE,
 	JWAOO_APP_STATE_FACTORY,
 	JWAOO_APP_STATE_SUSPEND,
 	JWAOO_APP_STATE_DEEP_SLEEP,
@@ -55,13 +61,32 @@ enum {
 struct jwaoo_app_data {
 	bool initialized;
 	bool device_enabled;
-	bool deep_sleep_enabled;
 
 	uint8_t moto_mode;
 	bool moto_boost_busy;
 
 	bool charge_online;
+	bool battery_report;
 	uint8_t battery_led_locked;
+	uint8_t battery_state;
+	uint8_t battery_level;
+	uint16_t battery_voltage;
+	uint8_t battery_voltage_head;
+	uint8_t battery_voltage_count;
+	uint16_t battery_voltages[JWAOO_VOLTAGE_ARRAY_SIZE];
+
+	bool flash_write_enable;
+	bool flash_write_success;
+	uint8_t flash_write_crc;
+	uint16_t flash_write_length;
+	uint32_t flash_write_offset;
+
+	bool sensor_enable;
+	bool sensor_pending;
+	bool sensor_poll_enable;
+	uint8_t sensor_accel_dead;
+	uint8_t sensor_capacity_dead;
+	uint16_t sensor_poll_delay;
 
 	bool key_locked;
 	bool key_lock_pending;
@@ -87,6 +112,8 @@ void jwaoo_app_adv_stop(void);
 void jwaoo_app_goto_active_mode(void);
 void jwaoo_app_goto_suspend_mode(void);
 void jwaoo_app_goto_deep_sleep_mode(void);
+void jwaoo_app_set_upgrade_enable(bool enable);
+void jwaoo_app_set_factory_enable(bool enable);
 
 void jwaoo_app_before_sleep(void);
 void jwaoo_app_resume_from_sleep(void);
@@ -105,6 +132,26 @@ static inline bool jwaoo_app_is_active(void)
 static inline bool jwaoo_app_not_active(void)
 {
 	return jwaoo_app_state_get() != JWAOO_APP_STATE_ACTIVE;
+}
+
+static inline bool jwaoo_app_is_upgrade(void)
+{
+	return jwaoo_app_state_get() == JWAOO_APP_STATE_UPGRADE;
+}
+
+static inline bool jwaoo_app_not_upgrade(void)
+{
+	return jwaoo_app_state_get() != JWAOO_APP_STATE_UPGRADE;
+}
+
+static inline bool jwaoo_app_is_factory(void)
+{
+	return jwaoo_app_state_get() == JWAOO_APP_STATE_FACTORY;
+}
+
+static inline bool jwaoo_app_not_factory(void)
+{
+	return jwaoo_app_state_get() != JWAOO_APP_STATE_FACTORY;
 }
 
 static inline bool jwaoo_app_is_suspended(void)

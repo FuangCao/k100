@@ -19,6 +19,8 @@
 
 #define JWAOO_IRQ_COUNT			(GPIO4_IRQn - GPIO0_IRQn + 1)
 
+#define println(fmt, args...)
+
 struct jwaoo_irq_desc
 {
 	GPIO_PORT port;
@@ -26,6 +28,11 @@ struct jwaoo_irq_desc
 	bool active_low;
 
 	void (*handler)(struct jwaoo_irq_desc *desc, bool status);
+};
+
+struct jwaoo_device_data
+{
+	uint8_t bd_addr[6];
 };
 
 extern struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];

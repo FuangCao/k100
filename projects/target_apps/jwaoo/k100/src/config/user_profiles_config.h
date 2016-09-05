@@ -37,8 +37,8 @@
  
 /// Add below the profiles that the application wishes to use by including the <profile_name>.h file.
 
-#include "diss.h"
-
+// #include "diss.h"
+#include "jwaoo_toy.h"
 /*
  * PROFILE CONFIGUARTION
  ****************************************************************************************
