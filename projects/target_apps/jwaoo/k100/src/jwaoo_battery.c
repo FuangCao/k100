@@ -161,6 +161,8 @@ void jwaoo_battery_poll(void)
 	jwaoo_app_env.battery_level = level;
 	jwaoo_battery_set_state(state);
 
-	ke_timer_set(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY, 1);
+	if (jwaoo_app_env.battery_report) {
+		ke_timer_set(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY, 1);
+	}
 }
 

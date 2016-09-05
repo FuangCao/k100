@@ -232,16 +232,14 @@ static int jwaoo_toy_battery_report_state_handler(ke_msg_id_t const msgid,
                                          ke_task_id_t const dest_id,
                                          ke_task_id_t const src_id)
 {
-	if (jwaoo_app_env.battery_report) {
-		struct jwaoo_toy_command command = {
-			.type = JWAOO_TOY_EVT_BATT_INFO,
-			.battery.state = jwaoo_app_env.battery_state,
-			.battery.level = jwaoo_app_env.battery_level,
-			.battery.voltage = jwaoo_app_env.battery_voltage,
-		};
+	struct jwaoo_toy_command command = {
+		.type = JWAOO_TOY_EVT_BATT_INFO,
+		.battery.state = jwaoo_app_env.battery_state,
+		.battery.level = jwaoo_app_env.battery_level,
+		.battery.voltage = jwaoo_app_env.battery_voltage,
+	};
 
-		jwaoo_toy_send_event(&command, 5);
-	}
+	jwaoo_toy_send_event(&command, 5);
 
 	return (KE_MSG_CONSUMED);
 }
