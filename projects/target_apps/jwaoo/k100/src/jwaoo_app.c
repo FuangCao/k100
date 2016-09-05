@@ -407,7 +407,6 @@ void jwaoo_app_init(void)
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_ACTIVE);
 
 	jwaoo_hw_set_deep_sleep(false);
-	jwaoo_spi_load_data();
 
 	jwaoo_app_env.initialized = true;
 }

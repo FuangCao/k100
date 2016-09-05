@@ -28,6 +28,8 @@
 #include "app_default_handlers.h"
 #include "app_adv_data.h"
 
+#define CONFIG_HAS_SPI_FLASH		1
+
 /*
  * DEFINES
  ****************************************************************************************

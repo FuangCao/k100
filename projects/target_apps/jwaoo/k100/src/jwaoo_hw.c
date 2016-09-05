@@ -119,13 +119,12 @@ void jwaoo_hw_set_device_enable(bool enable)
 
 void jwaoo_hw_init(void)
 {
-	GPIO_ConfigurePin(SPI_CS_GPIO_PORT, SPI_CS_GPIO_PIN, OUTPUT, PID_GPIO, true);
-	GPIO_ConfigurePin(SPI_CLK_GPIO_PORT, SPI_CLK_GPIO_PIN, INPUT, PID_GPIO, false);
-	GPIO_ConfigurePin(SPI_DO_GPIO_PORT, SPI_DO_GPIO_PIN, INPUT, PID_GPIO, false);
-	GPIO_ConfigurePin(SPI_DI_GPIO_PORT, SPI_DI_GPIO_PIN, INPUT, PID_GPIO, false);
-
-	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SCL_GPIO_PIN, INPUT, PID_GPIO, false);
-	GPIO_ConfigurePin(I2C1_GPIO_PORT, I2C1_SDA_GPIO_PIN, INPUT, PID_GPIO, false);
+	if (jwaoo_app_env.initialized) {
+		jwaoo_hw_set_device_enable(false);
+	} else {
+		jwaoo_hw_set_device_enable(true);
+		jwaoo_spi_load_data();
+	}
 }
 
 // ================================================================================

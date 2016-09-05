@@ -32,6 +32,9 @@
 #include "rwip_config.h"
 #include "user_config.h"
 
+#ifdef CONFIG_HAS_SPI_FLASH
+#include "jwaoo_spi.h"
+#endif
 
 const struct nvds_data_struct nvds_data_storage __attribute__((section("nvds_data_storage_area")))
 #ifdef CFG_INITIALIZE_NVDS_STRUCT
@@ -71,7 +74,9 @@ const struct nvds_data_struct nvds_data_storage __attribute__((section("nvds_dat
 ;
 
 /// Device BD address
+#ifndef CONFIG_HAS_SPI_FLASH
 struct bd_addr dev_bdaddr __attribute__((section("retention_mem_area0"), zero_init));
+#endif
 extern struct nvds_data_struct *nvds_data_ptr;
 
 
@@ -84,6 +89,7 @@ uint8_t custom_nvds_get_func(uint8_t tag, nvds_tag_len_t * lengthPtr, uint8_t *b
     {
         case NVDS_TAG_BD_ADDRESS:
         {
+#ifndef CONFIG_HAS_SPI_FLASH
             //check if dev_bdaddr is not zero
             if(memcmp(&dev_bdaddr, &co_null_bdaddr, NVDS_LEN_BD_ADDRESS))
             {
@@ -91,6 +97,12 @@ uint8_t custom_nvds_get_func(uint8_t tag, nvds_tag_len_t * lengthPtr, uint8_t *b
                 *lengthPtr = NVDS_LEN_BD_ADDRESS;
                 return NVDS_OK;
             }
+#else
+			if (jwaoo_spi_read_bd_addr(buf)) {
+                *lengthPtr = NVDS_LEN_BD_ADDRESS;
+                return NVDS_OK;
+			}
+#endif
             break;
         }
         
@@ -118,6 +130,7 @@ uint8_t custom_nvds_get_func(uint8_t tag, nvds_tag_len_t * lengthPtr, uint8_t *b
 
 }
 
+#ifndef CONFIG_HAS_SPI_FLASH
 void nvds_read_bdaddr_from_otp()
 {
     const uint16_t BDADDR_OFFSET = 0x7fd4; // offset of BD address in OTP header
@@ -143,7 +156,11 @@ void nvds_read_bdaddr_from_otp()
     memcpy(&dev_bdaddr, otp_bdaddr, sizeof(dev_bdaddr));
     SetBits16(CLK_AMBA_REG, OTP_ENABLE, 0);     //disable OTP clock    
 }
-
+#else
+void nvds_read_bdaddr_from_otp()
+{
+}
+#endif
 
 #if defined(__DA14583__) && !(BDADDR_FROM_DA14583_FLASH_DISABLED)
 
