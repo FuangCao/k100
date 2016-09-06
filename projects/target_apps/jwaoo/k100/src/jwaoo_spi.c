@@ -220,6 +220,7 @@ static bool jwaoo_is_invalid_bd_addr(const uint8_t bd_addr[6])
 
 bool jwaoo_spi_read_bd_addr(uint8_t bd_addr[6])
 {
+	uint8_t *last;
 	uint8_t *mac = jwaoo_device_data.bd_addr;
 
 	if (jwaoo_is_invalid_bd_addr(mac)) {
@@ -246,7 +247,9 @@ bool jwaoo_spi_read_bd_addr(uint8_t bd_addr[6])
 		}
 	}
 
-	memcpy(bd_addr, mac, 6);
+	for (last = mac + 5; last >= mac; last--, bd_addr++) {
+		*bd_addr = *last;
+	}
 
 	return true;
 }
