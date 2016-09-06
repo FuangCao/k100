@@ -6,6 +6,8 @@
 #include "jwaoo_hw.h"
 #include "jwaoo_battery.h"
 
+#define JWAOO_SUSPEND_DELAY			600
+
 #define APP_AD_MSD_COMPANY_ID		(0xABCD)
 #define APP_AD_MSD_COMPANY_ID_LEN	(2)
 #define APP_AD_MSD_DATA_LEN			(sizeof(uint16_t))
@@ -25,9 +27,9 @@ enum {
 	JWAOO_ADV_START,
 	JWAOO_REBOOT,
 	JWAOO_SHUTDOWN,
-	JWAOO_MOTO_BOOST,
-	JWAOO_MOTO_RAND,
 	JWAOO_PROCESS_KEY,
+	JWAOO_MOTO_BOOST,
+	JWAOO_MOTO_RAND_TIMER,
 
 	JWAOO_SUSPEND_TIMER,
 	JWAOO_KEY_LOCK_TIMER,
@@ -67,6 +69,7 @@ struct jwaoo_app_data {
 	bool connected;
 	bool initialized;
 	bool device_enabled;
+	uint16_t suspend_counter;
 
 	uint8_t moto_mode;
 	bool moto_boost_busy;
@@ -121,9 +124,13 @@ void jwaoo_app_goto_deep_sleep_mode(void);
 void jwaoo_app_set_upgrade_enable(bool enable);
 void jwaoo_app_set_factory_enable(bool enable);
 
+void jwaoo_app_suspend_counter_reset(void);
+void jwaoo_app_suspend_counter_start(void);
+
 void jwaoo_app_before_sleep(void);
 void jwaoo_app_resume_from_sleep(void);
 void jwaoo_app_update_suspend_timer(void);
+
 
 static inline void *jwaoo_app_msg_alloc(ke_msg_id_t const id, uint16_t const param_len)
 {

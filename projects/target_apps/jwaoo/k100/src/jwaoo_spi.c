@@ -1,3 +1,4 @@
+#include "jwaoo_app.h"
 #include "jwaoo_spi.h"
 #include "co_math.h"
 
@@ -70,6 +71,10 @@ void jwaoo_spi_load_data(void)
 	jwaoo_spi_read_user_data();
 	jwaoo_spi_read_device_data();
 	jwaoo_spi_read_factory_data();
+
+	if (jwaoo_user_data.suspend_delay == 0) {
+		jwaoo_user_data.suspend_delay = JWAOO_SUSPEND_DELAY;
+	}
 }
 
 uint8_t jwaoo_spi_calculate_crc(const uint8_t *mem, uint32_t size, uint8_t crc)
@@ -223,14 +228,16 @@ bool jwaoo_spi_read_bd_addr(uint8_t bd_addr[6])
 		mac = jwaoo_device_data.bd_addr_rand;
 
 		for (count = 0; jwaoo_is_invalid_bd_addr(mac); count++) {
-			uint8_t *p, *p_end;
+			uint8_t i;
 
 			if (count > 100) {
 				return false;
 			}
 
-			for (p = mac, p_end = p + 6; p < p_end; p++) {
-				*p = rand() & 0xFF;
+			init_rand_seed_from_trng();
+
+			for (i = 0; i < 6; i++) {
+				mac[i] = rand();
 			}
 		}
 

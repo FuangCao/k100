@@ -27,7 +27,7 @@ bool jwaoo_moto_set_mode(uint8_t mode, uint8_t speed);
 uint8_t jwaoo_moto_speed_add(void);
 uint8_t jwaoo_moto_speed_sub(void);
 uint8_t jwaoo_moto_mode_add(void);
-void jwaoo_moto_rand_fire(void);
+void jwaoo_moto_rand_timer_fire(void);
 
 static inline struct jwaoo_pwm_device *jwaoo_moto_get_device()
 {
@@ -54,3 +54,7 @@ static inline void jwaoo_moto_blink_square(uint32_t cycle)
 	jwaoo_pwm_blink_square(JWAOO_PWM_MOTO, 0, PWM_LEVEL_MAX, cycle, 0);
 }
 
+static inline uint8_t jwaoo_moto_get_level(void)
+{
+	return jwaoo_pwm_get_level(JWAOO_PWM_MOTO);
+}

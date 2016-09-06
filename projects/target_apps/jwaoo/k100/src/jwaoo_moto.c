@@ -37,6 +37,9 @@ bool jwaoo_moto_set_mode(uint8_t mode, uint8_t speed)
 	switch (mode) {
 	case JWAOO_MOTO_MODE_MANUL:
 		jwaoo_moto_set_speed(speed);
+		if (speed == 0) {
+			jwaoo_app_suspend_counter_start();
+		}
 		break;
 
 	case JWAOO_MOTO_MODE_LINE:
@@ -60,7 +63,7 @@ bool jwaoo_moto_set_mode(uint8_t mode, uint8_t speed)
 		break;
 
 	case JWAOO_MOTO_MODE_RAND:
-		jwaoo_app_timer_set(JWAOO_MOTO_RAND, 1);
+		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, 1);
 		break;
 
 	default:
@@ -110,6 +113,6 @@ uint8_t jwaoo_moto_mode_add(void)
 	return mode;
 }
 
-void jwaoo_moto_rand_fire(void)
+void jwaoo_moto_rand_timer_fire(void)
 {
 }

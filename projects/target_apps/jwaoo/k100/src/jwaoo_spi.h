@@ -8,7 +8,7 @@
 #define KB(value)						((value) << 10)
 #endif
 
-#define JWAOO_SPI_MAGIC					0x11223344
+#define JWAOO_SPI_MAGIC					0xA1B2C3D4
 
 #define JWAOO_SPI_FLASH_DEFAULT_SIZE	0x40000    // SPI Flash memory size in bytes
 #define JWAOO_SPI_FLASH_DEFAULT_PAGE	0x100
@@ -57,8 +57,7 @@ struct jwaoo_partition_factory_data {
 
 struct jwaoo_partition_user_data {
 	struct jwaoo_partition_desc desc;
-	bool auto_suspend_enable;
-	uint16_t auto_suspend_time;
+	uint16_t suspend_delay;
 };
 
 extern uint32_t spi_flash_jedec_id;

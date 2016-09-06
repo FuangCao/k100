@@ -67,10 +67,10 @@ void jwaoo_key_process_active(uint8_t keycode);
 void jwaoo_key_process_factory(uint8_t keycode);
 void jwaoo_key_process_suspend(uint8_t keycode);
 
-void jwaoo_key_lock_fire(void);
-void jwaoo_key_repeat_fire(ke_msg_id_t const msgid, uint8_t keycode);
-void jwaoo_key_long_click_fire(ke_msg_id_t const msgid, uint8_t keycode);
-void jwaoo_key_multi_click_fire(ke_msg_id_t const msgid, uint8_t keycode);
+void jwaoo_key_lock_timer_fire(void);
+void jwaoo_key_repeat_timer_fire(ke_msg_id_t const msgid, uint8_t keycode);
+void jwaoo_key_long_click_timer_fire(ke_msg_id_t const msgid, uint8_t keycode);
+void jwaoo_key_multi_click_timer_fire(ke_msg_id_t const msgid, uint8_t keycode);
 
 static ke_msg_id_t jwaoo_key_get_repeat_timer(uint8_t keycode)
 {

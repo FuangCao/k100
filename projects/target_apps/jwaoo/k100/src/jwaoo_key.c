@@ -143,6 +143,8 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 	uint8_t *param;
 	struct jwaoo_key_device *key = (struct jwaoo_key_device *) desc;
 
+	jwaoo_app_suspend_counter_reset();
+
 	if (status == key->value) {
 		return;
 	}
@@ -185,7 +187,7 @@ void jwaoo_key_init(void)
 
 // ================================================================================
 
-void jwaoo_key_lock_fire(void)
+void jwaoo_key_lock_timer_fire(void)
 {
 	if (jwaoo_app_env.key_locked) {
 		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
@@ -196,7 +198,7 @@ void jwaoo_key_lock_fire(void)
 	}
 }
 
-void jwaoo_key_repeat_fire(ke_msg_id_t const msgid, uint8_t keycode)
+void jwaoo_key_repeat_timer_fire(ke_msg_id_t const msgid, uint8_t keycode)
 {
 	struct jwaoo_key_device *key = jwaoo_keys + keycode;
 
@@ -215,7 +217,7 @@ void jwaoo_key_repeat_fire(ke_msg_id_t const msgid, uint8_t keycode)
 	}
 }
 
-void jwaoo_key_long_click_fire(ke_msg_id_t const msgid, uint8_t keycode)
+void jwaoo_key_long_click_timer_fire(ke_msg_id_t const msgid, uint8_t keycode)
 {
 	struct jwaoo_key_device *key = jwaoo_keys + keycode;
 
@@ -230,7 +232,7 @@ void jwaoo_key_long_click_fire(ke_msg_id_t const msgid, uint8_t keycode)
 	}
 }
 
-void jwaoo_key_multi_click_fire(ke_msg_id_t const msgid, uint8_t keycode)
+void jwaoo_key_multi_click_timer_fire(ke_msg_id_t const msgid, uint8_t keycode)
 {
 	struct jwaoo_key_device *key = jwaoo_keys + keycode;
 
