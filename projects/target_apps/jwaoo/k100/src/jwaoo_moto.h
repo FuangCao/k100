@@ -34,6 +34,16 @@ static inline struct jwaoo_pwm_device *jwaoo_moto_get_device()
 	return jwaoo_pwm_get_device(JWAOO_PWM_MOTO);
 }
 
+static inline void jwaoo_moto_blink_open(void)
+{
+	jwaoo_pwm_blink_open(JWAOO_PWM_MOTO);
+}
+
+static inline void jwaoo_moto_blink_close(void)
+{
+	jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
+}
+
 static inline void jwaoo_moto_blink_sawtooth(uint32_t cycle)
 {
 	jwaoo_pwm_blink_sawtooth(JWAOO_PWM_MOTO, MOTO_LEVEL_MIN, PWM_LEVEL_MAX, MOTO_LEVEL_STEP, cycle, 0);

@@ -3,8 +3,11 @@
 #include "jwaoo_pwm.h"
 #include "jwaoo_spi.h"
 #include "jwaoo_i2c.h"
-#include "jwaoo_battery.h"
 #include "jwaoo_app.h"
+#include "jwaoo_moto.h"
+#include "jwaoo_battery.h"
+
+extern uint8_t app_connection_idx;
 
 struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
 
@@ -63,7 +66,10 @@ bool jwaoo_hw_irq_disable(IRQn_Type irq)
 void jwaoo_hw_set_suspend(bool enable)
 {
 	if (enable) {
-		jwaoo_app_adv_stop();
+		jwaoo_moto_blink_close();
+		app_easy_gap_disconnect(app_connection_idx);
+		app_easy_gap_advertise_stop();
+		jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
 	} else {
 		jwaoo_app_adv_start();
 	}

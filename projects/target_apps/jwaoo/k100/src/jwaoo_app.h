@@ -20,7 +20,6 @@ enum {
 	JWAOO_SET_FACTORY_DISABLE,
 
 	JWAOO_ADV_START,
-	JWAOO_ADV_STOP,
 	JWAOO_BATT_POLL,
 	JWAOO_REBOOT,
 	JWAOO_SHUTDOWN,
@@ -108,7 +107,6 @@ void jwaoo_app_msg_send(void const *param);
 
 void jwaoo_app_init(void);
 void jwaoo_app_adv_start(void);
-void jwaoo_app_adv_stop(void);
 void jwaoo_app_goto_active_mode(void);
 void jwaoo_app_goto_suspend_mode(void);
 void jwaoo_app_goto_deep_sleep_mode(void);
