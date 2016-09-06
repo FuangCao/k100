@@ -45,7 +45,7 @@ static bool jwaoo_key_check_lock_state(void)
 		if (key->lock_enable && key->value == 0) {
 			if (jwaoo_app_env.key_lock_pending) {
 				jwaoo_app_env.key_lock_pending = false;
-				jwaoo_app_timer_clear(JWAOO_KEY_LOCK);
+				jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
 				jwaoo_battery_led_release();
 
 				for (key = jwaoo_keys; key < key_end; key++) {
@@ -75,14 +75,16 @@ static bool jwaoo_key_check_lock_state(void)
 		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
 	}
 
-	jwaoo_app_timer_set(JWAOO_KEY_LOCK, 300);
+	jwaoo_app_timer_set(JWAOO_KEY_LOCK_TIMER, 300);
 
 	return true;
 }
 
-static void jwaoo_key_process_active(struct jwaoo_key_device *key)
+void jwaoo_key_process_active(uint8_t keycode)
 {
-	jwaoo_key_timer_clear(key->code);
+	struct jwaoo_key_device *key = jwaoo_keys + keycode;
+
+	jwaoo_key_timer_clear(keycode);
 
 	if (jwaoo_key_check_lock_state()) {
 		return;
@@ -93,10 +95,10 @@ static void jwaoo_key_process_active(struct jwaoo_key_device *key)
 	if (key->value > 0) {
 		key->count++;
 		key->repeat = 0;
-		jwaoo_app_timer_set(jwaoo_key_get_repeat_timer(key->code), JWAOO_KEY_REPEAT_LONG_DELAY);
-		jwaoo_app_timer_set(jwaoo_key_get_long_click_timer(key->code), jwaoo_app_env.key_long_click_delay);
+		jwaoo_app_timer_set(jwaoo_key_get_repeat_timer(keycode), JWAOO_KEY_REPEAT_LONG_DELAY);
+		jwaoo_app_timer_set(jwaoo_key_get_long_click_timer(keycode), jwaoo_app_env.key_long_click_delay);
 	} else {
-		jwaoo_app_timer_set(jwaoo_key_get_multi_click_timer(key->code), jwaoo_app_env.key_multi_click_delay);
+		jwaoo_app_timer_set(jwaoo_key_get_multi_click_timer(keycode), jwaoo_app_env.key_multi_click_delay);
 	}
 
 	if (key->multi_click_enable == false && (key->repeat_enable == false || key->repeat == 0)) {
@@ -124,45 +126,36 @@ static void jwaoo_key_process_active(struct jwaoo_key_device *key)
 	}
 }
 
-static void jwaoo_key_process_factory(struct jwaoo_key_device *key)
+void jwaoo_key_process_factory(uint8_t keycode)
 {
-	jwaoo_on_client_key_state_changed(key);
+	jwaoo_on_client_key_state_changed(jwaoo_keys + keycode);
 }
 
-static void jwaoo_key_process_suspend(struct jwaoo_key_device *key)
+void jwaoo_key_process_suspend(uint8_t keycode)
 {
-	if (key->code == JWAOO_KEY_UP && key->value) {
+	if (keycode == JWAOO_KEY_UP && jwaoo_keys[keycode].value) {
 		jwaoo_app_goto_active_mode();
 	}
 }
 
 static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 {
+	uint8_t *param;
 	struct jwaoo_key_device *key = (struct jwaoo_key_device *) desc;
 
 	if (status == key->value) {
 		return;
 	}
 
-	if (status) {
+	if (!status) {
 		key->last_value = key->value;
 	}
 
 	key->value = status;
 
-	switch (jwaoo_app_state_get()) {
-	case JWAOO_APP_STATE_ACTIVE:
-		jwaoo_key_process_active(key);
-		break;
-
-	case JWAOO_APP_STATE_FACTORY:
-		jwaoo_key_process_factory(key);
-		break;
-
-	case JWAOO_APP_STATE_SUSPEND:
-		jwaoo_key_process_suspend(key);
-		break;
-	}
+	param = jwaoo_app_msg_alloc(JWAOO_PROCESS_KEY, sizeof(uint8_t));
+	*param = key->code;
+	jwaoo_app_msg_send(param);
 }
 
 void jwaoo_key_init(void)

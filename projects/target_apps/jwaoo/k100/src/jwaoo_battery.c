@@ -8,8 +8,8 @@ static void jwaoo_charge_isr(struct jwaoo_irq_desc *desc, bool status)
 {
 	jwaoo_app_env.charge_online = status;
 
-	if (!jwaoo_app_timer_active(JWAOO_BATT_POLL)) {
-		jwaoo_app_timer_set(JWAOO_BATT_POLL, 1);
+	if (!jwaoo_app_timer_active(JWAOO_BATT_POLL_TIMER)) {
+		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 1);
 	}
 }
 
@@ -81,6 +81,8 @@ void jwaoo_battery_poll(void)
 	uint8_t state;
 	uint8_t level;
 	uint32_t voltage;
+
+	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 100);
 
 	adc_calibrate();
 
@@ -162,7 +164,7 @@ void jwaoo_battery_poll(void)
 	jwaoo_battery_set_state(state);
 
 	if (jwaoo_app_env.battery_report) {
-		ke_timer_set(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY, 1);
+		SEND_EMPTY_MESSAGE(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY);
 	}
 }
 

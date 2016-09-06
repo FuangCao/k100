@@ -109,6 +109,8 @@ void jwaoo_toy_disable(uint16_t conhdl)
 	jwaoo_app_env.flash_write_enable = false;
 	jwaoo_app_env.flash_write_success = false;
 
+	jwaoo_app_env.battery_report = false;
+
 	jwaoo_sensor_set_enable(false);
 	jwaoo_app_set_upgrade_enable(false);
 	jwaoo_app_set_factory_enable(false);
@@ -397,6 +399,7 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 	// ================================================================================
 
 	case JWAOO_TOY_CMD_BATT_INFO:
+		jwaoo_app_env.battery_report = (length > 1 && command->enable.value);
 		break;
 
 	case JWAOO_TOY_CMD_FLASH_ID:
@@ -503,7 +506,7 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 				break;
 			}
 
-			ke_timer_set(JWAOO_TOY_UPGRADE_COMPLETE, TASK_JWAOO_TOY, 1);
+			SEND_EMPTY_MESSAGE(JWAOO_TOY_UPGRADE_COMPLETE, TASK_JWAOO_TOY);
 			success = true;
 		}
 		break;

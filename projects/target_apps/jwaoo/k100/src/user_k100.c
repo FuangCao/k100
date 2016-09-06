@@ -81,7 +81,7 @@ void user_app_connection(uint8_t connection_idx, struct gapc_connection_req_ind 
             app_param_update_request_timer_used = app_easy_timer(APP_PARAM_UPDATE_REQUEST_TO, param_update_request_timer_cb);
         }
 
-		jwaoo_pwm_blink_open(JWAOO_PWM_BT_LED);
+		jwaoo_app_set_connect_state(true);
     }
     else
     {
@@ -105,7 +105,7 @@ void user_app_disconnect(struct gapc_disconnect_ind const *param)
 {
      uint8_t state = ke_state_get(TASK_APP);
 
-	jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
+	jwaoo_app_set_connect_state(false);
 
     if ((state == APP_SECURITY) ||
         (state == APP_CONNECTED) ||

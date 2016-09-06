@@ -10,6 +10,9 @@
 #define APP_AD_MSD_COMPANY_ID_LEN	(2)
 #define APP_AD_MSD_DATA_LEN			(sizeof(uint16_t))
 
+#define SEND_EMPTY_MESSAGE(msgid, taskid) \
+	ke_msg_send(ke_msg_alloc(msgid, taskid, 0, 0))
+
 enum {
 	JWAOO_SET_ACTIVE = KE_FIRST_MSG(TASK_JWAOO_APP),
 	JWAOO_SET_SUSPEND,
@@ -20,12 +23,15 @@ enum {
 	JWAOO_SET_FACTORY_DISABLE,
 
 	JWAOO_ADV_START,
-	JWAOO_BATT_POLL,
 	JWAOO_REBOOT,
 	JWAOO_SHUTDOWN,
-	JWAOO_KEY_LOCK,
 	JWAOO_MOTO_BOOST,
 	JWAOO_MOTO_RAND,
+	JWAOO_PROCESS_KEY,
+
+	JWAOO_SUSPEND_TIMER,
+	JWAOO_KEY_LOCK_TIMER,
+	JWAOO_BATT_POLL_TIMER,
 
 	JWAOO_PWM1_BLINK_TIMER,
 	JWAOO_PWM2_BLINK_TIMER,
@@ -58,6 +64,7 @@ enum {
 };
 
 struct jwaoo_app_data {
+	bool connected;
 	bool initialized;
 	bool device_enabled;
 
@@ -107,6 +114,7 @@ void jwaoo_app_msg_send(void const *param);
 
 void jwaoo_app_init(void);
 void jwaoo_app_adv_start(void);
+void jwaoo_app_set_connect_state(bool connected);
 void jwaoo_app_goto_active_mode(void);
 void jwaoo_app_goto_suspend_mode(void);
 void jwaoo_app_goto_deep_sleep_mode(void);
@@ -117,9 +125,9 @@ void jwaoo_app_before_sleep(void);
 void jwaoo_app_resume_from_sleep(void);
 void jwaoo_app_update_suspend_timer(void);
 
-static inline void *jwaoo_app_msg_alloc(ke_msg_id_t const id, ke_task_id_t const src_id, uint16_t const param_len)
+static inline void *jwaoo_app_msg_alloc(ke_msg_id_t const id, uint16_t const param_len)
 {
-	return ke_msg_alloc(id, TASK_JWAOO_APP, src_id, param_len);
+	return ke_msg_alloc(id, TASK_JWAOO_APP, 0, param_len);
 }
 
 static inline bool jwaoo_app_is_active(void)

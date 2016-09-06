@@ -78,7 +78,7 @@ void jwaoo_hw_set_suspend(bool enable)
 void jwaoo_hw_set_deep_sleep(bool enable)
 {
 	if (enable) {
-		jwaoo_app_timer_clear(JWAOO_BATT_POLL);
+		jwaoo_app_timer_clear(JWAOO_BATT_POLL_TIMER);
 
 		arch_ble_ext_wakeup_on();
 
@@ -100,9 +100,6 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 		jwaoo_hw_set_device_enable(true);
 
 		arch_ble_force_wakeup();
-		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
-
-		jwaoo_app_timer_set(JWAOO_BATT_POLL, 1);
 	}
 }
 

@@ -67,8 +67,8 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 	jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BT_LED, 5, 1000, 0);
 #endif
 
-	if (!ke_timer_active(JWAOO_BATT_POLL, dest_id)) {
-		ke_timer_set(JWAOO_BATT_POLL, dest_id, 1);
+	if (!ke_timer_active(JWAOO_BATT_POLL_TIMER, dest_id)) {
+		ke_timer_set(JWAOO_BATT_POLL_TIMER, dest_id, 1);
 	}
 
 	return KE_MSG_CONSUMED;
@@ -159,7 +159,7 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 		jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
 		break;
 
-	case JWAOO_BATT_POLL:
+	case JWAOO_BATT_POLL_TIMER:
 		if (jwaoo_app_env.charge_online) {
 			jwaoo_battery_poll_handler(msgid, param, dest_id, src_id);
 		}
@@ -265,19 +265,43 @@ static int jwaoo_set_factory_disable_handler(ke_msg_id_t const msgid, void const
 	return KE_MSG_CONSUMED;
 }
 
+static int jwaoo_active_process_key_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	jwaoo_key_process_active(*(const uint8_t *) param);
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_suspend_process_key_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	jwaoo_key_process_suspend(*(const uint8_t *) param);
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_factory_process_key_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	jwaoo_key_process_factory(*(const uint8_t *) param);
+
+	return KE_MSG_CONSUMED;
+}
+
 static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_SUSPEND, 						(ke_msg_func_t) jwaoo_active_to_suspend_handler },
 	{ JWAOO_SET_DEEP_SLEEP, 					(ke_msg_func_t) jwaoo_active_to_deep_sleep_handler },
 	{ JWAOO_SET_UPGRADE_ENABLE, 				(ke_msg_func_t) jwaoo_set_upgrade_enable_handler },
 	{ JWAOO_SET_FACTORY_ENABLE, 				(ke_msg_func_t) jwaoo_set_factory_enable_handler },
+
 	{ JWAOO_ADV_START,							(ke_msg_func_t) jwaoo_adv_start_handler },
-	{ JWAOO_BATT_POLL,							(ke_msg_func_t) jwaoo_battery_poll_handler },
 	{ JWAOO_REBOOT,								(ke_msg_func_t) jwaoo_reboot_handler },
 	{ JWAOO_SHUTDOWN,							(ke_msg_func_t) jwaoo_shutdown_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
 	{ JWAOO_MOTO_RAND,							(ke_msg_func_t) jwaoo_moto_rand_handler },
-	{ JWAOO_KEY_LOCK,							(ke_msg_func_t) jwaoo_key_lock_handler },
+	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_active_process_key_handler },
+
+	{ JWAOO_KEY_LOCK_TIMER,						(ke_msg_func_t) jwaoo_key_lock_handler },
+	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_battery_poll_handler },
 
 	{ JWAOO_PWM1_BLINK_TIMER,					(ke_msg_func_t) jwaoo_pwm_blink_handler },
 	{ JWAOO_PWM2_BLINK_TIMER,					(ke_msg_func_t) jwaoo_pwm_blink_handler },
@@ -309,16 +333,18 @@ static const struct ke_msg_handler jwaoo_app_factory_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_FACTORY_DISABLE,				(ke_msg_func_t) jwaoo_set_factory_disable_handler },
 	{ JWAOO_ADV_START,							(ke_msg_func_t) jwaoo_adv_start_handler },
-	{ JWAOO_BATT_POLL,							(ke_msg_func_t) jwaoo_battery_poll_handler },
+	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_battery_poll_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
+	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_factory_process_key_handler },
 };
 
 static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_SET_DEEP_SLEEP,						(ke_msg_func_t) jwaoo_suspend_to_deep_sleep_handler },
-	{ JWAOO_BATT_POLL,							(ke_msg_func_t) jwaoo_battery_poll_handler },
-	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler}
+	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_battery_poll_handler },
+	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
+	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_suspend_process_key_handler },
 };
 
 static const struct ke_msg_handler jwaoo_app_deep_sleep_handlers[] = {
@@ -406,7 +432,7 @@ void jwaoo_app_init(void)
 
 static void jwaoo_app_set_mode(ke_msg_id_t const msgid)
 {
-	jwaoo_app_msg_send(jwaoo_app_msg_alloc(msgid, 0, 0));
+	jwaoo_app_msg_send(jwaoo_app_msg_alloc(msgid, 0));
 }
 
 void jwaoo_app_goto_active_mode(void)
@@ -444,7 +470,18 @@ void jwaoo_app_set_factory_enable(bool enable)
 
 void jwaoo_app_adv_start(void)
 {
-	jwaoo_app_msg_send(jwaoo_app_msg_alloc(JWAOO_ADV_START, 0, 0));
+	jwaoo_app_msg_send(jwaoo_app_msg_alloc(JWAOO_ADV_START, 0));
+}
+
+void jwaoo_app_set_connect_state(bool connected)
+{
+	jwaoo_app_env.connected = connected;
+
+	if (connected) {
+		jwaoo_pwm_blink_open(JWAOO_PWM_BT_LED);
+	} else {
+		jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
+	}
 }
 
 // ================================================================================
