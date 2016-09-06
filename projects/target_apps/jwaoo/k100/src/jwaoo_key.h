@@ -18,17 +18,19 @@
 #define WAKEUP_KEY_PIN			KEY1_GPIO_PIN
 #define WAKEUP_KEY_ACTIVE		KEY_GET_STATUS(WAKEUP_KEY_PORT, WAKEUP_KEY_PIN)
 
-#define WAKEUP_KEY_SEL_MASK \
-	( \
-		WKUPCT_PIN_SELECT(WAKEUP_KEY_PORT, WAKEUP_KEY_PIN) | \
-		WKUPCT_PIN_SELECT(CHG_DET_GPIO_PORT, CHG_DET_GPIO_PIN) \
-	)
+#define WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, port, pin) \
+	do { \
+		(pin_mask) |= WKUPCT_PIN_SELECT(port, pin); \
+		(pol_mask) |= WKUPCT_PIN_POLARITY(port, pin, GPIO_GetPinStatus(port, pin)); \
+	} while (0)
 
-#define WAKEUP_KEY_POL_MASK \
-	( \
-		WKUPCT_PIN_POLARITY(WAKEUP_KEY_PORT, WAKEUP_KEY_PIN, KEY_ACTIVE_LOW) | \
-		WKUPCT_PIN_POLARITY(CHG_DET_GPIO_PORT, CHG_DET_GPIO_PIN, CHG_DET_ACTIVE_LOW) \
-	)
+#define WAKEUP_KEY_MASK_BUILD_ALL(pin_mask, pol_mask) \
+	do { \
+		(pin_mask) = 0; \
+		(pol_mask) = 0; \
+		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, WAKEUP_KEY_PORT, WAKEUP_KEY_PIN); \
+		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, CHG_DET_GPIO_PORT, CHG_DET_GPIO_PIN); \
+	} while (0)
 
 enum {
 	JWAOO_KEY_UP,

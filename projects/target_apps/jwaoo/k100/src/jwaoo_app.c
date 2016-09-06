@@ -463,8 +463,12 @@ void jwaoo_app_adv_stop(void)
 
 void jwaoo_app_before_sleep(void)
 {
+	uint32_t pin_mask, pol_mask;
+
 	rwip_env.ext_wakeup_enable = 2;
-	wkupct_enable_irq(WAKEUP_KEY_SEL_MASK, WAKEUP_KEY_POL_MASK, 1, 60);
+
+	WAKEUP_KEY_MASK_BUILD_ALL(pin_mask, pol_mask);
+	wkupct_enable_irq(pin_mask, pol_mask, 1, 60);
 }
 
 void jwaoo_app_resume_from_sleep(void)
