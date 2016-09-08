@@ -52,7 +52,8 @@ struct jwaoo_partition_device_data {
 
 struct jwaoo_partition_factory_data {
 	struct jwaoo_partition_desc desc;
-	uint8_t test_result[16];
+	uint16_t test_valid;
+	uint16_t test_result;
 };
 
 struct jwaoo_partition_user_data {

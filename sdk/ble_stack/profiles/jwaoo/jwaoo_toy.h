@@ -128,6 +128,8 @@ enum
 	JWAOO_TOY_CMD_FLASH_WRITE_BD_ADDR,
 	JWAOO_TOY_CMD_FACTORY_ENABLE = 50,
 	JWAOO_TOY_CMD_LED_ENABLE,
+	JWAOO_TOY_CMD_READ_TEST_RESULT,
+	JWAOO_TOY_CMD_WRITE_TEST_RESULT,
 	JWAOO_TOY_CMD_BATT_INFO = 60,
 	JWAOO_TOY_CMD_BATT_EVENT_ENABLE,
 	JWAOO_TOY_CMD_SENSOR_ENABLE = 70,
@@ -175,6 +177,8 @@ struct jwaoo_toy_command
 	union {
 		char text[1];
 		uint8_t bytes[1];
+		uint16_t words[1];
+		uint32_t dwords[1];
 		uint8_t value8;
 		uint16_t value16;
 		uint32_t value32;
@@ -229,6 +233,11 @@ struct jwaoo_toy_command
 			uint8_t function;
 			uint8_t high;
 		} gpio_config;
+
+		struct {
+			uint16_t valid;
+			uint16_t result;
+		} test_result;
 	};
 };
 
@@ -240,9 +249,16 @@ struct jwaoo_toy_response
 	union {
 		char text[1];
 		uint8_t bytes[1];
+		uint16_t words[1];
+		uint32_t dwords[1];
 		uint8_t value8;
 		uint16_t value16;
 		uint32_t value32;
+
+		struct {
+			uint16_t valid;
+			uint16_t result;
+		} test_result;
 	};
 };
 #pragma pack()
@@ -323,6 +339,7 @@ uint8_t jwaoo_toy_send_response_u16(uint8_t command, uint16_t value);
 uint8_t jwaoo_toy_send_response_u32(uint8_t command, uint32_t value);
 uint8_t jwaoo_toy_send_response_data(uint8_t command, const uint8_t *data, uint16_t size);
 uint8_t jwaoo_toy_send_response_text(uint8_t command, const char *fmt, ...);
+uint8_t jwaoo_toy_send_test_result(uint8_t command);
 
 void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t length);
 bool jwaoo_toy_process_flash_data(const uint8_t *data, uint16_t length);

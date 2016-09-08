@@ -288,6 +288,19 @@ uint8_t jwaoo_toy_send_response_text(uint8_t command, const char *fmt, ...)
 	return jwaoo_toy_send_command(buff, length + 2);
 }
 
+uint8_t jwaoo_toy_send_test_result(uint8_t command)
+{
+	struct jwaoo_toy_response response = {
+		.command = command,
+		.type = JWAOO_TOY_RSP_DATA,
+	};
+
+	response.test_result.valid = jwaoo_factory_data.test_valid;
+	response.test_result.result = jwaoo_factory_data.test_result;
+
+	return jwaoo_toy_send_command(&response, 6);
+}
+
 // ===============================================================================
 
 void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t length)
@@ -388,6 +401,18 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 			}
 
 			success = true;
+		}
+		break;
+
+	case JWAOO_TOY_CMD_READ_TEST_RESULT:
+		jwaoo_toy_send_test_result(command->type);
+		return;
+
+	case JWAOO_TOY_CMD_WRITE_TEST_RESULT:
+		if (length == 5) {
+			jwaoo_factory_data.test_valid = command->test_result.valid;
+			jwaoo_factory_data.test_result = command->test_result.result;
+			success = jwaoo_spi_write_factory_data();
 		}
 		break;
 
