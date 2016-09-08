@@ -120,8 +120,11 @@ bool jwaoo_spi_flash_check_crc(uint32_t addr, uint32_t size, uint8_t crc_raw)
 
 static bool jwaoo_spi_flash_copy_safe(uint32_t rdaddr, uint32_t wraddr, uint32_t size, uint8_t crc_raw)
 {
-	uint8_t crc_read = 0xFF;
 	uint8_t crc_write = 0xFF;
+
+	if (!jwaoo_spi_flash_check_crc(rdaddr, size, crc_raw)) {
+		return false;
+	}
 
 	println("spi_flash_block_erase: 0x%04x", wraddr);
 
@@ -145,8 +148,6 @@ static bool jwaoo_spi_flash_copy_safe(uint32_t rdaddr, uint32_t wraddr, uint32_t
 			return false;
 		}
 
-		crc_read = jwaoo_spi_calculate_crc(buff, length, crc_read);
-
 		ret = spi_flash_write_data(buff, wraddr, length);
 		if (ret != length) {
 			println("Failed to spi_flash_write_data: %d", ret);
@@ -164,11 +165,6 @@ static bool jwaoo_spi_flash_copy_safe(uint32_t rdaddr, uint32_t wraddr, uint32_t
 		rdaddr += length;
 		wraddr += length;
 		size -= length;
-	}
-
-	if (crc_read != crc_raw) {
-		println("read crc not match: 0x%02x != 0x%02x", crc_read, crc_raw);
-		return false;
 	}
 
 	if (crc_write != crc_raw) {
