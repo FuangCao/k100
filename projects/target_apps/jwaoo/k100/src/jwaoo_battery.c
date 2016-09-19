@@ -33,10 +33,12 @@ void jwaoo_battery_led_blink(void)
 	}
 }
 
-void jwaoo_battery_led_release(void)
+void jwaoo_battery_led_release(bool force)
 {
-	jwaoo_app_env.battery_led_locked = 0;
-	jwaoo_battery_led_update_state();
+	if (force || jwaoo_app_env.battery_led_locked < 2) {
+		jwaoo_app_env.battery_led_locked = 0;
+		jwaoo_battery_led_update_state();
+	}
 }
 
 void jwaoo_battery_led_update_state(void)

@@ -1,4 +1,5 @@
 #include "jwaoo_pwm.h"
+#include "jwaoo_battery.h"
 
 static void jwaoo_pwm_set_enable(uint8_t pwm, bool enable)
 {
@@ -176,6 +177,11 @@ void jwaoo_pwm_blink_square(uint8_t pwm, uint8_t min, uint8_t max, uint32_t cycl
 	jwaoo_pwm_blink_set(pwm, min, max, max - min, delay, count);
 }
 
+static void jwaoo_battery_led_complete(struct jwaoo_pwm_device *device)
+{
+	jwaoo_battery_led_release(false);
+}
+
 struct jwaoo_pwm_device jwaoo_pwms[] = {
 	[JWAOO_PWM_MOTO] = {
 		.port = MOTO_GPIO_PORT,
@@ -191,5 +197,6 @@ struct jwaoo_pwm_device jwaoo_pwms[] = {
 		.port = BATT_LED_GPIO_PORT,
 		.pin = BATT_LED_GPIO_PIN,
 		.set_level = jwaoo_pwm_device_set_level_handler,
+		.on_complete = jwaoo_battery_led_complete,
 	},
 };

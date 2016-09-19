@@ -50,7 +50,7 @@ static bool jwaoo_key_check_lock_state(void)
 
 		jwaoo_app_env.key_lock_pending = false;
 		jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
-		jwaoo_battery_led_release();
+		jwaoo_battery_led_release(false);
 
 		for (key = jwaoo_keys; key < key_end; key++) {
 			key->value = 0;
@@ -138,6 +138,10 @@ void jwaoo_key_process_factory(uint8_t keycode)
 void jwaoo_key_process_suspend(uint8_t keycode)
 {
 	if (keycode == JWAOO_KEY_UP && jwaoo_keys[keycode].value) {
+		for (int i = 0; i < NELEM(jwaoo_keys); i++) {
+			jwaoo_keys[i].value = 0;
+		}
+
 		jwaoo_app_goto_active_mode();
 	}
 }
