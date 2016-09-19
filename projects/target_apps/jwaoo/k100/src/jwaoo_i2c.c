@@ -161,7 +161,7 @@ int jwaoo_i2c_transfer(uint8_t slave, struct jwaoo_i2c_message *msgs, int count)
 out_enable_irq:
 	GLOBAL_INT_RESTORE();
 out_i2c_disable:
-#if JWAOO_I2C_JWAOO_I2C_AUTO_POWER_DOWN
+#if JWAOO_I2C_AUTO_POWER_DOWN
 	SetWord16(I2C_ENABLE_REG, 0);
 #endif
 
