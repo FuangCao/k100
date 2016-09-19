@@ -1,4 +1,5 @@
 #include "jwaoo_moto.h"
+#include "co_math.h"
 
 uint8_t jwaoo_moto_speed_to_level(uint8_t speed)
 {
@@ -115,4 +116,8 @@ uint8_t jwaoo_moto_mode_add(void)
 
 void jwaoo_moto_rand_timer_fire(void)
 {
+	if (jwaoo_app_env.moto_mode == JWAOO_MOTO_MODE_RAND) {
+		jwaoo_moto_set_speed(rand() % MOTO_SPEED_MAX + 1);
+		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, rand() % 200 + 1);
+	}
 }
