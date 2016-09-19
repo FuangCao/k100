@@ -98,8 +98,11 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 		}
 
 		jwaoo_hw_set_device_enable(true);
-
 		arch_ble_force_wakeup();
+
+		if (!jwaoo_app_timer_active(JWAOO_BATT_POLL_TIMER)) {
+			jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 1);
+		}
 	}
 }
 

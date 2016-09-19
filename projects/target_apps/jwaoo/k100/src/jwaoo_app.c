@@ -169,8 +169,12 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 	switch (msgid) {
 	case JWAOO_PWM1_BLINK_TIMER:
 	case JWAOO_PWM2_BLINK_TIMER:
-	case JWAOO_PWM3_BLINK_TIMER:
-		jwaoo_pwm_blink_close(msgid - JWAOO_PWM1_BLINK_TIMER);
+	case JWAOO_PWM3_BLINK_TIMER: {
+			uint8_t pwm = msgid - JWAOO_PWM1_BLINK_TIMER;
+
+			jwaoo_pwm_blink_close(pwm);
+			jwaoo_pwm_set_complete(pwm);
+		}
 		break;
 
 	case JWAOO_MOTO_BOOST:
@@ -181,6 +185,8 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 	case JWAOO_BATT_POLL_TIMER:
 		if (jwaoo_app_env.charge_online) {
 			jwaoo_battery_poll_handler(msgid, param, dest_id, src_id);
+		} else {
+			jwaoo_app_goto_deep_sleep_mode();
 		}
 		break;
 
@@ -366,7 +372,6 @@ static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_SET_DEEP_SLEEP,						(ke_msg_func_t) jwaoo_suspend_to_deep_sleep_handler },
-	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_battery_poll_handler },
 	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_suspend_process_key_handler },
 };

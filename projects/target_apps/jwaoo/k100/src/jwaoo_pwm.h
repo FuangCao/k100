@@ -54,6 +54,15 @@ static inline uint8_t jwaoo_pwm_get_level(uint8_t pwm)
 	return jwaoo_pwm_get_device(pwm)->level;
 }
 
+static inline void jwaoo_pwm_set_complete(uint8_t pwm)
+{
+	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(pwm);
+
+	if (device->on_complete) {
+		device->on_complete(device);
+	}
+}
+
 static inline void jwaoo_pwm_timer_set(uint8_t pwm, uint32_t delay)
 {
 	jwaoo_app_timer_set(JWAOO_PWM_TIMER(pwm), delay);
