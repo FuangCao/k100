@@ -41,24 +41,28 @@ static bool jwaoo_key_check_lock_state(void)
 
 	key_end = jwaoo_keys + NELEM(jwaoo_keys);
 
-	for (key = jwaoo_keys; key < key_end; key++) {
-		if (key->lock_enable && key->value == 0) {
-			if (jwaoo_app_env.key_lock_pending) {
-				jwaoo_app_env.key_lock_pending = false;
-				jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
-				jwaoo_battery_led_release();
-
-				for (key = jwaoo_keys; key < key_end; key++) {
-					key->value = 0;
-				}
-			}
-
-			return jwaoo_app_env.key_locked;
-		}
-	}
-
 	if (jwaoo_app_env.key_lock_pending) {
-		return true;
+		for (key = jwaoo_keys; key < key_end; key++) {
+			if (key->lock_enable && key->value) {
+				return true;
+			}
+		}
+
+		jwaoo_app_env.key_lock_pending = false;
+		jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
+		jwaoo_battery_led_release();
+
+		for (key = jwaoo_keys; key < key_end; key++) {
+			key->value = 0;
+		}
+
+		return jwaoo_app_env.key_locked;
+	} else {
+		for (key = jwaoo_keys; key < key_end; key++) {
+			if (key->lock_enable && key->value == 0) {
+				return jwaoo_app_env.key_locked;
+			}
+		}
 	}
 
 	jwaoo_app_env.key_lock_pending = true;

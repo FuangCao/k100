@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Mon Sep 19 15:32:20 2016
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Mon Sep 19 15:55:40 2016
 ;VERSION 0.2
 ;FILE adc.o
 ;FILE app.o
@@ -117,7 +117,6 @@ dummyf <= USED 0
 jwaoo_app_goto_suspend_mode <= USED 0
 jwaoo_app_state_set <= USED 0
 ;FILE jwaoo_battery.o
-jwaoo_battery_led_blink <= USED 0
 ;FILE jwaoo_event.o
 ;FILE jwaoo_hw.o
 jwaoo_hw_irq_disable <= USED 0
