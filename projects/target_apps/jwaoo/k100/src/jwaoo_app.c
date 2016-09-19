@@ -289,7 +289,7 @@ static int jwaoo_set_factory_disable_handler(ke_msg_id_t const msgid, void const
 {
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_ACTIVE);
 
-	jwaoo_battery_led_release(true);
+	jwaoo_battery_led_release(3);
 
 	return KE_MSG_CONSUMED;
 }

@@ -19,10 +19,15 @@ struct jwaoo_irq_desc jwaoo_charge = {
 	.handler = jwaoo_charge_isr,
 };
 
-void jwaoo_battery_init(void)
+void jwaoo_set_battery_enable(bool enable)
 {
 	jwaoo_app_env.charge_online = CHG_ONLINE;
-	jwaoo_hw_irq_enable(CHG_DET_GPIO_IRQ, &jwaoo_charge, CHG_DET_ACTIVE_LOW);
+
+	if (enable) {
+		jwaoo_hw_irq_enable(CHG_DET_GPIO_IRQ, &jwaoo_charge, CHG_DET_ACTIVE_LOW);
+	} else {
+		jwaoo_hw_irq_disable(CHG_DET_GPIO_IRQ);
+	}
 }
 
 void jwaoo_battery_led_blink(void)
@@ -33,9 +38,9 @@ void jwaoo_battery_led_blink(void)
 	}
 }
 
-void jwaoo_battery_led_release(bool force)
+void jwaoo_battery_led_release(uint8_t level)
 {
-	if (force || jwaoo_app_env.battery_led_locked < 2) {
+	if (jwaoo_app_env.battery_led_locked <= level) {
 		jwaoo_app_env.battery_led_locked = 0;
 		jwaoo_battery_led_update_state();
 	}

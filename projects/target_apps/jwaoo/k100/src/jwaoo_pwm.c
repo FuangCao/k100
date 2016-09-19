@@ -179,7 +179,7 @@ void jwaoo_pwm_blink_square(uint8_t pwm, uint8_t min, uint8_t max, uint32_t cycl
 
 static void jwaoo_battery_led_complete(struct jwaoo_pwm_device *device)
 {
-	jwaoo_battery_led_release(false);
+	jwaoo_battery_led_release(1);
 }
 
 struct jwaoo_pwm_device jwaoo_pwms[] = {

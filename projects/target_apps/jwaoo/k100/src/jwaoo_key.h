@@ -62,7 +62,7 @@ struct jwaoo_key_device {
 
 extern struct jwaoo_key_device jwaoo_keys[];
 
-void jwaoo_key_init(void);
+void jwaoo_set_key_enable(bool enable);
 void jwaoo_key_process_active(uint8_t keycode);
 void jwaoo_key_process_factory(uint8_t keycode);
 void jwaoo_key_process_suspend(uint8_t keycode);

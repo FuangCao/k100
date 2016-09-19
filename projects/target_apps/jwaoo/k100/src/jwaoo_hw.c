@@ -114,10 +114,8 @@ void jwaoo_hw_set_device_enable(bool enable)
 
 	jwaoo_app_env.device_enabled = enable;
 
-	if (enable) {
-		jwaoo_key_init();
-		jwaoo_battery_init();
-	}
+	jwaoo_set_key_enable(enable);
+	jwaoo_set_battery_enable(enable);
 
 	jwaoo_spi_set_enable(enable);
 	jwaoo_i2c_set_enable(enable);
