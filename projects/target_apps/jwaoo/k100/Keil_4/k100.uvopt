@@ -146,24 +146,7 @@
           <Name>-U20090928 -O78 -S0 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO7 -FD0 -FC800 -FN0</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>409</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>D:\dialog\k100\sdk\ble_stack\profiles\jwaoo\jwaoo_toy.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -195,6 +178,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>jwaoo_app_env</ItemText>
         </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>jwaoo_factory_data</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>value</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>
@@ -223,7 +216,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>0</periodic>
-        <aLwin>0</aLwin>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -535,22 +528,6 @@
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>0</BreakIfRCount>
           <Filename>D:\dialog\k100\sdk\ble_stack\profiles\jwaoo\jwaoo_toy_task.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>10</Number>
-          <Type>0</Type>
-          <LineNumber>409</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>D:\dialog\k100\sdk\ble_stack\profiles\jwaoo\jwaoo_toy.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
@@ -897,22 +874,6 @@
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
-        <Bp>
-          <Number>10</Number>
-          <Type>0</Type>
-          <LineNumber>409</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>D:\dialog\k100\sdk\ble_stack\profiles\jwaoo\jwaoo_toy.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
       </Breakpoint>
       <MemoryWindow1>
         <Mm>
@@ -997,10 +958,10 @@
       <FileType>2</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>26</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>150</TopLine>
-      <CurrentLine>146</CurrentLine>
+      <TopLine>138</TopLine>
+      <CurrentLine>158</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\boot\rvds\boot_vectors.s</PathWithFileName>
       <FilenameWithoutPath>boot_vectors.s</FilenameWithoutPath>
@@ -1383,8 +1344,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>331</TopLine>
-      <CurrentLine>343</CurrentLine>
+      <TopLine>326</TopLine>
+      <CurrentLine>334</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\gpio\gpio.c</PathWithFileName>
       <FilenameWithoutPath>gpio.c</FilenameWithoutPath>
@@ -1399,8 +1360,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>158</TopLine>
-      <CurrentLine>165</CurrentLine>
+      <TopLine>159</TopLine>
+      <CurrentLine>175</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\wkupct_quadec\wkupct_quadec.c</PathWithFileName>
       <FilenameWithoutPath>wkupct_quadec.c</FilenameWithoutPath>
@@ -1527,8 +1488,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\bmi160\bmi160.c</PathWithFileName>
       <FilenameWithoutPath>bmi160.c</FilenameWithoutPath>
@@ -1543,8 +1504,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\driver\fdc1004\fdc1004.c</PathWithFileName>
       <FilenameWithoutPath>fdc1004.c</FilenameWithoutPath>
@@ -1599,7 +1560,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>286</TopLine>
+      <TopLine>287</TopLine>
       <CurrentLine>297</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\rwip\src\rwip.c</PathWithFileName>
@@ -1653,10 +1614,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>30</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>288</TopLine>
-      <CurrentLine>298</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\ble_stack\profiles\jwaoo\jwaoo_toy.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_toy.c</FilenameWithoutPath>
@@ -2605,10 +2566,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>14</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>9</TopLine>
-      <CurrentLine>24</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_spi.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_spi.c</FilenameWithoutPath>
@@ -2639,8 +2600,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>117</TopLine>
-      <CurrentLine>128</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_app.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_app.c</FilenameWithoutPath>
@@ -2685,10 +2646,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>33</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>98</TopLine>
-      <CurrentLine>101</CurrentLine>
+      <TopLine>88</TopLine>
+      <CurrentLine>118</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_hw.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_hw.c</FilenameWithoutPath>
@@ -2703,8 +2664,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_i2c.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_i2c.c</FilenameWithoutPath>
@@ -2735,8 +2696,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_moto.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_moto.c</FilenameWithoutPath>
@@ -2751,8 +2712,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>13</TopLine>
+      <CurrentLine>23</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_sensor.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_sensor.c</FilenameWithoutPath>

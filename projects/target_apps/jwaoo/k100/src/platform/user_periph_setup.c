@@ -92,6 +92,18 @@ i.e.
 #ifdef KEY4_GPIO_PORT
 	KEY_GPIO_RESERVE(4);
 #endif
+
+#ifdef POSITION1_GPIO_PIN
+	POSITION_GPIO_RESERVE(1);
+#endif
+
+#ifdef POSITION2_GPIO_PIN
+	POSITION_GPIO_RESERVE(2);
+#endif
+
+#ifdef POSITION3_GPIO_PIN
+	POSITION_GPIO_RESERVE(3);
+#endif
 }
 #endif //DEVELOPMENT_DEBUG
 
@@ -126,6 +138,18 @@ void set_pad_functions(void)        // set gpio port function mode
 
 #ifdef LDO_P3V3_GPIO_CONFIG
 	LDO_P3V3_GPIO_CONFIG;
+#endif
+
+#ifdef POSITION1_GPIO_PIN
+	POSITION_GPIO_CONFIG(1);
+#endif
+
+#ifdef POSITION2_GPIO_PIN
+	POSITION_GPIO_CONFIG(2);
+#endif
+
+#ifdef POSITION3_GPIO_PIN
+	POSITION_GPIO_CONFIG(3);
 #endif
 }
 

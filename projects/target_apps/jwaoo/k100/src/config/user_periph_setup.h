@@ -23,6 +23,8 @@
 #include "da1458x_periph_setup.h"
 #include "i2c_eeprom.h"
 
+#define JWAOO_BOARD_K101		1
+
 #define USE_JWAOO_GPIO_ISR
 #define PWM_LEVEL_MAX			100
 #define KEY_ACTIVE_LOW			0
@@ -115,6 +117,20 @@
 
 #define KEY4_GPIO_PORT			GPIO_PORT_2
 #define KEY4_GPIO_PIN			GPIO_PIN_4
+
+#define POSITION_GPIO_PORT		GPIO_PORT_2
+#define POSITION1_GPIO_PIN		GPIO_PIN_5
+#define POSITION2_GPIO_PIN		GPIO_PIN_7
+#define POSITION3_GPIO_PIN		GPIO_PIN_8
+
+#define POSITION_GPIO_READ_PORT \
+	GetWord16(GPIO_BASE + (POSITION_GPIO_PORT << 5))
+
+#define POSITION_GPIO_RESERVE(index) \
+	RESERVE_GPIO(POSITION##index, POSITION_GPIO_PORT, POSITION##index##_GPIO_PIN, PID_GPIO)
+
+#define POSITION_GPIO_CONFIG(index) \
+	GPIO_ConfigurePin(POSITION_GPIO_PORT, POSITION##index##_GPIO_PIN, INPUT_PULLDOWN, PID_GPIO, true)
 
 /****************************************************************************************/
 /* i2c eeprom configuration                                                             */
