@@ -26,7 +26,6 @@
 #define JWAOO_BOARD_K101		1
 
 #define USE_JWAOO_GPIO_ISR
-#define PWM_LEVEL_MAX			100
 #define KEY_ACTIVE_LOW			0
 #define CHG_DET_ACTIVE_LOW		1
 

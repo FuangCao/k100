@@ -64,7 +64,7 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 #if 1
 	jwaoo_pwm_blink_square_full(JWAOO_PWM_BT_LED, 1000, 0);
 #else
-	jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BT_LED, 5, 1000, 0);
+	jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BT_LED, PWM_LEVEL_MAX / 10, 1000, 0);
 #endif
 
 	if (!jwaoo_app_timer_active(JWAOO_BATT_POLL_TIMER)) {

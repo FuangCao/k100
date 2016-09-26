@@ -4,9 +4,7 @@
 #include "jwaoo_app.h"
 #include "pwm.h"
 
-#define JWAOO_PWM_LEVEL_MAX		100
-#define JWAOO_MOTO_BOOST_LEVEL	JWAOO_PWM_LEVEL_MAX
-#define JWAOO_MOTO_BOOST_TIME	5
+#define PWM_LEVEL_MAX		250
 
 #define JWAOO_PWM_TIMER(pwm) \
 	(JWAOO_PWM1_BLINK_TIMER + (pwm))
@@ -80,7 +78,7 @@ static inline void jwaoo_pwm_blink_set_level(uint8_t pwm, uint8_t level)
 
 static inline void jwaoo_pwm_blink_open(uint8_t pwm)
 {
-	jwaoo_pwm_blink_set_level(pwm, JWAOO_PWM_LEVEL_MAX);
+	jwaoo_pwm_blink_set_level(pwm, PWM_LEVEL_MAX);
 }
 
 static inline void jwaoo_pwm_blink_close(uint8_t pwm)
@@ -90,11 +88,11 @@ static inline void jwaoo_pwm_blink_close(uint8_t pwm)
 
 static inline void jwaoo_pwm_blink_sawtooth_full(uint8_t pwm, uint8_t step, uint32_t cycle, uint8_t count)
 {
-	jwaoo_pwm_blink_sawtooth(pwm, 0, JWAOO_PWM_LEVEL_MAX, step, cycle, count);
+	jwaoo_pwm_blink_sawtooth(pwm, 0, PWM_LEVEL_MAX, step, cycle, count);
 }
 
 static inline void jwaoo_pwm_blink_square_full(uint8_t pwm, uint32_t cycle, uint8_t count)
 {
-	jwaoo_pwm_blink_square(pwm, 0, JWAOO_PWM_LEVEL_MAX, cycle, count);
+	jwaoo_pwm_blink_square(pwm, 0, PWM_LEVEL_MAX, cycle, count);
 }
 

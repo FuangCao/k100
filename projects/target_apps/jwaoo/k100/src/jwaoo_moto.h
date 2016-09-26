@@ -2,9 +2,18 @@
 
 #include "jwaoo_pwm.h"
 
+#define MOTO_BOOST_LEVEL		PWM_LEVEL_MAX
+#define MOTO_BOOST_TIME			50
+
+#if 0
 #define MOTO_LEVEL_MIN			32
 #define MOTO_SPEED_MAX			18
 #define MOTO_LEVEL_STEP			((PWM_LEVEL_MAX - MOTO_LEVEL_MIN) / (MOTO_SPEED_MAX - 1))
+#else
+#define MOTO_LEVEL_MIN			PWM_LEVEL_MAX
+#define MOTO_SPEED_MAX			1
+#define MOTO_LEVEL_STEP			PWM_LEVEL_MAX
+#endif
 
 enum
 {

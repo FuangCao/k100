@@ -1,4 +1,5 @@
 #include "jwaoo_pwm.h"
+#include "jwaoo_moto.h"
 #include "jwaoo_battery.h"
 
 static void jwaoo_pwm_set_enable(uint8_t pwm, bool enable)
@@ -52,8 +53,8 @@ static void jwaoo_moto_device_set_level_handler(struct jwaoo_pwm_device *device,
 
 	if (level > 0 && device->level == 0) {
 		jwaoo_app_env.moto_boost_busy = true;
-		jwaoo_pwm_device_set_level_handler(device, pwm, JWAOO_MOTO_BOOST_LEVEL);
-		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_BOOST_TIME);
+		jwaoo_pwm_device_set_level_handler(device, pwm, MOTO_BOOST_LEVEL);
+		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, MOTO_BOOST_TIME);
 	} else {
 		jwaoo_pwm_device_set_level_handler(device, pwm, level);
 	}
