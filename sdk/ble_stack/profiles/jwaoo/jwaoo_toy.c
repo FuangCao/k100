@@ -416,16 +416,25 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		}
 		break;
 
+	// ================================================================================
+
 	case JWAOO_TOY_CMD_BATT_EVENT_ENABLE:
 		jwaoo_app_env.battery_report = (length > 1 && command->enable.value);
 		success = true;
 		break;
 
-	// ================================================================================
+	case JWAOO_TOY_CMD_BATT_INFO: {
+		struct jwaoo_toy_response response = {
+			.command = command->type,
+			.type = JWAOO_TOY_RSP_DATA,
+			.battery.state = jwaoo_app_env.battery_state,
+			.battery.level = jwaoo_app_env.battery_level,
+			.battery.voltage = jwaoo_app_env.battery_voltage,
+		};
 
-	case JWAOO_TOY_CMD_BATT_INFO:
-		jwaoo_app_env.battery_report = (length > 1 && command->enable.value);
-		break;
+		jwaoo_toy_send_command(&response, 6);
+		return;
+	}
 
 	case JWAOO_TOY_CMD_FLASH_ID:
 		jwaoo_toy_send_response_u32(command->type, spi_flash_jedec_id);
@@ -574,6 +583,23 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		}
 
 		success = jwaoo_moto_set_mode(command->moto.mode, command->moto.level);
+		break;
+
+	case JWAOO_TOY_CMD_MOTO_GET_MODE: {
+		struct jwaoo_toy_response response = {
+			.command = command->type,
+			.type = JWAOO_TOY_RSP_DATA,
+			.moto.mode = jwaoo_app_env.moto_mode,
+			.moto.level = jwaoo_moto_get_speed(),
+		};
+
+		jwaoo_toy_send_command(&response, 4);
+		return;
+	}
+
+	case JWAOO_TOY_CMD_MOTO_EVENT_ENABLE:
+		jwaoo_app_env.moto_report = (length > 1 && command->enable.value);
+		success = true;
 		break;
 
 	// ================================================================================

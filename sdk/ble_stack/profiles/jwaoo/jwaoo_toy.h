@@ -134,6 +134,8 @@ enum
 	JWAOO_TOY_CMD_BATT_EVENT_ENABLE,
 	JWAOO_TOY_CMD_SENSOR_ENABLE = 70,
 	JWAOO_TOY_CMD_MOTO_SET_MODE = 80,
+	JWAOO_TOY_CMD_MOTO_GET_MODE,
+	JWAOO_TOY_CMD_MOTO_EVENT_ENABLE,
 	JWAOO_TOY_CMD_KEY_CLICK_ENABLE = 90,
 	JWAOO_TOY_CMD_KEY_LONG_CLICK_ENABLE,
 	JWAOO_TOY_CMD_KEY_MULTI_CLICK_ENABLE,
@@ -150,6 +152,7 @@ enum
 	JWAOO_TOY_EVT_KEY_CLICK,
 	JWAOO_TOY_EVT_KEY_LONG_CLICK,
 	JWAOO_TOY_EVT_UPGRADE_COMPLETE,
+	JWAOO_TOY_EVT_MOTO_STATE_CHANGED,
 };
 
 enum
@@ -259,6 +262,17 @@ struct jwaoo_toy_response
 			uint16_t valid;
 			uint16_t result;
 		} test_result;
+
+		struct {
+			uint8_t state;
+			uint8_t level;
+			uint16_t voltage;
+		} battery;
+
+		struct {
+			uint8_t mode;
+			uint8_t level;
+		} moto;
 	};
 };
 #pragma pack()
