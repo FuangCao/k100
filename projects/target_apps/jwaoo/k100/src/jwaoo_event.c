@@ -19,7 +19,9 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 		break;
 
 	case JWAOO_KEY_O:
-		jwaoo_moto_mode_add();
+		if (!jwaoo_app_env.connected) {
+			jwaoo_moto_mode_add();
+		}
 		break;
 	}
 }
