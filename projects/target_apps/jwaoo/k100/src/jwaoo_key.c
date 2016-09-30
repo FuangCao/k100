@@ -51,6 +51,8 @@ static bool jwaoo_key_check_lock_state(void)
 				for (key = jwaoo_keys; key < key_end; key++) {
 					key->value = 0;
 				}
+
+				return true;
 			}
 
 			return jwaoo_app_env.key_locked;
