@@ -4,6 +4,27 @@
 #include "jwaoo_battery.h"
 #include "jwaoo_toy_task.h"
 
+static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
+	{ 3120, 2800 },
+	{ 3230, 2900 },
+	{ 3340, 3000 },
+	{ 3450, 3100 },
+	{ 3560, 3200 },
+	{ 3680, 3300 },
+	{ 3790, 3400 },
+	{ 3900, 3500 },
+	{ 4020, 3600 },
+	{ 4130, 3700 },
+	{ 4240, 3800 },
+	{ 4360, 3900 },
+	{ 4460, 4000 },
+	{ 4580, 4100 },
+	{ 4680, 4200 },
+	{ 4790, 4300 },
+	{ 4910, 4400 },
+	{ 5030, 4500 },
+};
+
 static void jwaoo_charge_isr(struct jwaoo_irq_desc *desc, bool status)
 {
 	jwaoo_app_env.charge_online = status;
@@ -82,6 +103,37 @@ void jwaoo_battery_set_state(uint8_t state)
 	}
 }
 
+uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, uint16_t voltage)
+{
+	const struct jwaoo_battery_voltage_map *map, *map_end;
+
+	for (map = table, map_end = map + size; map < map_end; map++) {
+		if (voltage > map->raw_value) {
+			continue;
+		}
+
+		if (map > table) {
+			uint16_t raw_min, raw_range;
+			uint16_t real_min, real_range;
+			const struct jwaoo_battery_voltage_map *prev = map - 1;
+
+			raw_min = prev->raw_value;
+			raw_range = map->raw_value - raw_min;
+
+			real_min = prev->real_value;
+			real_range = map->real_value - real_min;
+
+			return ((uint32_t) (voltage - raw_min)) * real_range / raw_range + real_min;
+		} else {
+			return ((uint32_t) voltage) * map->real_value / map->raw_value;
+		}
+	}
+
+	map = map_end - 1;
+
+	return ((uint32_t) voltage) * map->real_value / map->raw_value;
+}
+
 void jwaoo_battery_poll(void)
 {
 	int i;
@@ -105,7 +157,7 @@ void jwaoo_battery_poll(void)
 
 	println("raw voltage = %d", voltage);
 
-	voltage = voltage * 1126 / 1000;
+	voltage = jwaoo_battery_voltage_calibration(jwaoo_battery_voltage_table, NELEM(jwaoo_battery_voltage_table), voltage);
 
 	if (jwaoo_app_env.charge_online && voltage < 4226 && jwaoo_app_env.battery_state != JWAOO_TOY_BATTERY_FULL) {
 		uint8_t percent;
