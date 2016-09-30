@@ -60,12 +60,7 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 	jwaoo_app_add_ad_struct(cmd, &mnf_data, sizeof(struct mnf_specific_data_ad_structure));
 
 	app_easy_gap_undirected_advertise_start();
-
-#if 1
 	jwaoo_pwm_blink_square_full(JWAOO_PWM_BT_LED, 1000, 0);
-#else
-	jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BT_LED, 5, 1000, 0);
-#endif
 
 	if (!jwaoo_app_timer_active(JWAOO_BATT_POLL_TIMER)) {
 		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 1);
@@ -113,7 +108,7 @@ static int jwaoo_key_lock_timer_handler(ke_msg_id_t const msgid, void const *par
 
 static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	if (jwaoo_app_env.connected || jwaoo_moto_get_level()) {
+	if (jwaoo_app_env.connected || jwaoo_moto_get_speed()) {
 		jwaoo_app_suspend_counter_reset();
 	} else {
 		jwaoo_app_timer_set(msgid, 100);

@@ -87,7 +87,7 @@ void jwaoo_battery_led_update_state(void)
 		break;
 
 	case JWAOO_TOY_BATTERY_CHARGING:
-		jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BATT_LED, 10, 2000, 0);
+		jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BATT_LED, JWAOO_PWM_LEVEL_MAX / 10, 2000, 0);
 		break;
 
 	default:
@@ -103,7 +103,7 @@ void jwaoo_battery_set_state(uint8_t state)
 	}
 }
 
-uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, uint16_t voltage)
+uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, uint32_t voltage)
 {
 	const struct jwaoo_battery_voltage_map *map, *map_end;
 
@@ -123,15 +123,15 @@ uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_ma
 			real_min = prev->real_value;
 			real_range = map->real_value - real_min;
 
-			return ((uint32_t) (voltage - raw_min)) * real_range / raw_range + real_min;
+			return (voltage - raw_min) * real_range / raw_range + real_min;
 		} else {
-			return ((uint32_t) voltage) * map->real_value / map->raw_value;
+			return voltage * map->real_value / map->raw_value;
 		}
 	}
 
 	map = map_end - 1;
 
-	return ((uint32_t) voltage) * map->real_value / map->raw_value;
+	return voltage * map->real_value / map->raw_value;
 }
 
 void jwaoo_battery_poll(void)

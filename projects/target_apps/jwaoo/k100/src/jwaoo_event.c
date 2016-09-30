@@ -13,7 +13,11 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 		break;
 
 	case JWAOO_KEY_DOWN:
-		if (jwaoo_moto_speed_sub() == 0 && key->repeat > 0) {
+		if (jwaoo_moto_speed_sub() > 0) {
+			if (key->repeat > 1) {
+				key->repeat = 1;
+			}
+		} else if (key->repeat > 20) {
 			jwaoo_app_goto_deep_sleep_mode();
 		}
 		break;

@@ -1,36 +1,13 @@
 #include "jwaoo_moto.h"
 #include "co_math.h"
 
-uint8_t jwaoo_moto_speed_to_level(uint8_t speed)
+static uint16_t jwaoo_moto_speed_table[] = {
+	0, 20, 25, 35, 50, 70, 95, 125, 160, 200, 245, 295, 350, 410, 475, 545, 620, 700, JWAOO_PWM_LEVEL_MAX
+};
+
+uint16_t jwaoo_moto_speed_to_level(uint16_t speed)
 {
-	if (speed < 1) {
-		return 0;
-	}
-
-	return (speed - 1) * MOTO_LEVEL_STEP + MOTO_LEVEL_MIN;
-}
-
-uint8_t jwaoo_moto_level_to_speed(uint8_t level)
-{
-	if (level < MOTO_LEVEL_MIN) {
-		return 0;
-	}
-
-	return (level - MOTO_LEVEL_MIN) / MOTO_LEVEL_STEP + 1;
-}
-
-void jwaoo_moto_set_speed(uint8_t speed)
-{
-	uint8_t level = jwaoo_moto_speed_to_level(speed);
-
-	jwaoo_pwm_blink_set_level(JWAOO_PWM_MOTO, level);
-}
-
-uint8_t jwaoo_moto_get_speed(void)
-{
-	uint8_t level = jwaoo_pwm_get_level(JWAOO_PWM_MOTO);
-
-	return jwaoo_moto_level_to_speed(level);
+	return jwaoo_moto_speed_table[speed];
 }
 
 bool jwaoo_moto_set_mode(uint8_t mode, uint8_t speed)
@@ -84,7 +61,7 @@ uint8_t jwaoo_moto_speed_add(void)
 {
 	uint8_t speed = jwaoo_moto_get_speed();
 
-	if (speed < MOTO_SPEED_MAX) {
+	if (speed < JWAOO_MOTO_SPEED_MAX) {
 		speed++;
 	}
 
@@ -121,7 +98,7 @@ uint8_t jwaoo_moto_mode_add(void)
 void jwaoo_moto_rand_timer_fire(void)
 {
 	if (jwaoo_app_env.moto_mode == JWAOO_MOTO_MODE_RAND) {
-		jwaoo_moto_set_speed(rand() % MOTO_SPEED_MAX + 1);
-		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, rand() % 200 + 1);
+		jwaoo_moto_set_speed(rand() % JWAOO_MOTO_SPEED_MAX + 1);
+		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, 10);
 	}
 }
