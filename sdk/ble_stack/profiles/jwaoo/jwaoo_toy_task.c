@@ -40,6 +40,7 @@
 #include "jwaoo_spi.h"
 #include "jwaoo_app.h"
 #include "jwaoo_key.h"
+#include "jwaoo_moto.h"
 #include "jwaoo_sensor.h"
 
 static uint16_t jwaoo_toy_svc = JWAOO_TOY_UUID_SVC;
@@ -280,6 +281,22 @@ static int jwaoo_toy_key_report_long_click_handler(ke_msg_id_t const msgid,
 	return (KE_MSG_CONSUMED);
 }
 
+static int jwaoo_toy_moto_report_state_handler(ke_msg_id_t const msgid,
+										 struct jwaoo_toy_key_message const *param,
+										 ke_task_id_t const dest_id,
+										 ke_task_id_t const src_id)
+{
+	struct jwaoo_toy_command command = {
+		.type = JWAOO_TOY_EVT_MOTO_STATE_CHANGED,
+		.moto.mode = jwaoo_app_env.moto_mode,
+		.moto.level = jwaoo_moto_get_speed(),
+	};
+
+	jwaoo_toy_send_event(&command, 3);
+
+	return (KE_MSG_CONSUMED);
+}
+
 /**
  ****************************************************************************************
  * @brief Handles reception of the @ref JWAOO_TOY_ENABLE_REQ message.
@@ -447,7 +464,8 @@ const struct ke_msg_handler jwaoo_toy_connected[] =
 	{ JWAOO_TOY_KEY_REPORT_STATE,		(ke_msg_func_t) jwaoo_toy_key_report_state_handler },
 	{ JWAOO_TOY_KEY_REPORT_CLICK,		(ke_msg_func_t) jwaoo_toy_key_report_click_handler },
 	{ JWAOO_TOY_KEY_REPORT_LONG_CLICK,	(ke_msg_func_t) jwaoo_toy_key_report_long_click_handler },
-    { GAPC_DISCONNECT_IND,				(ke_msg_func_t) gapc_disconnect_ind_handler },
+	{ JWAOO_TOY_MOTO_REPORT_STATE,		(ke_msg_func_t) jwaoo_toy_moto_report_state_handler },
+	{ GAPC_DISCONNECT_IND,				(ke_msg_func_t) gapc_disconnect_ind_handler },
     { GATTC_CMP_EVT,					(ke_msg_func_t) gattc_cmp_evt_handler },
     { GATTC_WRITE_CMD_IND,				(ke_msg_func_t) gattc_write_cmd_ind_handler },
 };

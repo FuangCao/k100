@@ -72,6 +72,7 @@ struct jwaoo_app_data {
 	uint16_t suspend_counter;
 
 	uint8_t moto_mode;
+	bool moto_report;
 	bool moto_boost_busy;
 
 	bool charge_online;

@@ -116,14 +116,12 @@ void jwaoo_key_process_active(uint8_t keycode)
 			if (key->value == 0 && key->last_value != JWAOO_KEY_VALUE_LONG) {
 				jwaoo_on_client_key_clicked(key, 1);
 			}
-		} else if (jwaoo_app_env.key_click_enable) {
-			if (key->value > 0) {
-				jwaoo_on_client_key_clicked(key, 1);
-			}
-		} else {
-			jwaoo_on_client_key_state_changed(key);
+		} else if (jwaoo_app_env.key_click_enable && key->value > 0) {
+			jwaoo_on_client_key_clicked(key, 1);
 		}
 	}
+
+	jwaoo_on_client_key_state_changed(key);
 }
 
 void jwaoo_key_process_factory(uint8_t keycode)

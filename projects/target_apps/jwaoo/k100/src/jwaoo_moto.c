@@ -73,6 +73,10 @@ bool jwaoo_moto_set_mode(uint8_t mode, uint8_t speed)
 
 	jwaoo_app_env.moto_mode = mode;
 
+	if (jwaoo_app_env.moto_report) {
+		SEND_EMPTY_MESSAGE(JWAOO_TOY_MOTO_REPORT_STATE, TASK_JWAOO_TOY);
+	}
+
 	return true;
 }
 
