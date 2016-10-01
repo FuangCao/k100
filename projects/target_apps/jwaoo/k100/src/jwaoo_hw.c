@@ -79,6 +79,7 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 {
 	if (enable) {
 		jwaoo_battery_poll_stop();
+		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 
 		arch_ble_ext_wakeup_on();
 
@@ -99,6 +100,9 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 
 		jwaoo_hw_set_device_enable(true);
 		arch_ble_force_wakeup();
+
+		jwaoo_app_env.battery_led_locked = 0;
+		jwaoo_battery_led_update_state();
 		jwaoo_battery_poll_start();
 	}
 }
