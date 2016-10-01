@@ -3,7 +3,6 @@
 #include "jwaoo_pwm.h"
 #include "jwaoo_spi.h"
 #include "jwaoo_moto.h"
-#include "jwaoo_battery.h"
 
 struct mnf_specific_data_ad_structure
 {
@@ -61,10 +60,7 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 
 	app_easy_gap_undirected_advertise_start();
 	jwaoo_pwm_blink_square_full(JWAOO_PWM_BT_LED, 1000, 0);
-
-	if (!jwaoo_app_timer_active(JWAOO_BATT_POLL_TIMER)) {
-		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 1);
-	}
+	jwaoo_battery_poll_start();
 
 	jwaoo_app_suspend_counter_start();
 
@@ -411,15 +407,6 @@ void jwaoo_app_timer_clear(ke_msg_id_t const timer_id)
 	if (jwaoo_app_env.initialized) {
 		ke_timer_clear(timer_id, TASK_JWAOO_APP);
 	}
-}
-
-bool jwaoo_app_timer_active(ke_msg_id_t const timer_id)
-{
-	if (jwaoo_app_env.initialized) {
-		return ke_timer_active(timer_id, TASK_JWAOO_APP);
-	}
-
-	return false;
 }
 
 void jwaoo_app_timer_set(ke_msg_id_t const timer_id, uint32_t delay)

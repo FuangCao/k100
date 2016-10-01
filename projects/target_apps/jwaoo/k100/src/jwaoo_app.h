@@ -111,7 +111,6 @@ extern struct jwaoo_app_data jwaoo_app_env;
 
 ke_state_t jwaoo_app_state_get(void);
 void jwaoo_app_state_set(ke_state_t const state_id);
-bool jwaoo_app_timer_active(ke_msg_id_t const timer_id);
 void jwaoo_app_timer_clear(ke_msg_id_t const timer_id);
 void jwaoo_app_timer_set(ke_msg_id_t const timer_id, uint32_t delay);
 void jwaoo_app_msg_send(void const *param);
@@ -186,4 +185,14 @@ static inline bool jwaoo_app_is_deep_sleep(void)
 static inline bool jwaoo_app_not_deep_sleep(void)
 {
 	return jwaoo_app_state_get() != JWAOO_APP_STATE_DEEP_SLEEP;
+}
+
+static inline void jwaoo_battery_poll_start(void)
+{
+	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 10);
+}
+
+static inline void jwaoo_battery_poll_stop(void)
+{
+	jwaoo_app_timer_clear(JWAOO_BATT_POLL_TIMER);
 }

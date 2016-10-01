@@ -2,6 +2,7 @@
 
 #include "jwaoo_hw.h"
 
+#define JWAOO_BATT_POLL_DELAY		100
 #define JWAOO_BATT_LEVEL_LOW		8
 #define JWAOO_BATT_VOLTAGE_MIN		3000
 #define JWAOO_BATT_VOLTAGE_MAX		4200

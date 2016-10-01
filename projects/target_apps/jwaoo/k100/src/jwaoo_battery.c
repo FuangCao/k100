@@ -28,10 +28,7 @@ static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
 static void jwaoo_charge_isr(struct jwaoo_irq_desc *desc, bool status)
 {
 	jwaoo_app_env.charge_online = status;
-
-	if (!jwaoo_app_timer_active(JWAOO_BATT_POLL_TIMER)) {
-		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 1);
-	}
+	jwaoo_battery_poll_start();
 }
 
 struct jwaoo_irq_desc jwaoo_charge = {
@@ -141,7 +138,9 @@ void jwaoo_battery_poll(void)
 	uint8_t level;
 	uint32_t voltage;
 
-	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 100);
+	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, JWAOO_BATT_POLL_DELAY);
+
+	jwaoo_app_env.charge_online = CHG_ONLINE;
 
 	adc_calibrate();
 
