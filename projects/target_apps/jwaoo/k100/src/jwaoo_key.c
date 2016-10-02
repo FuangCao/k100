@@ -45,13 +45,9 @@ static bool jwaoo_key_check_lock_state(void)
 		if (key->lock_enable && key->value == 0) {
 			if (jwaoo_app_env.key_lock_pending) {
 				jwaoo_app_env.key_lock_pending = false;
+				jwaoo_app_env.key_release_pending = true;
 				jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
 				jwaoo_battery_led_release(2);
-
-				for (key = jwaoo_keys; key < key_end; key++) {
-					key->value = 0;
-				}
-
 				return true;
 			}
 
@@ -87,12 +83,11 @@ void jwaoo_key_process_active(uint8_t keycode)
 	struct jwaoo_key_device *key = jwaoo_keys + keycode;
 
 	jwaoo_key_timer_clear(keycode);
+	jwaoo_app_suspend_counter_reset();
 
 	if (jwaoo_key_check_lock_state()) {
 		return;
 	}
-
-	jwaoo_app_update_suspend_timer();
 
 	if (key->value > 0) {
 		key->count++;
@@ -133,8 +128,8 @@ void jwaoo_key_process_factory(uint8_t keycode)
 
 void jwaoo_key_process_suspend(uint8_t keycode)
 {
-	if (keycode == JWAOO_KEY_UP && jwaoo_keys[keycode].value) {
-		jwaoo_keys[keycode].value = 0;
+	if (jwaoo_keys[JWAOO_KEY_UP].value) {
+		jwaoo_app_env.key_release_pending = true;
 		jwaoo_app_goto_active_mode();
 	}
 }
@@ -144,9 +139,11 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 	uint8_t *param;
 	struct jwaoo_key_device *key = (struct jwaoo_key_device *) desc;
 
-	jwaoo_app_suspend_counter_reset();
+	if (jwaoo_app_env.key_release_pending) {
+		if (jwaoo_key_get_press_count() == 0) {
+			jwaoo_app_env.key_release_pending = false;
+		}
 
-	if (status == key->value) {
 		return;
 	}
 
@@ -161,14 +158,24 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 	jwaoo_app_msg_send(param);
 }
 
-void jwaoo_key_reset(void)
+uint8_t jwaoo_key_get_press_count(void)
 {
-	for (int i = 0; i < NELEM(jwaoo_keys); i++) {
-		jwaoo_keys[i].value = 0;
+	uint8_t count = 0;
+	struct jwaoo_key_device *key, *key_end;
+
+	for (key = jwaoo_keys, key_end = key + NELEM(jwaoo_keys); key < key_end; key++) {
+		struct jwaoo_irq_desc *desc = &key->irq_desc;
+
+		key->value = KEY_GET_STATUS(desc->port, desc->pin);
+		if (key->value) {
+			count++;
+		}
 	}
+
+	return count;
 }
 
-void jwaoo_set_key_enable(bool enable)
+void jwaoo_key_set_enable(bool enable)
 {
 	jwaoo_app_env.key_long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
 	jwaoo_app_env.key_multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
@@ -183,19 +190,17 @@ void jwaoo_set_key_enable(bool enable)
 			struct jwaoo_key_device *key = jwaoo_keys + i;
 			struct jwaoo_irq_desc *desc = &key->irq_desc;
 
-			key->code = i;
-			key->value = 0;
-			desc->handler = jwaoo_key_isr;
-
 			KEY_GPIO_CONFIG(desc->port, desc->pin);
+
+			key->code = i;
+			key->value = KEY_GET_STATUS(desc->port, desc->pin);
+
+			desc->handler = jwaoo_key_isr;
 			jwaoo_hw_irq_enable((IRQn_Type) (GPIO0_IRQn + i), desc, KEY_ACTIVE_LOW);
 		}
 	} else {
 		for (int i = 0; i < NELEM(jwaoo_keys); i++) {
-			struct jwaoo_key_device *key = jwaoo_keys + i;
-
 			jwaoo_hw_irq_disable((IRQn_Type) (GPIO0_IRQn + i));
-			key->value = 0;
 		}
 	}
 }

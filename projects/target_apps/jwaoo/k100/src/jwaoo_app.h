@@ -18,7 +18,6 @@
 enum {
 	JWAOO_SET_ACTIVE = KE_FIRST_MSG(TASK_JWAOO_APP),
 	JWAOO_SET_SUSPEND,
-	JWAOO_SET_DEEP_SLEEP,
 	JWAOO_SET_UPGRADE_ENABLE,
 	JWAOO_SET_UPGRADE_DISABLE,
 	JWAOO_SET_FACTORY_ENABLE,
@@ -101,6 +100,7 @@ struct jwaoo_app_data {
 
 	bool key_locked;
 	bool key_lock_pending;
+	bool key_release_pending;
 	bool key_click_enable;
 	bool key_multi_click_enable;
 	bool key_long_click_enable;
@@ -121,7 +121,6 @@ void jwaoo_app_adv_start(void);
 void jwaoo_app_set_connect_state(bool connected);
 void jwaoo_app_goto_active_mode(void);
 void jwaoo_app_goto_suspend_mode(void);
-void jwaoo_app_goto_deep_sleep_mode(void);
 void jwaoo_app_set_upgrade_enable(bool enable);
 void jwaoo_app_set_factory_enable(bool enable);
 
@@ -130,7 +129,6 @@ void jwaoo_app_suspend_counter_start(void);
 
 void jwaoo_app_before_sleep(void);
 void jwaoo_app_resume_from_sleep(void);
-void jwaoo_app_update_suspend_timer(void);
 
 
 static inline void *jwaoo_app_msg_alloc(ke_msg_id_t const id, uint16_t const param_len)

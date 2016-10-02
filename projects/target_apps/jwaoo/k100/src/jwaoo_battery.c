@@ -37,7 +37,7 @@ struct jwaoo_irq_desc jwaoo_charge = {
 	.handler = jwaoo_charge_isr,
 };
 
-void jwaoo_set_battery_enable(bool enable)
+void jwaoo_battery_set_enable(bool enable)
 {
 	jwaoo_app_env.charge_online = CHG_ONLINE;
 

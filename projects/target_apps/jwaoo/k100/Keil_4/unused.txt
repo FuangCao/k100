@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Sat Oct 01 17:45:50 2016
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Sun Oct 02 20:47:18 2016
 ;VERSION 0.2
 ;FILE adc.o
 ;FILE app.o
@@ -116,7 +116,6 @@ i2c_wait_until_eeprom_ready <= USED 0
 ;FILE jump_table.o
 dummyf <= USED 0
 ;FILE jwaoo_app.o
-jwaoo_app_goto_suspend_mode <= USED 0
 jwaoo_app_state_set <= USED 0
 ;FILE jwaoo_battery.o
 ;FILE jwaoo_event.o
@@ -126,7 +125,6 @@ jwaoo_i2c_update_u16 <= USED 0
 jwaoo_i2c_update_u32 <= USED 0
 jwaoo_i2c_update_u8 <= USED 0
 ;FILE jwaoo_key.o
-jwaoo_key_reset <= USED 0
 ;FILE jwaoo_moto.o
 ;FILE jwaoo_pwm.o
 jwaoo_pwm_set_level <= USED 0

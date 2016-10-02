@@ -148,6 +148,20 @@ static inline void app_sleep_entry_proc(sleep_mode_t sleep_mode);
 extern bool fine_hit;
 #endif
 
+static void arch_goto_wfi(void)
+{
+#if USE_WDOG
+	wdg_freeze();
+#endif
+
+	WFI();
+
+#if USE_WDOG
+	wdg_reload(WATCHDOG_DEFAULT_PERIOD);
+	wdg_resume();
+#endif
+}
+
 /**
  ****************************************************************************************
  * @brief BLE main function.
@@ -198,7 +212,7 @@ int main_func(void)
             	arch_goto_sleep(sleep_mode);
 
             	//wait for an interrupt to resume operation
-                WFI();
+                arch_goto_wfi();
 
                 //resume operation
                 arch_resume_from_sleep();
@@ -208,7 +222,7 @@ int main_func(void)
             	if (((!BLE_APP_PRESENT) && check_gtl_state()) ||
             		(BLE_APP_PRESENT))
             		//wait for an interrupt to resume operation
-                    WFI();    
+                    arch_goto_wfi();
             }
             // restore interrupts
             GLOBAL_INT_START();

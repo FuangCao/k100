@@ -18,7 +18,7 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 				key->repeat = 1;
 			}
 		} else if (key->repeat > 20) {
-			jwaoo_app_goto_deep_sleep_mode();
+			jwaoo_app_goto_suspend_mode();
 		}
 		break;
 

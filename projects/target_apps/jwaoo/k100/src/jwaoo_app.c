@@ -67,9 +67,22 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 	return KE_MSG_CONSUMED;
 }
 
-static int jwaoo_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+static int jwaoo_active_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	jwaoo_battery_poll();
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_suspend_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	if (jwaoo_app_env.charge_online || jwaoo_key_get_press_count()) {
+		jwaoo_battery_poll();
+	} else {
+		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
+		jwaoo_hw_set_suspend(true);
+		jwaoo_hw_set_deep_sleep(true);
+	}
 
 	return KE_MSG_CONSUMED;
 }
@@ -83,7 +96,7 @@ static int jwaoo_reboot_handler(ke_msg_id_t const msgid, void const *param, ke_t
 
 static int jwaoo_shutdown_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	jwaoo_app_goto_deep_sleep_mode();
+	jwaoo_app_goto_suspend_mode();
 
 	return KE_MSG_CONSUMED;
 }
@@ -106,13 +119,15 @@ static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *para
 {
 	if (jwaoo_app_env.connected || jwaoo_moto_get_speed()) {
 		jwaoo_app_suspend_counter_reset();
+	} else if (jwaoo_app_env.key_locked) {
+		jwaoo_app_goto_suspend_mode();
 	} else {
 		jwaoo_app_timer_set(msgid, 100);
 
 		if (jwaoo_app_env.suspend_counter > 0) {
 			jwaoo_app_env.suspend_counter--;
 		} else {
-			jwaoo_app_goto_deep_sleep_mode();
+			jwaoo_app_goto_suspend_mode();
 		}
 	}
 
@@ -173,14 +188,6 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 		jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
 		break;
 
-	case JWAOO_BATT_POLL_TIMER:
-		if (jwaoo_app_env.charge_online) {
-			jwaoo_battery_poll_handler(msgid, param, dest_id, src_id);
-		} else {
-			jwaoo_app_goto_deep_sleep_mode();
-		}
-		break;
-
 	case JWAOO_SUSPEND_TIMER:
 		jwaoo_app_suspend_counter_reset();
 		break;
@@ -200,35 +207,11 @@ static int jwaoo_active_to_suspend_handler(ke_msg_id_t const msgid, void const *
 	return KE_MSG_CONSUMED;
 }
 
-static int jwaoo_active_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
-{
-	if (jwaoo_app_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
-		jwaoo_hw_set_suspend(true);
-	} else {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
-		jwaoo_hw_set_suspend(true);
-		jwaoo_hw_set_deep_sleep(true);
-	}
-
-	return KE_MSG_CONSUMED;
-}
-
 static int jwaoo_suspend_to_active_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_ACTIVE);
 
 	jwaoo_hw_set_suspend(false);
-
-	return KE_MSG_CONSUMED;
-}
-
-static int jwaoo_suspend_to_deep_sleep_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
-{
-	if (!jwaoo_app_env.charge_online) {
-		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
-		jwaoo_hw_set_deep_sleep(true);
-	}
 
 	return KE_MSG_CONSUMED;
 }
@@ -262,6 +245,8 @@ static int jwaoo_set_upgrade_enable_handler(ke_msg_id_t const msgid, void const 
 static int jwaoo_set_upgrade_disable_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_ACTIVE);
+
+	jwaoo_battery_poll_start();
 
 	return KE_MSG_CONSUMED;
 }
@@ -309,7 +294,6 @@ static int jwaoo_factory_process_key_handler(ke_msg_id_t const msgid, void const
 static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_SUSPEND, 						(ke_msg_func_t) jwaoo_active_to_suspend_handler },
-	{ JWAOO_SET_DEEP_SLEEP, 					(ke_msg_func_t) jwaoo_active_to_deep_sleep_handler },
 	{ JWAOO_SET_UPGRADE_ENABLE, 				(ke_msg_func_t) jwaoo_set_upgrade_enable_handler },
 	{ JWAOO_SET_FACTORY_ENABLE, 				(ke_msg_func_t) jwaoo_set_factory_enable_handler },
 
@@ -322,7 +306,7 @@ static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 
 	{ JWAOO_SUSPEND_TIMER,						(ke_msg_func_t) jwaoo_suspend_timer_handler },
 	{ JWAOO_KEY_LOCK_TIMER,						(ke_msg_func_t) jwaoo_key_lock_timer_handler },
-	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_battery_poll_handler },
+	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_active_battery_poll_handler },
 
 	{ JWAOO_PWM1_BLINK_TIMER,					(ke_msg_func_t) jwaoo_pwm_blink_handler },
 	{ JWAOO_PWM2_BLINK_TIMER,					(ke_msg_func_t) jwaoo_pwm_blink_handler },
@@ -354,7 +338,7 @@ static const struct ke_msg_handler jwaoo_app_factory_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_FACTORY_DISABLE,				(ke_msg_func_t) jwaoo_set_factory_disable_handler },
 	{ JWAOO_ADV_START,							(ke_msg_func_t) jwaoo_adv_start_handler },
-	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_battery_poll_handler },
+	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_active_battery_poll_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_factory_process_key_handler },
 };
@@ -362,7 +346,7 @@ static const struct ke_msg_handler jwaoo_app_factory_handlers[] = {
 static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
-	{ JWAOO_SET_DEEP_SLEEP,						(ke_msg_func_t) jwaoo_suspend_to_deep_sleep_handler },
+	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_suspend_battery_poll_handler },
 	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_suspend_process_key_handler },
 };
@@ -456,11 +440,6 @@ void jwaoo_app_goto_suspend_mode(void)
 	jwaoo_app_set_mode(JWAOO_SET_SUSPEND);
 }
 
-void jwaoo_app_goto_deep_sleep_mode(void)
-{
-	jwaoo_app_set_mode(JWAOO_SET_DEEP_SLEEP);
-}
-
 void jwaoo_app_set_upgrade_enable(bool enable)
 {
 	if (enable) {
@@ -518,23 +497,45 @@ void jwaoo_app_before_sleep(void)
 	wkupct_enable_irq(pin_mask, pol_mask, 1, 60);
 }
 
+static bool jwaoo_app_need_wakeup(void)
+{
+	uint16_t count = 0;
+
+	while (WAKEUP_KEY1_ACTIVE) {
+		if (jwaoo_app_env.key_locked && WAKEUP_KEY2_ACTIVE == 0) {
+			count = 0;
+		} else if (count < 60000) {
+			count++;
+		} else {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void jwaoo_app_resume_from_sleep(void)
 {
-	wkupct_disable_irq();
+#if USE_WDOG
+	wdg_freeze();
+#endif
 
+	jwaoo_app_env.key_release_pending = true;
+
+	wkupct_disable_irq();
 	jwaoo_hw_set_deep_sleep(false);
 
-	jwaoo_app_env.charge_online = CHG_ONLINE;
-
-	if (WAKEUP_KEY_ACTIVE) {
+	if (jwaoo_app_need_wakeup()) {
+		jwaoo_app_env.key_locked = false;
 		jwaoo_app_goto_active_mode();
 	} else if (jwaoo_app_env.charge_online) {
 		jwaoo_app_goto_suspend_mode();
 	} else {
 		jwaoo_hw_set_deep_sleep(true);
 	}
-}
 
-void jwaoo_app_update_suspend_timer(void)
-{
+#if USE_WDOG
+	wdg_reload(WATCHDOG_DEFAULT_PERIOD);
+	wdg_resume();
+#endif
 }
