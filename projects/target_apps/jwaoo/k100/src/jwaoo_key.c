@@ -45,7 +45,6 @@ static bool jwaoo_key_check_lock_state(void)
 		if (key->lock_enable && key->value == 0) {
 			if (jwaoo_app_env.key_lock_pending) {
 				jwaoo_app_env.key_lock_pending = false;
-				jwaoo_app_env.key_release_pending = true;
 				jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
 				jwaoo_battery_led_release(2);
 				return true;
@@ -147,6 +146,10 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 		return;
 	}
 
+	if (key->value == status) {
+		return;
+	}
+
 	if (!status) {
 		key->last_value = key->value;
 	}
@@ -209,12 +212,18 @@ void jwaoo_key_set_enable(bool enable)
 
 void jwaoo_key_lock_timer_fire(void)
 {
+	jwaoo_app_env.key_release_pending = true;
+
 	if (jwaoo_app_env.key_locked) {
 		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
 		jwaoo_app_env.key_locked = false;
 	} else {
 		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 		jwaoo_app_env.key_locked = true;
+
+		if (!jwaoo_app_env.connected) {
+			jwaoo_app_goto_suspend_mode();
+		}
 	}
 }
 

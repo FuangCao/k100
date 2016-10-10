@@ -76,8 +76,11 @@ static int jwaoo_active_battery_poll_handler(ke_msg_id_t const msgid, void const
 
 static int jwaoo_suspend_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	if (jwaoo_app_env.charge_online || jwaoo_key_get_press_count()) {
+	if (jwaoo_app_env.charge_online) {
 		jwaoo_battery_poll();
+	} else if (jwaoo_key_get_press_count()) {
+		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 20);
+		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 	} else {
 		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
 		jwaoo_hw_set_suspend(true);
@@ -432,12 +435,16 @@ static void jwaoo_app_set_mode(ke_msg_id_t const msgid)
 
 void jwaoo_app_goto_active_mode(void)
 {
-	jwaoo_app_set_mode(JWAOO_SET_ACTIVE);
+	if (!jwaoo_app_env.key_locked) {
+		jwaoo_app_set_mode(JWAOO_SET_ACTIVE);
+	}
 }
 
 void jwaoo_app_goto_suspend_mode(void)
 {
-	jwaoo_app_set_mode(JWAOO_SET_SUSPEND);
+	if ((GetWord16(SYS_STAT_REG) & DBG_IS_UP) == 0) {
+		jwaoo_app_set_mode(JWAOO_SET_SUSPEND);
+	}
 }
 
 void jwaoo_app_set_upgrade_enable(bool enable)
@@ -499,16 +506,20 @@ void jwaoo_app_before_sleep(void)
 
 static bool jwaoo_app_need_wakeup(void)
 {
-	uint16_t count = 0;
+	if (jwaoo_app_env.key_locked) {
+		uint32_t count = 0;
 
-	while (WAKEUP_KEY1_ACTIVE) {
-		if (jwaoo_app_env.key_locked && WAKEUP_KEY2_ACTIVE == 0) {
-			count = 0;
-		} else if (count < 60000) {
-			count++;
-		} else {
-			return true;
+		while (WAKEUP_KEY1_ACTIVE) {
+			if (WAKEUP_KEY2_ACTIVE) {
+				if (++count > 500000) {
+					return true;
+				}
+			} else {
+				count = 0;
+			}
 		}
+	} else if (WAKEUP_KEY1_ACTIVE) {
+		return true;
 	}
 
 	return false;
@@ -520,6 +531,7 @@ void jwaoo_app_resume_from_sleep(void)
 	wdg_freeze();
 #endif
 
+	jwaoo_app_env.key_lock_pending = false;
 	jwaoo_app_env.key_release_pending = true;
 
 	wkupct_disable_irq();
