@@ -44,7 +44,7 @@
  ****************************************************************************************
  */
 
-#define JWAOO_TOY_IDENTIFY				"K101"
+#define JWAOO_TOY_IDENTIFY				"MODEL6"
 #define JWAOO_TOY_VERSION				0x20160702
 #define JWAOO_TOY_READ_FLASH_ENABLE		0
 
