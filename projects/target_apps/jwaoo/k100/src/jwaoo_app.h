@@ -6,7 +6,7 @@
 #include "jwaoo_hw.h"
 #include "jwaoo_battery.h"
 
-#define JWAOO_SUSPEND_DELAY			600
+#define JWAOO_SUSPEND_DELAY			300
 
 #define APP_AD_MSD_COMPANY_ID		(0xABCD)
 #define APP_AD_MSD_COMPANY_ID_LEN	(2)

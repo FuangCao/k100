@@ -482,7 +482,7 @@ void jwaoo_app_set_connect_state(bool connected)
 
 void jwaoo_app_suspend_counter_reset(void)
 {
-	jwaoo_app_env.suspend_counter = 600;
+	jwaoo_app_env.suspend_counter = JWAOO_SUSPEND_DELAY;
 }
 
 void jwaoo_app_suspend_counter_start(void)
