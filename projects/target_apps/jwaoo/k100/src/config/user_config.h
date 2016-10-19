@@ -28,8 +28,6 @@
 #include "app_default_handlers.h"
 #include "app_adv_data.h"
 
-#define CONFIG_HAS_SPI_FLASH		1
-
 /*
  * DEFINES
  ****************************************************************************************
@@ -107,7 +105,7 @@ static const enum gap_adv_mode user_non_connectable_advertise_mode = GAP_GEN_DIS
 /// Advertising data length - maximum 28 bytes, 3 bytes are reserved to set
     #define USER_ADVERTISE_DATA_LEN (sizeof(USER_ADVERTISE_DATA)-1)
 /// Advertising name
-    #define USER_DEVICE_NAME    ("JwaooToy")
+    #define USER_DEVICE_NAME    ("SenseTube")
 /// Advertising name Length
     #define USER_DEVICE_NAME_LEN (sizeof(USER_DEVICE_NAME)-1)
 /// Scan response data

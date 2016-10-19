@@ -616,21 +616,6 @@
               <FilePath>.\..\..\..\..\..\sdk\platform\driver\trng\trng.c</FilePath>
             </File>
             <File>
-              <FileName>spi_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\spi\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c_eeprom.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\i2c_eeprom\i2c_eeprom.c</FilePath>
-            </File>
-            <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.c</FilePath>
@@ -804,16 +789,6 @@
               <FileName>pwm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.h</FilePath>
-            </File>
-            <File>
-              <FileName>spi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\spi\spi.h</FilePath>
-            </File>
-            <File>
-              <FileName>spi_flash.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.h</FilePath>
             </File>
             <File>
               <FileName>systick.h</FileName>
@@ -994,11 +969,6 @@
               <FileName>user_k100.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\user_k100.c</FilePath>
-            </File>
-            <File>
-              <FileName>jwaoo_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\jwaoo_spi.c</FilePath>
             </File>
             <File>
               <FileName>jwaoo_pwm.c</FileName>
@@ -1659,21 +1629,6 @@
               <FilePath>.\..\..\..\..\..\sdk\platform\driver\trng\trng.c</FilePath>
             </File>
             <File>
-              <FileName>spi_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\spi\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c_eeprom.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\i2c_eeprom\i2c_eeprom.c</FilePath>
-            </File>
-            <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.c</FilePath>
@@ -1847,16 +1802,6 @@
               <FileName>pwm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.h</FilePath>
-            </File>
-            <File>
-              <FileName>spi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\spi\spi.h</FilePath>
-            </File>
-            <File>
-              <FileName>spi_flash.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.h</FilePath>
             </File>
             <File>
               <FileName>systick.h</FileName>
@@ -2037,11 +1982,6 @@
               <FileName>user_k100.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\user_k100.c</FilePath>
-            </File>
-            <File>
-              <FileName>jwaoo_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\jwaoo_spi.c</FilePath>
             </File>
             <File>
               <FileName>jwaoo_pwm.c</FileName>
@@ -2702,21 +2642,6 @@
               <FilePath>.\..\..\..\..\..\sdk\platform\driver\trng\trng.c</FilePath>
             </File>
             <File>
-              <FileName>spi_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\spi\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c_eeprom.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\driver\i2c_eeprom\i2c_eeprom.c</FilePath>
-            </File>
-            <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.c</FilePath>
@@ -2890,16 +2815,6 @@
               <FileName>pwm.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.h</FilePath>
-            </File>
-            <File>
-              <FileName>spi.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\spi\spi.h</FilePath>
-            </File>
-            <File>
-              <FileName>spi_flash.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\spi_flash\spi_flash.h</FilePath>
             </File>
             <File>
               <FileName>systick.h</FileName>
@@ -3080,11 +2995,6 @@
               <FileName>user_k100.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\user_k100.c</FilePath>
-            </File>
-            <File>
-              <FileName>jwaoo_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\jwaoo_spi.c</FilePath>
             </File>
             <File>
               <FileName>jwaoo_pwm.c</FileName>

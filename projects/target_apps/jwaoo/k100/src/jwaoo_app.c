@@ -1,7 +1,6 @@
 #include "jwaoo_app.h"
 #include "jwaoo_key.h"
 #include "jwaoo_pwm.h"
-#include "jwaoo_spi.h"
 #include "jwaoo_moto.h"
 
 struct mnf_specific_data_ad_structure
@@ -483,7 +482,7 @@ void jwaoo_app_set_connect_state(bool connected)
 
 void jwaoo_app_suspend_counter_reset(void)
 {
-	jwaoo_app_env.suspend_counter = jwaoo_user_data.suspend_delay;
+	jwaoo_app_env.suspend_counter = 600;
 }
 
 void jwaoo_app_suspend_counter_start(void)

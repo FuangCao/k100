@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Mon Oct 10 17:52:38 2016
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Wed Oct 19 12:32:44 2016
 ;VERSION 0.2
 ;FILE adc.o
 ;FILE app.o
@@ -103,16 +103,6 @@ fdc1004_set_enable <= USED 0
 GPIO_ConfigurePinPower <= USED 0
 GPIO_GetIRQInputLevel <= USED 0
 ;FILE hardfault_handler.o
-;FILE i2c_eeprom.o
-i2c_eeprom_init <= USED 0
-i2c_eeprom_read_byte <= USED 0
-i2c_eeprom_read_data <= USED 0
-i2c_eeprom_release <= USED 0
-i2c_eeprom_write_byte <= USED 0
-i2c_eeprom_write_data <= USED 0
-i2c_eeprom_write_page <= USED 0
-i2c_send_address <= USED 0
-i2c_wait_until_eeprom_ready <= USED 0
 ;FILE jump_table.o
 dummyf <= USED 0
 ;FILE jwaoo_app.o
@@ -129,13 +119,13 @@ jwaoo_i2c_update_u8 <= USED 0
 ;FILE jwaoo_pwm.o
 jwaoo_pwm_set_level <= USED 0
 ;FILE jwaoo_sensor.o
-;FILE jwaoo_spi.o
 ;FILE jwaoo_toy.o
 jwaoo_toy_send_command_data <= USED 0
 jwaoo_toy_send_command_text <= USED 0
 jwaoo_toy_send_command_u16 <= USED 0
 jwaoo_toy_send_command_u32 <= USED 0
 jwaoo_toy_send_command_u8 <= USED 0
+jwaoo_toy_send_response_data <= USED 0
 jwaoo_toy_send_response_u16 <= USED 0
 ;FILE ke_task.obj
 ;FILE llc.obj
@@ -168,21 +158,6 @@ rf_nfm_is_enabled <= USED 0
 ;FILE rwip.o
 ;FILE smpc.obj
 ;FILE smpc_task.obj
-;FILE spi.o
-spi_disable <= USED 0
-spi_release <= USED 0
-;FILE spi_flash.o
-spi_flash_chip_erase <= USED 0
-spi_flash_chip_erase_forced <= USED 0
-spi_flash_configure_memory_protection <= USED 0
-spi_flash_fill <= USED 0
-spi_flash_page_fill <= USED 0
-spi_flash_power_down <= USED 0
-spi_flash_set_write_disable <= USED 0
-spi_flash_write_enable_volatile <= USED 0
-spi_flash_write_status_reg <= USED 0
-spi_read_flash_memory_man_and_dev_id <= USED 0
-spi_read_flash_unique_id <= USED 0
 ;FILE syscntl.o
 syscntl_set_dcdc_vbat3v_level <= USED 0
 ;FILE system_armcm0.o

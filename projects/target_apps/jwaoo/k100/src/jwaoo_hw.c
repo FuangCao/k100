@@ -1,7 +1,7 @@
+#include "co_math.h"
 #include "jwaoo_hw.h"
 #include "jwaoo_key.h"
 #include "jwaoo_pwm.h"
-#include "jwaoo_spi.h"
 #include "jwaoo_i2c.h"
 #include "jwaoo_app.h"
 #include "jwaoo_moto.h"
@@ -10,6 +10,34 @@
 extern uint8_t app_connection_idx;
 
 struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
+
+bool jwaoo_hw_get_rand_bd_addr(uint8_t bd_addr[6])
+{
+	uint8_t count;
+	bool valid = false;
+
+	for (count = 0; count < 100; count++) {
+		uint8_t i;
+
+		init_rand_seed_from_trng();
+
+		for (i = 0; i < 6; i++) {
+			uint8_t value = rand();
+
+			bd_addr[i] = value;
+
+			if (value != 0x00 && value != 0xFF) {
+				valid = true;
+			}
+		}
+
+		if (valid) {
+			break;
+		}
+	}
+
+	return valid;
+}
 
 static void jwaoo_hw_gpio_isr(IRQn_Type irq)
 {
@@ -116,8 +144,6 @@ void jwaoo_hw_set_device_enable(bool enable)
 
 	jwaoo_key_set_enable(enable);
 	jwaoo_battery_set_enable(enable);
-
-	jwaoo_spi_set_enable(enable);
 	jwaoo_i2c_set_enable(enable);
 }
 
@@ -127,7 +153,6 @@ void jwaoo_hw_init(void)
 		jwaoo_hw_set_device_enable(false);
 	} else {
 		jwaoo_hw_set_device_enable(true);
-		jwaoo_spi_load_data();
 	}
 }
 

@@ -39,7 +39,6 @@
 #include "user_periph_setup.h"
 
 #include "jwaoo_i2c.h"
-#include "jwaoo_spi.h"
 #include "jwaoo_pwm.h"
 #include "jwaoo_app.h"
 #include "jwaoo_key.h"
@@ -288,19 +287,6 @@ uint8_t jwaoo_toy_send_response_text(uint8_t command, const char *fmt, ...)
 	return jwaoo_toy_send_command(buff, length + 2);
 }
 
-uint8_t jwaoo_toy_send_test_result(uint8_t command)
-{
-	struct jwaoo_toy_response response = {
-		.command = command,
-		.type = JWAOO_TOY_RSP_DATA,
-	};
-
-	response.test_result.valid = jwaoo_factory_data.test_valid;
-	response.test_result.result = jwaoo_factory_data.test_result;
-
-	return jwaoo_toy_send_command(&response, 6);
-}
-
 // ===============================================================================
 
 void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t length)
@@ -404,18 +390,6 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		}
 		break;
 
-	case JWAOO_TOY_CMD_READ_TEST_RESULT:
-		jwaoo_toy_send_test_result(command->type);
-		return;
-
-	case JWAOO_TOY_CMD_WRITE_TEST_RESULT:
-		if (length == 5) {
-			jwaoo_factory_data.test_valid = command->test_result.valid;
-			jwaoo_factory_data.test_result = command->test_result.result;
-			success = jwaoo_spi_write_factory_data();
-		}
-		break;
-
 	// ================================================================================
 
 	case JWAOO_TOY_CMD_BATT_EVENT_ENABLE:
@@ -435,125 +409,6 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		jwaoo_toy_send_command(&response, 6);
 		return;
 	}
-
-	case JWAOO_TOY_CMD_FLASH_ID:
-		jwaoo_toy_send_response_u32(command->type, spi_flash_jedec_id);
-		return;
-
-	case JWAOO_TOY_CMD_FLASH_SIZE:
-		jwaoo_toy_send_response_u32(command->type, spi_flash_size);
-		return;
-
-	case JWAOO_TOY_CMD_FLASH_PAGE_SIZE:
-		jwaoo_toy_send_response_u32(command->type, spi_flash_page_size);
-		return;
-
-	case JWAOO_TOY_CMD_FLASH_WRITE_ENABLE:
-		if (jwaoo_app_is_upgrade()) {
-			break;
-		}
-
-		jwaoo_app_env.flash_write_enable = (length > 1 && command->enable.value);
-		success = true;
-		break;
-
-	case JWAOO_TOY_CMD_FLASH_ERASE:
-		if (jwaoo_app_env.flash_write_enable) {
-			println("spi_flash_block_erase SPI_PART_BACK_CODE");
-			if (spi_flash_block_erase(JWAOO_SPI_PART_BACK_CODE, JWAOO_SPI_CODE_ERASE_MODE) != ERR_OK) {
-				jwaoo_app_env.flash_write_success = false;
-				println("Failed to spi_flash_chip_erase SPI_PART_BACKUP_CODE");
-				break;
-			}
-
-			success = true;
-		}
-		break;
-
-	case JWAOO_TOY_CMD_FLASH_READ:
-#if JWAOO_TOY_READ_FLASH_ENABLE
-		if (length == 5) {
-			uint32_t address;
-
-			if (jwaoo_toy_env.flash_upgrade) {
-				break;
-			}
-
-			address = command->value32;
-			if (address < spi_flash_size) {
-				uint8_t buff[JWAOO_TOY_MAX_FLASH_DATA_SIZE];
-				int length = spi_flash_size - address;
-
-				if (length > sizeof(buff)) {
-					length = sizeof(buff);
-				}
-
-				length = spi_flash_read_data(buff, address, length);
-				if (length > 0) {
-					success = (jwaoo_toy_write_data(JWAOO_TOY_ATTR_FLASH_DATA, buff, length) == ATT_ERR_NO_ERROR);
-				}
-			}
-		}
-#endif
-		break;
-
-	case JWAOO_TOY_CMD_FLASH_SEEK:
-		if (length == 5) {
-			uint32_t offset = command->value32;
-			if (offset < spi_flash_size) {
-				jwaoo_app_env.flash_write_offset = offset;
-				success = true;
-			}
-		}
-		break;
-
-	case JWAOO_TOY_CMD_FLASH_WRITE_START:
-		if (jwaoo_app_env.flash_write_enable) {
-			jwaoo_app_set_upgrade_enable(true);
-			jwaoo_moto_set_mode(0, 0);
-			jwaoo_sensor_set_enable(false);
-			jwaoo_app_env.flash_write_success = true;
-			jwaoo_app_env.flash_write_length = 0;
-			jwaoo_app_env.flash_write_offset = JWAOO_SPI_PART_BACK_CODE;
-			jwaoo_app_env.flash_write_crc = 0xFF;
-			success = true;
-		}
-		break;
-
-	case JWAOO_TOY_CMD_FLASH_WRITE_FINISH:
-		if (length != 4) {
-			break;
-		}
-
-		if (jwaoo_app_is_upgrade() && jwaoo_app_env.flash_write_enable && jwaoo_app_env.flash_write_success) {
-			println("remote: crc = 0x%02x, length = %d", command->upgrade.crc, command->upgrade.length);
-			println("local:  crc = 0x%02x, length = %d",
-				jwaoo_toy_env.flash_write_crc, jwaoo_toy_env.flash_write_length);
-
-			if (command->upgrade.crc != jwaoo_app_env.flash_write_crc) {
-				println("crc not match");
-				break;
-			}
-
-			if (command->upgrade.length != jwaoo_app_env.flash_write_length) {
-				println("length not match");
-				break;
-			}
-
-			SEND_EMPTY_MESSAGE(JWAOO_TOY_UPGRADE_COMPLETE, TASK_JWAOO_TOY);
-			success = true;
-		}
-		break;
-
-	case JWAOO_TOY_CMD_FLASH_READ_BD_ADDR:
-		jwaoo_toy_send_response_data(command->type, jwaoo_device_data.bd_addr, sizeof(jwaoo_device_data.bd_addr));
-		return;
-
-	case JWAOO_TOY_CMD_FLASH_WRITE_BD_ADDR:
-		if (length == 7 && jwaoo_app_env.flash_write_enable) {
-			success = jwaoo_spi_write_bd_addr(command->bytes);
-		}
-		break;
 
 	// ================================================================================
 
@@ -687,18 +542,6 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 static bool jwaoo_toy_process_flash_data_safe(const uint8_t *data, int length)
 {
-	int wrlen;
-
-	wrlen = spi_flash_write_data((uint8_t *) data, jwaoo_app_env.flash_write_offset, length);
-	if (wrlen < 0) {
-		println("Failed to spi_flash_write_data: %d", wrlen);
-		return false;
-	}
-
-	jwaoo_app_env.flash_write_crc = jwaoo_spi_calculate_crc(data, length, jwaoo_app_env.flash_write_crc);
-	jwaoo_app_env.flash_write_offset += wrlen;
-	jwaoo_app_env.flash_write_length += wrlen;
-
 	return true;
 }
 

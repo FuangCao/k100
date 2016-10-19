@@ -37,7 +37,6 @@
 #include "atts_util.h"
 #include "user_periph_setup.h"
 
-#include "jwaoo_spi.h"
 #include "jwaoo_app.h"
 #include "jwaoo_key.h"
 #include "jwaoo_moto.h"
@@ -199,14 +198,6 @@ static int jwaoo_toy_upgrade_complete_handler(ke_msg_id_t const msgid,
                                          ke_task_id_t const dest_id,
                                          ke_task_id_t const src_id)
 {
-	uint8_t event[2] = {
-		JWAOO_TOY_EVT_UPGRADE_COMPLETE,
-		jwaoo_spi_flash_copy(JWAOO_SPI_PART_BACK_CODE, JWAOO_SPI_PART_FRONT_CODE, jwaoo_app_env.flash_write_length, jwaoo_app_env.flash_write_crc)
-	};
-
-	jwaoo_toy_send_event(event, sizeof(event));
-	jwaoo_app_set_upgrade_enable(false);
-
     return (KE_MSG_CONSUMED);
 }
 
