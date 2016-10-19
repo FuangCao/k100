@@ -2,11 +2,12 @@
 
 #include "jwaoo_hw.h"
 
-#define JWAOO_BATT_POLL_DELAY		100
-#define JWAOO_BATT_LEVEL_LOW		8
-#define JWAOO_BATT_VOLTAGE_MIN		3000
-#define JWAOO_BATT_VOLTAGE_MAX		4200
-#define JWAOO_VOLTAGE_ARRAY_SIZE	20
+#define JWAOO_BATT_POLL_DELAY			100
+#define JWAOO_BATT_LEVEL_LOW			8
+#define JWAOO_BATT_VOLTAGE_VALID_MIN	2000
+#define JWAOO_BATT_VOLTAGE_MIN			3200
+#define JWAOO_BATT_VOLTAGE_MAX			4200
+#define JWAOO_VOLTAGE_ARRAY_SIZE		20
 
 struct jwaoo_battery_voltage_map {
 	uint16_t raw_value;

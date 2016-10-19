@@ -417,6 +417,10 @@ void jwaoo_app_init(void)
 	jwaoo_app_env.key_long_click_delay = 200;
 	jwaoo_app_env.key_multi_click_delay = 30;
 
+	jwaoo_app_env.battery_state = JWAOO_TOY_BATTERY_FULL;
+	jwaoo_app_env.battery_level = 100;
+	jwaoo_app_env.battery_voltage = 4200;
+
 	jwaoo_app_mnf_data_init();
 
 	ke_task_create(TASK_JWAOO_APP, &TASK_DESC_JWAOO_APP);

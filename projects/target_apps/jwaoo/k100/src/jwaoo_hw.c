@@ -11,6 +11,19 @@ extern uint8_t app_connection_idx;
 
 struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
 
+bool jwaoo_hw_is_valid_bd_addr(const uint8_t bd_addr[6])
+{
+	uint8_t i;
+
+	for (i = 0; i < 6; i++) {
+		if (bd_addr[i] != 0x00 && bd_addr[i] != 0xFF) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool jwaoo_hw_get_rand_bd_addr(uint8_t bd_addr[6])
 {
 	uint8_t count;

@@ -211,6 +211,10 @@ void jwaoo_battery_poll(void)
 			state = JWAOO_TOY_BATTERY_NORMAL;
 		} else {
 			state = JWAOO_TOY_BATTERY_LOW;
+
+			if (voltage < JWAOO_BATT_VOLTAGE_MIN && voltage > JWAOO_BATT_VOLTAGE_VALID_MIN) {
+				jwaoo_app_goto_suspend_mode();
+			}
 		}
 	}
 

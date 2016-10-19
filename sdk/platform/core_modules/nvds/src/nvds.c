@@ -84,7 +84,7 @@ uint8_t custom_nvds_get_func(uint8_t tag, nvds_tag_len_t * lengthPtr, uint8_t *b
         case NVDS_TAG_BD_ADDRESS:
         {
             //check if dev_bdaddr is not zero
-            if(memcmp(&dev_bdaddr, &co_null_bdaddr, NVDS_LEN_BD_ADDRESS) || jwaoo_hw_get_rand_bd_addr(dev_bdaddr.addr))
+            if(jwaoo_hw_is_valid_bd_addr(dev_bdaddr.addr) || jwaoo_hw_get_rand_bd_addr(dev_bdaddr.addr))
             {
                 memcpy(buf,&dev_bdaddr,NVDS_LEN_BD_ADDRESS);
                 *lengthPtr = NVDS_LEN_BD_ADDRESS;

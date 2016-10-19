@@ -37,6 +37,7 @@ struct jwaoo_device_data
 
 extern struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
 
+bool jwaoo_hw_is_valid_bd_addr(const uint8_t bd_addr[6]);
 bool jwaoo_hw_get_rand_bd_addr(uint8_t bd_addr[6]);
 bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc, bool active_low);
 bool jwaoo_hw_irq_disable(IRQn_Type irq);
