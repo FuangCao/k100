@@ -826,6 +826,8 @@ uint8_t check_sys_startup_period(void)
         else // After 2 seconds system can sleep
         {
             sys_startup_flag = false;
+
+#if CFG_DEBUGGER_POWER_DOWN_WAIT
             if ( (arch_get_sleep_mode() == 2) || (arch_get_sleep_mode() == 1) )
             {
                 wdg_freeze();                           // Stop WDOG until debugger is removed
@@ -835,7 +837,11 @@ uint8_t check_sys_startup_period(void)
 
             if(USE_WDOG)
                 SetWord16(RESET_FREEZE_REG, FRZ_WDOG);  // Start WDOG
-         
+#else
+			if (GetWord16(SYS_STAT_REG) & DBG_IS_DOWN) {
+				SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 0);
+			}
+#endif
             ret_value = 0;
         }
     }

@@ -100,6 +100,10 @@ uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_ma
 {
 	const struct jwaoo_battery_voltage_map *map, *map_end;
 
+	if (voltage < JWAOO_BATT_VOLTAGE_VALID_MIN || voltage > JWAOO_BATT_VOLTAGE_VALID_MAX) {
+		return JWAOO_BATT_VOLTAGE_MAX;
+	}
+
 	for (map = table, map_end = map + size; map < map_end; map++) {
 		if (voltage > map->raw_value) {
 			continue;
@@ -212,7 +216,7 @@ void jwaoo_battery_poll(void)
 		} else {
 			state = JWAOO_TOY_BATTERY_LOW;
 
-			if (voltage < JWAOO_BATT_VOLTAGE_MIN && voltage > JWAOO_BATT_VOLTAGE_VALID_MIN) {
+			if (voltage < jwaoo_app_settings.shutdown_voltage) {
 				jwaoo_app_goto_suspend_mode();
 			}
 		}

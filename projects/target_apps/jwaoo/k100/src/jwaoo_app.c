@@ -3,20 +3,20 @@
 #include "jwaoo_pwm.h"
 #include "jwaoo_moto.h"
 
-struct mnf_specific_data_ad_structure
+static struct
 {
     uint8_t ad_structure_size;
     uint8_t ad_structure_type;
     uint8_t company_id[APP_AD_MSD_COMPANY_ID_LEN];
     uint8_t proprietary_data[APP_AD_MSD_DATA_LEN];
-};
+} mnf_data __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
 
-struct jwaoo_app_data jwaoo_app_env __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
-static struct mnf_specific_data_ad_structure mnf_data __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
+jwaoo_app_env_t jwaoo_app_env __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
+jwaoo_app_settings_t jwaoo_app_settings __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
 
 static void jwaoo_app_mnf_data_init(void)
 {
-	mnf_data.ad_structure_size = sizeof(struct mnf_specific_data_ad_structure ) - sizeof(uint8_t); // minus the size of the ad_structure_size field
+	mnf_data.ad_structure_size = sizeof(mnf_data) - sizeof(uint8_t); // minus the size of the ad_structure_size field
 	mnf_data.ad_structure_type = GAP_AD_TYPE_MANU_SPECIFIC_DATA;
 	mnf_data.company_id[0] = APP_AD_MSD_COMPANY_ID & 0xFF; // LSB
 	mnf_data.company_id[1] = (APP_AD_MSD_COMPANY_ID >> 8 )& 0xFF; // MSB
@@ -55,7 +55,7 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 	struct gapm_start_advertise_cmd *cmd = app_easy_gap_undirected_advertise_get_active();
 
 	jwaoo_app_mnf_data_update();
-	jwaoo_app_add_ad_struct(cmd, &mnf_data, sizeof(struct mnf_specific_data_ad_structure));
+	jwaoo_app_add_ad_struct(cmd, &mnf_data, sizeof(mnf_data));
 
 	app_easy_gap_undirected_advertise_start();
 	jwaoo_pwm_blink_square_full(JWAOO_PWM_BT_LED, 1000, 0);
@@ -421,6 +421,9 @@ void jwaoo_app_init(void)
 	jwaoo_app_env.battery_level = 100;
 	jwaoo_app_env.battery_voltage = 4200;
 
+	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
+	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_POWER_DOWN;
+
 	jwaoo_app_mnf_data_init();
 
 	ke_task_create(TASK_JWAOO_APP, &TASK_DESC_JWAOO_APP);
@@ -445,9 +448,7 @@ void jwaoo_app_goto_active_mode(void)
 
 void jwaoo_app_goto_suspend_mode(void)
 {
-	if ((GetWord16(SYS_STAT_REG) & DBG_IS_UP) == 0) {
-		jwaoo_app_set_mode(JWAOO_SET_SUSPEND);
-	}
+	jwaoo_app_set_mode(JWAOO_SET_SUSPEND);
 }
 
 void jwaoo_app_set_upgrade_enable(bool enable)
@@ -486,7 +487,7 @@ void jwaoo_app_set_connect_state(bool connected)
 
 void jwaoo_app_suspend_counter_reset(void)
 {
-	jwaoo_app_env.suspend_counter = JWAOO_SUSPEND_DELAY;
+	jwaoo_app_env.suspend_counter = jwaoo_app_settings.suspend_delay;
 }
 
 void jwaoo_app_suspend_counter_start(void)

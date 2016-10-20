@@ -158,5 +158,6 @@
 /****************************************************************************************************************/
 #undef CFG_READ_BDADDR_FROM_DA14583_FLASH
 
+#define CFG_DEBUGGER_POWER_DOWN_WAIT		0
 
 #endif // DA1458X_CONFIG_ADVANCED_H_

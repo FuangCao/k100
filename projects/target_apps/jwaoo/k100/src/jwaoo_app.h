@@ -6,11 +6,11 @@
 #include "jwaoo_hw.h"
 #include "jwaoo_battery.h"
 
-#define JWAOO_SUSPEND_DELAY			300
+#define JWAOO_SUSPEND_DELAY_DEFAULT		300
 
-#define APP_AD_MSD_COMPANY_ID		(0xABCD)
-#define APP_AD_MSD_COMPANY_ID_LEN	(2)
-#define APP_AD_MSD_DATA_LEN			(sizeof(uint16_t))
+#define APP_AD_MSD_COMPANY_ID			(0xABCD)
+#define APP_AD_MSD_COMPANY_ID_LEN		(2)
+#define APP_AD_MSD_DATA_LEN				(sizeof(uint16_t))
 
 #define SEND_EMPTY_MESSAGE(msgid, taskid) \
 	ke_msg_send(ke_msg_alloc(msgid, taskid, 0, 0))
@@ -64,7 +64,7 @@ enum {
 	JWAOO_APP_STATE_MAX
 };
 
-struct jwaoo_app_data {
+typedef struct {
 	bool connected;
 	bool initialized;
 	bool device_enabled;
@@ -106,9 +106,15 @@ struct jwaoo_app_data {
 	bool key_long_click_enable;
 	uint16_t key_long_click_delay;
 	uint16_t key_multi_click_delay;
-};
+} jwaoo_app_env_t;
 
-extern struct jwaoo_app_data jwaoo_app_env;
+typedef struct {
+	uint16_t suspend_delay;
+	uint16_t shutdown_voltage;
+} jwaoo_app_settings_t;
+
+extern jwaoo_app_env_t jwaoo_app_env;
+extern jwaoo_app_settings_t jwaoo_app_settings;
 
 ke_state_t jwaoo_app_state_get(void);
 void jwaoo_app_state_set(ke_state_t const state_id);

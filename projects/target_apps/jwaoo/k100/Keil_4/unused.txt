@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Wed Oct 19 20:53:05 2016
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Thu Oct 20 14:51:01 2016
 ;VERSION 0.2
 ;FILE adc.o
 ;FILE app.o
@@ -75,6 +75,7 @@ gapc_encrypt_req_ind_handler <= USED 0
 ;FILE arch_patch.o
 ;FILE arch_sleep.o
 arch_force_active_mode <= USED 0
+arch_get_sleep_mode <= USED 0
 arch_last_rwble_evt_get <= USED 0
 arch_restore_sleep_mode <= USED 0
 ;FILE arch_system.o
@@ -126,7 +127,6 @@ jwaoo_toy_send_command_u16 <= USED 0
 jwaoo_toy_send_command_u32 <= USED 0
 jwaoo_toy_send_command_u8 <= USED 0
 jwaoo_toy_send_response_data <= USED 0
-jwaoo_toy_send_response_u16 <= USED 0
 ;FILE ke_task.obj
 ;FILE llc.obj
 ;FILE nmi_handler.o

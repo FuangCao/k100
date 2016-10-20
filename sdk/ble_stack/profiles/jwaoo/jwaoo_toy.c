@@ -357,10 +357,23 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 			response[0] = command->type;
 			response[1] = JWAOO_TOY_RSP_DATA;
-
 			jwaoo_toy_send_command(response, sizeof(response));
 			return;
 		}
+		break;
+
+	case JWAOO_TOY_CMD_SUSPEND_DELAY:
+		if (length == 1) {
+			jwaoo_toy_send_response_u16(command->type, jwaoo_app_settings.suspend_delay);
+			return;
+		}
+
+		if (length != 3 || command->value16 < 10) {
+			break;
+		}
+
+		jwaoo_app_settings.suspend_delay = command->value16;
+		success = true;
 		break;
 
 	case JWAOO_TOY_CMD_FACTORY_ENABLE:
@@ -409,6 +422,20 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		jwaoo_toy_send_command(&response, 6);
 		return;
 	}
+
+	case JWAOO_TOY_CMD_BATT_SHUTDOWN_VOLTAGE:
+		if (length == 1) {
+			jwaoo_toy_send_response_u16(command->type, jwaoo_app_settings.shutdown_voltage);
+			return;
+		}
+
+		if (length != 3 || command->value16 < JWAOO_BATT_VOLTAGE_MIN || command->value16 > JWAOO_BATT_VOLTAGE_MAX) {
+			break;
+		}
+
+		jwaoo_app_settings.shutdown_voltage = command->value16;
+		success = true;
+		break;
 
 	// ================================================================================
 

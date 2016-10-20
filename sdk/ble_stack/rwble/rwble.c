@@ -816,8 +816,14 @@ void BLE_SLP_Handler(void)
     power_up(); // power-up the BLE core
     
     wakeup_lp_comp = 0; // clear flag for next time
-    
+
+#if CFG_DEBUGGER_POWER_DOWN_WAIT
     SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 0);
+#else
+	if (GetWord16(SYS_STAT_REG) & DBG_IS_DOWN) {
+		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 0);
+	}
+#endif
 
     SetBits16(GP_CONTROL_REG, BLE_WAKEUP_REQ, 0);   //just to be sure    
 
