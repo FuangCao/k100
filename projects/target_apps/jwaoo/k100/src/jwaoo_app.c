@@ -82,7 +82,7 @@ static int jwaoo_factory_battery_poll_handler(ke_msg_id_t const msgid, void cons
 
 static int jwaoo_suspend_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	if (jwaoo_app_env.charge_online) {
+	if (CHG_ONLINE) {
 		jwaoo_battery_poll(true);
 	} else if (jwaoo_key_get_press_count()) {
 		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 20);
@@ -230,6 +230,9 @@ static int jwaoo_deep_sleep_to_suspend_handler(ke_msg_id_t const msgid, void con
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_SUSPEND);
 
 	// jwaoo_hw_set_deep_sleep(false);
+
+	jwaoo_battery_led_update_state(true);
+	jwaoo_battery_poll_start();
 
 	return KE_MSG_CONSUMED;
 }
@@ -424,7 +427,7 @@ void jwaoo_app_init(void)
 	jwaoo_app_env.key_long_click_delay = 200;
 	jwaoo_app_env.key_multi_click_delay = 30;
 
-	jwaoo_app_env.battery_state = JWAOO_TOY_BATTERY_FULL;
+	jwaoo_app_env.battery_state = JWAOO_TOY_BATTERY_NORMAL;
 	jwaoo_app_env.battery_level = 100;
 	jwaoo_app_env.battery_voltage = 4200;
 
@@ -551,7 +554,7 @@ void jwaoo_app_resume_from_sleep(void)
 	if (jwaoo_app_need_wakeup()) {
 		jwaoo_app_env.key_locked = false;
 		jwaoo_app_goto_active_mode();
-	} else if (jwaoo_app_env.charge_online) {
+	} else if (CHG_ONLINE) {
 		jwaoo_app_goto_suspend_mode();
 	} else {
 		jwaoo_hw_set_deep_sleep(true);

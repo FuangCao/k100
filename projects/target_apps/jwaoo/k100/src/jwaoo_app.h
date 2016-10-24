@@ -75,7 +75,6 @@ typedef struct {
 	bool moto_report;
 	bool moto_boost_busy;
 
-	bool charge_online;
 	bool battery_report;
 	uint8_t battery_led_locked;
 	uint8_t battery_state;

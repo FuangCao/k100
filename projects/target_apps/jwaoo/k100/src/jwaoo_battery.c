@@ -27,7 +27,6 @@ static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
 
 static void jwaoo_charge_isr(struct jwaoo_irq_desc *desc, bool status)
 {
-	jwaoo_app_env.charge_online = status;
 	jwaoo_battery_poll_start();
 }
 
@@ -39,8 +38,6 @@ struct jwaoo_irq_desc jwaoo_charge = {
 
 void jwaoo_battery_set_enable(bool enable)
 {
-	jwaoo_app_env.charge_online = CHG_ONLINE;
-
 	if (enable) {
 		jwaoo_hw_irq_enable(CHG_DET_GPIO_IRQ, &jwaoo_charge, CHG_DET_ACTIVE_LOW);
 	} else {
@@ -59,14 +56,15 @@ void jwaoo_battery_led_blink(void)
 void jwaoo_battery_led_release(uint8_t level)
 {
 	if (jwaoo_app_env.battery_led_locked <= level) {
-		jwaoo_app_env.battery_led_locked = 0;
-		jwaoo_battery_led_update_state();
+		jwaoo_battery_led_update_state(true);
 	}
 }
 
-void jwaoo_battery_led_update_state(void)
+void jwaoo_battery_led_update_state(bool force)
 {
-	if (jwaoo_app_env.battery_led_locked) {
+	if (force) {
+		jwaoo_app_env.battery_led_locked = 0;
+	} else if (jwaoo_app_env.battery_led_locked) {
 		return;
 	}
 
@@ -92,7 +90,7 @@ void jwaoo_battery_set_state(uint8_t state)
 {
 	if (jwaoo_app_env.battery_state != state) {
 		jwaoo_app_env.battery_state = state;
-		jwaoo_battery_led_update_state();
+		jwaoo_battery_led_update_state(false);
 	}
 }
 
@@ -133,10 +131,9 @@ void jwaoo_battery_poll(bool optimize)
 	uint8_t state;
 	uint8_t level;
 	uint32_t voltage;
+	bool charge_online = CHG_ONLINE;
 
 	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, JWAOO_BATT_POLL_DELAY);
-
-	jwaoo_app_env.charge_online = CHG_ONLINE;
 
 	adc_calibrate();
 
@@ -158,7 +155,7 @@ void jwaoo_battery_poll(bool optimize)
 		if (voltage < JWAOO_BATT_VOLTAGE_VALID_MIN || voltage > JWAOO_BATT_VOLTAGE_VALID_MAX) {
 			voltage = JWAOO_BATT_VOLTAGE_MAX;
 		} else {
-			if (jwaoo_app_env.charge_online && voltage < 4226 && jwaoo_app_env.battery_state != JWAOO_TOY_BATTERY_FULL) {
+			if (charge_online && voltage < 4226 && jwaoo_app_env.battery_state != JWAOO_TOY_BATTERY_FULL) {
 				uint8_t percent;
 
 				if (voltage < 4100) {
@@ -206,24 +203,22 @@ void jwaoo_battery_poll(bool optimize)
 		level = (voltage - JWAOO_BATT_VOLTAGE_MIN) * 100 / (JWAOO_BATT_VOLTAGE_MAX - JWAOO_BATT_VOLTAGE_MIN);
 	}
 
-	if (jwaoo_app_env.charge_online) {
-		if (level < 100) {
-			state = JWAOO_TOY_BATTERY_CHARGING;
-		} else if (BATT_CHARGING) {
+	if (BATT_CHARGING) {
+		if (level > 99) {
 			level = 99;
-			state = JWAOO_TOY_BATTERY_CHARGING;
-		} else {
-			state = JWAOO_TOY_BATTERY_FULL;
 		}
-	} else {
-		if (level > JWAOO_BATT_LEVEL_LOW) {
-			state = JWAOO_TOY_BATTERY_NORMAL;
-		} else {
-			state = JWAOO_TOY_BATTERY_LOW;
 
-			if (voltage < jwaoo_app_settings.shutdown_voltage) {
-				jwaoo_app_goto_suspend_mode();
-			}
+		state = JWAOO_TOY_BATTERY_CHARGING;
+	} else if (charge_online) {
+		level = 100;
+		state = JWAOO_TOY_BATTERY_FULL;
+	} else if (level > JWAOO_BATT_LEVEL_LOW) {
+		state = JWAOO_TOY_BATTERY_NORMAL;
+	} else {
+		state = JWAOO_TOY_BATTERY_LOW;
+
+		if (voltage < jwaoo_app_settings.shutdown_voltage) {
+			jwaoo_app_goto_suspend_mode();
 		}
 	}
 

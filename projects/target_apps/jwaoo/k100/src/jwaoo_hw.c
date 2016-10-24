@@ -112,9 +112,7 @@ void jwaoo_hw_set_suspend(bool enable)
 		app_easy_gap_advertise_stop();
 		jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
 	} else {
-		jwaoo_app_env.battery_led_locked = 0;
-		jwaoo_battery_led_update_state();
-		jwaoo_battery_poll_start();
+		jwaoo_battery_led_update_state(true);
 		jwaoo_app_adv_start();
 	}
 }
