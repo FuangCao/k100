@@ -23,5 +23,5 @@ void jwaoo_battery_led_blink(void);
 void jwaoo_battery_led_release(uint8_t level);
 void jwaoo_battery_led_update_state(void);
 void jwaoo_battery_set_state(uint8_t state);
-void jwaoo_battery_poll(void);
+void jwaoo_battery_poll(bool optimize);
 uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, uint32_t voltage);

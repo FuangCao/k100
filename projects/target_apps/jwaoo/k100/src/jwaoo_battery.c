@@ -100,10 +100,6 @@ uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_ma
 {
 	const struct jwaoo_battery_voltage_map *map, *map_end;
 
-	if (voltage < JWAOO_BATT_VOLTAGE_VALID_MIN || voltage > JWAOO_BATT_VOLTAGE_VALID_MAX) {
-		return JWAOO_BATT_VOLTAGE_MAX;
-	}
-
 	for (map = table, map_end = map + size; map < map_end; map++) {
 		if (voltage > map->raw_value) {
 			continue;
@@ -131,7 +127,7 @@ uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_ma
 	return voltage * map->real_value / map->raw_value;
 }
 
-void jwaoo_battery_poll(void)
+void jwaoo_battery_poll(bool optimize)
 {
 	int i;
 	uint8_t state;
@@ -158,41 +154,47 @@ void jwaoo_battery_poll(void)
 
 	voltage = jwaoo_battery_voltage_calibration(jwaoo_battery_voltage_table, NELEM(jwaoo_battery_voltage_table), voltage);
 
-	if (jwaoo_app_env.charge_online && voltage < 4226 && jwaoo_app_env.battery_state != JWAOO_TOY_BATTERY_FULL) {
-		uint8_t percent;
-
-		if (voltage < 4100) {
-			percent = 96;
-		} else if (voltage < 4200) {
-			percent = 97;
-		} else if (voltage < 4210) {
-			percent = 98;
+	if (optimize) {
+		if (voltage < JWAOO_BATT_VOLTAGE_VALID_MIN || voltage > JWAOO_BATT_VOLTAGE_VALID_MAX) {
+			voltage = JWAOO_BATT_VOLTAGE_MAX;
 		} else {
-			percent = 99;
+			if (jwaoo_app_env.charge_online && voltage < 4226 && jwaoo_app_env.battery_state != JWAOO_TOY_BATTERY_FULL) {
+				uint8_t percent;
+
+				if (voltage < 4100) {
+					percent = 96;
+				} else if (voltage < 4200) {
+					percent = 97;
+				} else if (voltage < 4210) {
+					percent = 98;
+				} else {
+					percent = 99;
+				}
+
+				voltage = voltage * percent / 100;
+				if (voltage < jwaoo_app_env.battery_voltage) {
+					voltage = jwaoo_app_env.battery_voltage;
+				}
+			}
+
+			println("fix voltage = %d", voltage);
+
+			jwaoo_app_env.battery_voltages[jwaoo_app_env.battery_voltage_head] = voltage;
+			jwaoo_app_env.battery_voltage_head = (jwaoo_app_env.battery_voltage_head + 1) % JWAOO_VOLTAGE_ARRAY_SIZE;
+
+			if (jwaoo_app_env.battery_voltage_count < JWAOO_VOLTAGE_ARRAY_SIZE) {
+				jwaoo_app_env.battery_voltage_count++;
+			}
+
+			for (i = jwaoo_app_env.battery_voltage_count - 1, voltage = 0; i >= 0; i--) {
+				voltage += jwaoo_app_env.battery_voltages[i];
+			}
+
+			voltage /= jwaoo_app_env.battery_voltage_count;
+
+			println("avg voltage = %d", voltage);
 		}
-
-		voltage = voltage * percent / 100;
-		if (voltage < jwaoo_app_env.battery_voltage) {
-			voltage = jwaoo_app_env.battery_voltage;
-		}
 	}
-
-	println("fix voltage = %d", voltage);
-
-	jwaoo_app_env.battery_voltages[jwaoo_app_env.battery_voltage_head] = voltage;
-	jwaoo_app_env.battery_voltage_head = (jwaoo_app_env.battery_voltage_head + 1) % JWAOO_VOLTAGE_ARRAY_SIZE;
-
-	if (jwaoo_app_env.battery_voltage_count < JWAOO_VOLTAGE_ARRAY_SIZE) {
-		jwaoo_app_env.battery_voltage_count++;
-	}
-
-	for (i = jwaoo_app_env.battery_voltage_count - 1, voltage = 0; i >= 0; i--) {
-		voltage += jwaoo_app_env.battery_voltages[i];
-	}
-
-	voltage /= jwaoo_app_env.battery_voltage_count;
-
-	println("avg voltage = %d", voltage);
 
 	jwaoo_app_env.battery_voltage = voltage;
 

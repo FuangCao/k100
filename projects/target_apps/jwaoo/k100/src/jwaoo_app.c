@@ -68,7 +68,14 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 
 static int jwaoo_active_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	jwaoo_battery_poll();
+	jwaoo_battery_poll(true);
+
+	return KE_MSG_CONSUMED;
+}
+
+static int jwaoo_factory_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	jwaoo_battery_poll(false);
 
 	return KE_MSG_CONSUMED;
 }
@@ -76,7 +83,7 @@ static int jwaoo_active_battery_poll_handler(ke_msg_id_t const msgid, void const
 static int jwaoo_suspend_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	if (jwaoo_app_env.charge_online) {
-		jwaoo_battery_poll();
+		jwaoo_battery_poll(true);
 	} else if (jwaoo_key_get_press_count()) {
 		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 20);
 		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
@@ -340,7 +347,7 @@ static const struct ke_msg_handler jwaoo_app_factory_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_FACTORY_DISABLE,				(ke_msg_func_t) jwaoo_set_factory_disable_handler },
 	{ JWAOO_ADV_START,							(ke_msg_func_t) jwaoo_adv_start_handler },
-	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_active_battery_poll_handler },
+	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_factory_battery_poll_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_factory_process_key_handler },
 };
