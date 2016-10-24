@@ -77,6 +77,10 @@ i.e.
 	CHG_DET_GPIO_RESERVE;
 #endif
 
+#ifdef CHG_STAT_GPIO_RESERVE
+	CHG_STAT_GPIO_RESERVE;
+#endif
+
 #ifdef KEY1_GPIO_PORT
 	KEY_GPIO_RESERVE(1);
 #endif
@@ -134,6 +138,10 @@ void set_pad_functions(void)        // set gpio port function mode
 
 #ifdef CHG_DET_GPIO_CONFIG
 	CHG_DET_GPIO_CONFIG;
+#endif
+
+#ifdef CHG_STAT_GPIO_CONFIG
+	CHG_STAT_GPIO_CONFIG;
 #endif
 
 #ifdef LDO_P3V3_GPIO_CONFIG

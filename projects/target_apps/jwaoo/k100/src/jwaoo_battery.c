@@ -209,6 +209,9 @@ void jwaoo_battery_poll(bool optimize)
 	if (jwaoo_app_env.charge_online) {
 		if (level < 100) {
 			state = JWAOO_TOY_BATTERY_CHARGING;
+		} else if (BATT_CHARGING) {
+			level = 99;
+			state = JWAOO_TOY_BATTERY_CHARGING;
 		} else {
 			state = JWAOO_TOY_BATTERY_FULL;
 		}
