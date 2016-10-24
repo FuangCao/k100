@@ -203,22 +203,27 @@ void jwaoo_battery_poll(bool optimize)
 		level = (voltage - JWAOO_BATT_VOLTAGE_MIN) * 100 / (JWAOO_BATT_VOLTAGE_MAX - JWAOO_BATT_VOLTAGE_MIN);
 	}
 
-	if (BATT_CHARGING) {
-		if (level > 99) {
-			level = 99;
+	if (charge_online) {
+		if (BATT_CHARGING) {
+			jwaoo_app_env.battery_full = 0;
+			state = JWAOO_TOY_BATTERY_CHARGING;
+		} else if (jwaoo_app_env.battery_full < 10) {
+			jwaoo_app_env.battery_full++;
+			state = JWAOO_TOY_BATTERY_CHARGING;
+		} else {
+			state = JWAOO_TOY_BATTERY_FULL;
 		}
-
-		state = JWAOO_TOY_BATTERY_CHARGING;
-	} else if (charge_online) {
-		level = 100;
-		state = JWAOO_TOY_BATTERY_FULL;
-	} else if (level > JWAOO_BATT_LEVEL_LOW) {
-		state = JWAOO_TOY_BATTERY_NORMAL;
 	} else {
-		state = JWAOO_TOY_BATTERY_LOW;
+		jwaoo_app_env.battery_full = 0;
 
-		if (voltage < jwaoo_app_settings.shutdown_voltage) {
-			jwaoo_app_goto_suspend_mode();
+		if (level > JWAOO_BATT_LEVEL_LOW) {
+			state = JWAOO_TOY_BATTERY_NORMAL;
+		} else {
+			state = JWAOO_TOY_BATTERY_LOW;
+
+			if (voltage < jwaoo_app_settings.shutdown_voltage) {
+				jwaoo_app_goto_suspend_mode();
+			}
 		}
 	}
 

@@ -79,6 +79,7 @@ typedef struct {
 	uint8_t battery_led_locked;
 	uint8_t battery_state;
 	uint8_t battery_level;
+	uint8_t battery_full;
 	uint16_t battery_voltage;
 	uint8_t battery_voltage_head;
 	uint8_t battery_voltage_count;
