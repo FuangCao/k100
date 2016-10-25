@@ -124,6 +124,10 @@ void jwaoo_key_process_factory(uint8_t keycode)
 
 void jwaoo_key_process_suspend(uint8_t keycode)
 {
+	if (jwaoo_key_check_lock_state()) {
+		return;
+	}
+
 	if (jwaoo_keys[JWAOO_KEY_UP].value) {
 		jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
 		jwaoo_app_env.key_release_pending = true;
@@ -231,6 +235,7 @@ void jwaoo_key_lock_timer_fire(void)
 	if (jwaoo_app_env.key_locked) {
 		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
 		jwaoo_app_env.key_locked = false;
+		jwaoo_app_goto_active_mode();
 	} else {
 		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 		jwaoo_app_env.key_locked = true;

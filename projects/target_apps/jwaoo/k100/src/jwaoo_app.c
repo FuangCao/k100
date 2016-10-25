@@ -359,6 +359,7 @@ static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_suspend_battery_poll_handler },
+	{ JWAOO_KEY_LOCK_TIMER, 					(ke_msg_func_t) jwaoo_key_lock_timer_handler },
 	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_suspend_process_key_handler },
 };
