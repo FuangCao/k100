@@ -432,7 +432,7 @@ void jwaoo_app_init(void)
 	jwaoo_app_env.battery_voltage = JWAOO_BATT_VOLTAGE_MAX;
 
 	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
-	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_POWER_DOWN;
+	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_SHUTDOWN;
 
 	jwaoo_app_mnf_data_init();
 

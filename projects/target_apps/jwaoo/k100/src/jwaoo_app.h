@@ -99,6 +99,7 @@ typedef struct {
 	uint16_t sensor_poll_delay;
 
 	bool key_locked;
+	bool key_app_locked;
 	bool key_lock_pending;
 	bool key_release_pending;
 	bool key_click_enable;
@@ -106,6 +107,8 @@ typedef struct {
 	bool key_long_click_enable;
 	uint16_t key_long_click_delay;
 	uint16_t key_multi_click_delay;
+
+	uint8_t app_data[16];
 } jwaoo_app_env_t;
 
 typedef struct {

@@ -84,7 +84,7 @@ void jwaoo_key_process_active(uint8_t keycode)
 	jwaoo_key_timer_clear(keycode);
 	jwaoo_app_suspend_counter_reset();
 
-	if (jwaoo_key_check_lock_state()) {
+	if (jwaoo_key_check_lock_state() || jwaoo_app_env.key_app_locked) {
 		return;
 	}
 

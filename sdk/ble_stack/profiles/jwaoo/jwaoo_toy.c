@@ -376,6 +376,20 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		success = true;
 		break;
 
+	case JWAOO_TOY_CMD_APP_DATA:
+		if (length > 1) {
+			if (--length > sizeof(jwaoo_app_env.app_data)) {
+				break;
+			}
+
+			memcpy(jwaoo_app_env.app_data, command->bytes, length);
+			success = true;
+			break;
+		}
+
+		jwaoo_toy_send_response_data(command->type, jwaoo_app_env.app_data, sizeof(jwaoo_app_env.app_data));
+		return;
+
 	case JWAOO_TOY_CMD_FACTORY_ENABLE:
 		jwaoo_app_set_factory_enable(length > 1 && command->enable.value);
 		success = true;
@@ -424,18 +438,18 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 	}
 
 	case JWAOO_TOY_CMD_BATT_SHUTDOWN_VOLTAGE:
-		if (length == 1) {
-			jwaoo_toy_send_response_u16(command->type, jwaoo_app_settings.shutdown_voltage);
-			return;
-		}
+		if (length > 1) {
+			if (length != 3 || command->value16 > JWAOO_BATT_VOLTAGE_SHUTDOWN_MAX) {
+				break;
+			}
 
-		if (length != 3 || command->value16 < JWAOO_BATT_VOLTAGE_MIN || command->value16 > JWAOO_BATT_VOLTAGE_MAX) {
+			jwaoo_app_settings.shutdown_voltage = command->value16;
+			success = true;
 			break;
 		}
 
-		jwaoo_app_settings.shutdown_voltage = command->value16;
-		success = true;
-		break;
+		jwaoo_toy_send_response_u16(command->type, jwaoo_app_settings.shutdown_voltage);
+		return;
 
 	// ================================================================================
 
@@ -526,6 +540,16 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 		success = true;
 		break;
+
+	case JWAOO_TOY_CMD_KEY_LOCK:
+		if (length > 1) {
+			jwaoo_app_env.key_app_locked = command->enable.value;
+			success = true;
+			break;
+		}
+
+		jwaoo_toy_send_response_u8(command->type, jwaoo_app_env.key_app_locked);
+		return;
 
 	// ================================================================================
 
