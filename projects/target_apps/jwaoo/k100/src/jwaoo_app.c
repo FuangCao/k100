@@ -84,9 +84,9 @@ static int jwaoo_suspend_battery_poll_handler(ke_msg_id_t const msgid, void cons
 {
 	if (CHG_ONLINE) {
 		jwaoo_battery_poll(true);
-	} else if (jwaoo_key_get_press_count()) {
+	} else if (jwaoo_app_env.key_release_pending) {
 		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 20);
-		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+		jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
 	} else {
 		ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_DEEP_SLEEP);
 		jwaoo_hw_set_suspend(true);
@@ -523,16 +523,19 @@ static bool jwaoo_app_need_wakeup(void)
 	if (jwaoo_app_env.key_locked) {
 		uint32_t count = 0;
 
-		while (WAKEUP_KEY1_ACTIVE) {
-			if (WAKEUP_KEY2_ACTIVE) {
-				if (++count > 500000) {
+		while (jwaoo_key_get_status(JWAOO_KEY_UP)) {
+			if (jwaoo_key_get_status(JWAOO_KEY_DOWN)) {
+				if (++count > 200000) {
+					jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
+					jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
 					return true;
 				}
 			} else {
 				count = 0;
 			}
 		}
-	} else if (WAKEUP_KEY1_ACTIVE) {
+	} else if (jwaoo_key_get_status(JWAOO_KEY_UP)) {
+		jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
 		return true;
 	}
 
@@ -546,12 +549,12 @@ void jwaoo_app_resume_from_sleep(void)
 #endif
 
 	jwaoo_app_env.key_lock_pending = false;
-	jwaoo_app_env.key_release_pending = true;
 
 	wkupct_disable_irq();
 	jwaoo_hw_set_deep_sleep(false);
 
 	if (jwaoo_app_need_wakeup()) {
+		jwaoo_app_env.key_release_pending = true;
 		jwaoo_app_env.key_locked = false;
 		jwaoo_app_goto_active_mode();
 	} else if (CHG_ONLINE) {

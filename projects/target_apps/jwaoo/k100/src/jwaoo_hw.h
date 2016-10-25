@@ -47,22 +47,27 @@ void jwaoo_hw_set_suspend(bool enable);
 void jwaoo_hw_set_deep_sleep(bool enable);
 void jwaoo_hw_set_device_enable(bool enable);
 
-static bool jwaoo_hw_irq_invalid(IRQn_Type irq)
+static inline bool jwaoo_hw_irq_invalid(IRQn_Type irq)
 {
 	return irq < GPIO0_IRQn || irq > GPIO4_IRQn;
 }
 
-static uint8_t jwaoo_hw_get_irq_index(IRQn_Type irq)
+static inline uint8_t jwaoo_hw_get_irq_index(IRQn_Type irq)
 {
 	return irq - GPIO0_IRQn;
 }
 
-static struct jwaoo_irq_desc *jwaoo_hw_get_irq_desc(IRQn_Type irq)
+static inline struct jwaoo_irq_desc *jwaoo_hw_get_irq_desc(IRQn_Type irq)
 {
 	return jwaoo_irqs[jwaoo_hw_get_irq_index(irq)];
 }
 
-static void jwaoo_hw_set_irq_desc(IRQn_Type irq, struct jwaoo_irq_desc *desc)
+static inline void jwaoo_hw_set_irq_desc(IRQn_Type irq, struct jwaoo_irq_desc *desc)
 {
 	jwaoo_irqs[jwaoo_hw_get_irq_index(irq)] = desc;
+}
+
+static inline bool jwaoo_hw_get_irq_status(struct jwaoo_irq_desc *desc)
+{
+	return GPIO_GetPinStatus(desc->port, desc->pin) ^ desc->active_low;
 }

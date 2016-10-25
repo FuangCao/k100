@@ -14,13 +14,8 @@
 #define WAKEUP_KEY_POLARITY(port, pin) \
 	WKUPCT_PIN_POLARITY(port, pin, KEY_ACTIVE_LOW)
 
-#define WAKEUP_KEY1_PORT		KEY1_GPIO_PORT
-#define WAKEUP_KEY1_PIN			KEY1_GPIO_PIN
-#define WAKEUP_KEY1_ACTIVE		KEY_GET_STATUS(WAKEUP_KEY1_PORT, WAKEUP_KEY1_PIN)
-
-#define WAKEUP_KEY2_PORT		KEY3_GPIO_PORT
-#define WAKEUP_KEY2_PIN			KEY3_GPIO_PIN
-#define WAKEUP_KEY2_ACTIVE		KEY_GET_STATUS(WAKEUP_KEY2_PORT, WAKEUP_KEY2_PIN)
+#define WAKEUP_KEY_PORT						KEY1_GPIO_PORT
+#define WAKEUP_KEY_PIN						KEY1_GPIO_PIN
 
 #define WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, port, pin) \
 	do { \
@@ -32,7 +27,7 @@
 	do { \
 		(pin_mask) = 0; \
 		(pol_mask) = 0; \
-		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, WAKEUP_KEY1_PORT, WAKEUP_KEY1_PIN); \
+		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, WAKEUP_KEY_PORT, WAKEUP_KEY_PIN); \
 		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, CHG_DET_GPIO_PORT, CHG_DET_GPIO_PIN); \
 	} while (0)
 
@@ -58,6 +53,7 @@ struct jwaoo_key_device {
 	uint8_t count;
 	uint8_t repeat;
 	uint8_t last_value;
+	bool wait_release;
 	bool lock_enable;
 	bool repeat_enable;
 	bool long_click_enable;
@@ -66,8 +62,9 @@ struct jwaoo_key_device {
 
 extern struct jwaoo_key_device jwaoo_keys[];
 
+bool jwaoo_key_check_release(void);
+bool jwaoo_key_get_status(uint8_t keycode);
 void jwaoo_key_set_enable(bool enable);
-uint8_t jwaoo_key_get_press_count(void);
 void jwaoo_key_process_active(uint8_t keycode);
 void jwaoo_key_process_factory(uint8_t keycode);
 void jwaoo_key_process_suspend(uint8_t keycode);
