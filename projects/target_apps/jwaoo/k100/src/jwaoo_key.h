@@ -54,7 +54,6 @@ struct jwaoo_key_device {
 	uint8_t repeat;
 	uint8_t last_value;
 	bool wait_release;
-	bool lock_enable;
 	bool repeat_enable;
 	bool long_click_enable;
 	bool multi_click_enable;

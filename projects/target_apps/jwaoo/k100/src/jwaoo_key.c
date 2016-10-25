@@ -39,19 +39,8 @@ static bool jwaoo_key_check_lock_state(void)
 {
 	struct jwaoo_key_device *key, *key_end;
 
-	key_end = jwaoo_keys + NELEM(jwaoo_keys);
-
-	for (key = jwaoo_keys; key < key_end; key++) {
-		if (key->lock_enable && key->value == 0) {
-			if (jwaoo_app_env.key_lock_pending) {
-				jwaoo_app_env.key_lock_pending = false;
-				jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
-				jwaoo_battery_led_release(2);
-				return true;
-			}
-
-			return jwaoo_app_env.key_locked;
-		}
+	if (jwaoo_keys[JWAOO_KEY_UP].value == 0 || jwaoo_keys[JWAOO_KEY_DOWN].value == 0) {
+		return jwaoo_app_env.key_locked;
 	}
 
 	if (jwaoo_app_env.key_lock_pending) {
@@ -60,7 +49,11 @@ static bool jwaoo_key_check_lock_state(void)
 
 	jwaoo_app_env.key_lock_pending = true;
 
-	for (key = jwaoo_keys; key < key_end; key++) {
+	jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
+	jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
+	jwaoo_app_env.key_release_pending = true;
+
+	for (key = jwaoo_keys, key_end = key + NELEM(jwaoo_keys); key < key_end; key++) {
 		jwaoo_key_timer_clear(key->code);
 	}
 
@@ -97,8 +90,12 @@ void jwaoo_key_process_active(uint8_t keycode)
 		jwaoo_app_timer_set(jwaoo_key_get_multi_click_timer(keycode), jwaoo_app_env.key_multi_click_delay);
 	}
 
-	if (key->multi_click_enable == false && (key->repeat_enable == false || key->repeat == 0)) {
-		if (key->long_click_enable || key->lock_enable) {
+	if (key->multi_click_enable == false) {
+		if (key->repeat_enable) {
+			if (key->repeat == 0 && key->value == 0) {
+				jwaoo_on_host_key_clicked(key, 1);
+			}
+		} else if (key->long_click_enable) {
 			if (key->value == 0 && key->last_value != JWAOO_KEY_VALUE_LONG) {
 				jwaoo_on_host_key_clicked(key, 1);
 			}
@@ -164,6 +161,12 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 	if (jwaoo_app_env.key_release_pending) {
 		if (jwaoo_key_check_release()) {
 			jwaoo_app_env.key_release_pending = false;
+
+			if (jwaoo_app_env.key_lock_pending) {
+				jwaoo_app_env.key_lock_pending = false;
+				jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
+				jwaoo_battery_led_release(2);
+			}
 		}
 
 		return;
@@ -190,9 +193,7 @@ void jwaoo_key_set_enable(bool enable)
 	jwaoo_app_env.key_multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
 
 	jwaoo_keys[JWAOO_KEY_UP].repeat_enable = true;
-	jwaoo_keys[JWAOO_KEY_UP].lock_enable = true;
 	jwaoo_keys[JWAOO_KEY_DOWN].repeat_enable = true;
-	jwaoo_keys[JWAOO_KEY_DOWN].lock_enable = true;
 
 	if (enable) {
 		for (int i = 0; i < NELEM(jwaoo_keys); i++) {
@@ -227,10 +228,6 @@ bool jwaoo_key_get_status(uint8_t keycode)
 
 void jwaoo_key_lock_timer_fire(void)
 {
-	jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
-	jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
-	jwaoo_app_env.key_release_pending = true;
-
 	if (jwaoo_app_env.key_locked) {
 		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
 		jwaoo_app_env.key_locked = false;
