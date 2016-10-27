@@ -46,20 +46,15 @@ bool bmi160_set_enable(bool enable)
 	return true;
 }
 
-bool bmi160_read_sensor_values(uint8_t values[3])
+bool bmi160_read_sensor_values(uint8_t values[6])
 {
 	int ret;
-	uint8_t buff[6];
 
-	ret = bmi160_read_data(BMI160_REG_DATA_ACC, buff, sizeof(buff));
+	ret = bmi160_read_data(BMI160_REG_DATA_ACC, values, 6);
 	if (ret < 0) {
 		println("Failed to bmi160_read_data: %d", ret);
 		return false;
 	}
-
-	values[0] = buff[1];
-	values[1] = buff[3];
-	values[2] = buff[5];
 
 	return true;
 }

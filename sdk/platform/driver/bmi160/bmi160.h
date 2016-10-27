@@ -115,7 +115,7 @@ enum {
 };
 
 bool bmi160_set_enable(bool enable);
-bool bmi160_read_sensor_values(uint8_t values[3]);
+bool bmi160_read_sensor_values(uint8_t values[6]);
 
 static inline int bmi160_read_data(uint8_t addr, uint8_t *data, int size)
 {
