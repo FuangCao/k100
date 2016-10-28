@@ -110,7 +110,7 @@ void jwaoo_hw_set_suspend(bool enable)
 		jwaoo_moto_blink_close();
 		app_easy_gap_disconnect(app_connection_idx);
 		app_easy_gap_advertise_stop();
-		jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
+		BT_LED_CLOSE;
 	} else {
 		jwaoo_battery_led_update_state(true);
 		jwaoo_app_adv_start();

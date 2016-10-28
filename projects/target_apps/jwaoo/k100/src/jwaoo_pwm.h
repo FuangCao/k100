@@ -11,7 +11,6 @@
 
 enum {
 	JWAOO_PWM_MOTO,
-	JWAOO_PWM_BT_LED,
 	JWAOO_PWM_BATT_LED,
 };
 

@@ -397,20 +397,22 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 	case JWAOO_TOY_CMD_LED_ENABLE:
 		if (length >= 2) {
-			int pwm;
+			bool enable = (length > 2 && command->led.enable > 0);
 
 			if (command->led.index == 1) {
-				pwm = JWAOO_PWM_BATT_LED;
+				if (enable) {
+					jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
+				} else {
+					jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+				}
 			} else if (command->led.index == 2) {
-				pwm = JWAOO_PWM_BT_LED;
+				if (enable) {
+					BT_LED_OPEN;
+				} else {
+					BT_LED_CLOSE;
+				}
 			} else {
 				break;
-			}
-
-			if (length > 2 && command->led.enable > 0) {
-				jwaoo_pwm_blink_open(pwm);
-			} else {
-				jwaoo_pwm_blink_close(pwm);
 			}
 
 			success = true;

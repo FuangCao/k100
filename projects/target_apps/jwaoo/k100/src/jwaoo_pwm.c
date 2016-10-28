@@ -189,11 +189,6 @@ struct jwaoo_pwm_device jwaoo_pwms[] = {
 		.pin = MOTO_GPIO_PIN,
 		.set_level = jwaoo_moto_device_set_level_handler,
 	},
-	[JWAOO_PWM_BT_LED] = {
-		.port = BT_LED_GPIO_PORT,
-		.pin = BT_LED_GPIO_PIN,
-		.set_level = jwaoo_pwm_device_set_level_handler,
-	},
 	[JWAOO_PWM_BATT_LED] = {
 		.port = BATT_LED_GPIO_PORT,
 		.pin = BATT_LED_GPIO_PIN,

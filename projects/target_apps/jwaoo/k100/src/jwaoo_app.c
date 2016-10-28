@@ -58,10 +58,12 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 	jwaoo_app_add_ad_struct(cmd, &mnf_data, sizeof(mnf_data));
 
 	app_easy_gap_undirected_advertise_start();
-	jwaoo_pwm_blink_square_full(JWAOO_PWM_BT_LED, 1000, 0);
 	jwaoo_battery_poll_start();
 
 	jwaoo_app_suspend_counter_start();
+
+	jwaoo_app_env.disconnected = false;
+	jwaoo_update_bt_led_state();
 
 	return KE_MSG_CONSUMED;
 }
@@ -151,6 +153,23 @@ static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, 
 	return KE_MSG_CONSUMED;
 }
 
+static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
+{
+	if (jwaoo_app_env.connected) {
+		BT_LED_OPEN;
+	} else if (jwaoo_app_env.disconnected) {
+		BT_LED_CLOSE;
+	} else if (BT_LED_STATE) {
+		BT_LED_CLOSE;
+		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, 550);
+	} else {
+		BT_LED_OPEN;
+		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, 50);
+	}
+
+	return KE_MSG_CONSUMED;
+}
+
 static int jwaoo_moto_rand_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	jwaoo_moto_rand_timer_fire();
@@ -200,6 +219,9 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 	case JWAOO_SUSPEND_TIMER:
 		jwaoo_app_suspend_counter_reset();
 		break;
+
+	case JWAOO_BT_LED_BLINK:
+		BT_LED_CLOSE;
 	}
 
 	return KE_MSG_CONSUMED;
@@ -313,6 +335,7 @@ static const struct ke_msg_handler jwaoo_app_active_handlers[] = {
 	{ JWAOO_REBOOT,								(ke_msg_func_t) jwaoo_reboot_handler },
 	{ JWAOO_SHUTDOWN,							(ke_msg_func_t) jwaoo_shutdown_handler },
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_active_process_key_handler },
+	{ JWAOO_BT_LED_BLINK, 						(ke_msg_func_t) jwaoo_bt_led_blink_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
 	{ JWAOO_MOTO_RAND_TIMER,					(ke_msg_func_t) jwaoo_moto_rand_handler },
 
@@ -488,12 +511,8 @@ void jwaoo_app_adv_start(void)
 void jwaoo_app_set_connect_state(bool connected)
 {
 	jwaoo_app_env.connected = connected;
-
-	if (connected) {
-		jwaoo_pwm_blink_open(JWAOO_PWM_BT_LED);
-	} else {
-		jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
-	}
+	jwaoo_app_env.disconnected = !connected;
+	jwaoo_update_bt_led_state();
 }
 
 void jwaoo_app_suspend_counter_reset(void)

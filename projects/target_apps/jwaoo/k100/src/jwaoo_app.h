@@ -27,6 +27,7 @@ enum {
 	JWAOO_REBOOT,
 	JWAOO_SHUTDOWN,
 	JWAOO_PROCESS_KEY,
+	JWAOO_BT_LED_BLINK,
 	JWAOO_MOTO_BOOST,
 	JWAOO_MOTO_RAND_TIMER,
 
@@ -66,6 +67,7 @@ enum {
 
 typedef struct {
 	bool connected;
+	bool disconnected;
 	bool initialized;
 	bool device_enabled;
 	uint16_t suspend_counter;
@@ -203,4 +205,9 @@ static inline void jwaoo_battery_poll_start(void)
 static inline void jwaoo_battery_poll_stop(void)
 {
 	jwaoo_app_timer_clear(JWAOO_BATT_POLL_TIMER);
+}
+
+static inline void jwaoo_update_bt_led_state(void)
+{
+	jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, 1);
 }
