@@ -161,10 +161,10 @@ static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param
 		BT_LED_CLOSE;
 	} else if (BT_LED_STATE) {
 		BT_LED_CLOSE;
-		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
+		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
 	} else {
 		BT_LED_OPEN;
-		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
+		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
 	}
 
 	return KE_MSG_CONSUMED;
@@ -462,8 +462,8 @@ void jwaoo_app_init(void)
 
 	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
 	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_SHUTDOWN;
-	jwaoo_app_settings.bt_led_open_time = 550;
-	jwaoo_app_settings.bt_led_close_time = 50;
+	jwaoo_app_settings.bt_led_open_time = 20;
+	jwaoo_app_settings.bt_led_close_time = 580;
 
 	jwaoo_app_mnf_data_init();
 
