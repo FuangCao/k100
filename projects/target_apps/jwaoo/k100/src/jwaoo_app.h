@@ -6,7 +6,7 @@
 #include "jwaoo_hw.h"
 #include "jwaoo_battery.h"
 
-#define JWAOO_SUSPEND_DELAY_DEFAULT		300
+#define JWAOO_SUSPEND_DELAY_DEFAULT		600
 
 #define APP_AD_MSD_COMPANY_ID			(0xABCD)
 #define APP_AD_MSD_COMPANY_ID_LEN		(2)
@@ -65,6 +65,17 @@ enum {
 	JWAOO_APP_STATE_MAX
 };
 
+#pragma pack(1)
+
+typedef struct {
+	uint16_t suspend_delay;
+	uint16_t shutdown_voltage;
+	uint16_t bt_led_open_time;
+	uint16_t bt_led_close_time;
+} jwaoo_app_settings_t;
+
+#pragma pack()
+
 typedef struct {
 	bool connected;
 	bool disconnected;
@@ -74,6 +85,9 @@ typedef struct {
 
 	uint8_t moto_mode;
 	uint8_t moto_rand;
+	uint8_t moto_speed_line;
+	uint8_t moto_speed_square;
+	uint8_t moto_speed_sawtooth;
 	bool moto_report;
 	bool moto_boost_busy;
 
@@ -112,11 +126,6 @@ typedef struct {
 
 	uint8_t app_data[16];
 } jwaoo_app_env_t;
-
-typedef struct {
-	uint16_t suspend_delay;
-	uint16_t shutdown_voltage;
-} jwaoo_app_settings_t;
 
 extern jwaoo_app_env_t jwaoo_app_env;
 extern jwaoo_app_settings_t jwaoo_app_settings;

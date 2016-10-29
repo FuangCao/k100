@@ -107,7 +107,7 @@ bool jwaoo_hw_irq_disable(IRQn_Type irq)
 void jwaoo_hw_set_suspend(bool enable)
 {
 	if (enable) {
-		jwaoo_moto_blink_close();
+		jwaoo_moto_set_mode(JWAOO_MOTO_MODE_IDLE, 0);
 		app_easy_gap_disconnect(app_connection_idx);
 		app_easy_gap_advertise_stop();
 		BT_LED_CLOSE;
@@ -121,7 +121,7 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 {
 	if (enable) {
 		jwaoo_battery_poll_stop();
-		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+		jwaoo_moto_blink_close();
 
 		arch_ble_ext_wakeup_on();
 

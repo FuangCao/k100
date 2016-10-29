@@ -49,7 +49,7 @@ void jwaoo_battery_led_blink(void)
 {
 	if (jwaoo_app_env.battery_led_locked < 2) {
 		jwaoo_app_env.battery_led_locked = 1;
-		jwaoo_pwm_blink_square_full(JWAOO_PWM_BATT_LED, 50, 2);
+		jwaoo_pwm_blink_square_full(JWAOO_PWM_BATT_LED, 50, 1);
 	}
 }
 

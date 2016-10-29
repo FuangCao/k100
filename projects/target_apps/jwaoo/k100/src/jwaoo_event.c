@@ -5,15 +5,13 @@
 
 void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 {
-	jwaoo_battery_led_blink();
-
 	switch (key->code) {
 	case JWAOO_KEY_UP:
-		jwaoo_moto_speed_add();
+		jwaoo_moto_speed_add(1);
 		break;
 
 	case JWAOO_KEY_DOWN:
-		if (jwaoo_moto_speed_sub() > 0) {
+		if (jwaoo_moto_speed_add(-1)) {
 			if (key->repeat > 1) {
 				key->repeat = 1;
 			}
@@ -23,11 +21,18 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 		break;
 
 	case JWAOO_KEY_O:
-		if (!jwaoo_app_env.connected) {
-			jwaoo_moto_mode_add();
+		if (jwaoo_app_env.connected) {
+			return;
 		}
+
+		jwaoo_moto_mode_add();
 		break;
+
+	default:
+		return;
 	}
+
+	jwaoo_battery_led_blink();
 }
 
 void jwaoo_on_host_key_long_clicked(struct jwaoo_key_device *key)

@@ -390,6 +390,18 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		jwaoo_toy_send_response_data(command->type, jwaoo_app_env.app_data, sizeof(jwaoo_app_env.app_data));
 		return;
 
+	case JWAOO_TOY_CMD_APP_SETTINGS:
+		if (length == 1) {
+			jwaoo_toy_send_response_data(command->type, (uint8_t *) &jwaoo_app_settings, sizeof(jwaoo_app_settings));
+			return;
+		}
+
+		if (--length == sizeof(jwaoo_app_settings)) {
+			memcpy(&jwaoo_app_settings, command->bytes, length);
+			success = true;
+		}
+		break;
+
 	case JWAOO_TOY_CMD_FACTORY_ENABLE:
 		jwaoo_app_set_factory_enable(length > 1 && command->enable.value);
 		success = true;
@@ -480,7 +492,15 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 			break;
 		}
 
-		success = jwaoo_moto_set_mode(command->moto.mode, command->moto.level);
+		if (command->moto.mode < JWAOO_MOTO_MODE_COUNT) {
+			if (command->moto.level > 0) {
+				jwaoo_moto_set_mode(command->moto.mode, command->moto.level);
+			} else {
+				jwaoo_moto_blink_close();
+			}
+
+			success = true;
+		}
 		break;
 
 	case JWAOO_TOY_CMD_MOTO_GET_MODE: {

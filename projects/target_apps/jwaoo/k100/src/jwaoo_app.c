@@ -161,10 +161,10 @@ static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param
 		BT_LED_CLOSE;
 	} else if (BT_LED_STATE) {
 		BT_LED_CLOSE;
-		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, 550);
+		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
 	} else {
 		BT_LED_OPEN;
-		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, 50);
+		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
 	}
 
 	return KE_MSG_CONSUMED;
@@ -265,6 +265,11 @@ static int jwaoo_deep_sleep_to_active_handler(ke_msg_id_t const msgid, void cons
 
 	// jwaoo_hw_set_deep_sleep(false);
 	jwaoo_hw_set_suspend(false);
+
+	if (jwaoo_app_env.key_release_pending && jwaoo_app_env.key_lock_pending) {
+		jwaoo_app_env.battery_led_locked = 2;
+		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
+	}
 
 	return KE_MSG_CONSUMED;
 }
@@ -457,6 +462,8 @@ void jwaoo_app_init(void)
 
 	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
 	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_SHUTDOWN;
+	jwaoo_app_settings.bt_led_open_time = 550;
+	jwaoo_app_settings.bt_led_close_time = 50;
 
 	jwaoo_app_mnf_data_init();
 
@@ -575,7 +582,12 @@ void jwaoo_app_resume_from_sleep(void)
 
 	if (jwaoo_app_need_wakeup()) {
 		jwaoo_app_env.key_release_pending = true;
-		jwaoo_app_env.key_locked = false;
+
+		if (jwaoo_app_env.key_locked) {
+			jwaoo_app_env.key_locked = false;
+			jwaoo_app_env.key_lock_pending = true;
+		}
+
 		jwaoo_app_goto_active_mode();
 	} else if (CHG_ONLINE) {
 		jwaoo_app_goto_suspend_mode();
