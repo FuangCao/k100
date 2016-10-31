@@ -156,15 +156,15 @@ static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, 
 static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	if (jwaoo_app_env.connected) {
-		BT_LED_OPEN;
-	} else if (jwaoo_app_env.disconnected) {
-		BT_LED_CLOSE;
-	} else if (BT_LED_STATE) {
-		BT_LED_CLOSE;
-		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
+		if (BT_LED_STATE) {
+			BT_LED_CLOSE;
+			jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
+		} else {
+			BT_LED_OPEN;
+			jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
+		}
 	} else {
-		BT_LED_OPEN;
-		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
+		BT_LED_CLOSE;
 	}
 
 	return KE_MSG_CONSUMED;
@@ -265,11 +265,6 @@ static int jwaoo_deep_sleep_to_active_handler(ke_msg_id_t const msgid, void cons
 
 	// jwaoo_hw_set_deep_sleep(false);
 	jwaoo_hw_set_suspend(false);
-
-	if (jwaoo_app_env.key_release_pending && jwaoo_app_env.key_lock_pending) {
-		jwaoo_app_env.battery_led_locked = 2;
-		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
-	}
 
 	return KE_MSG_CONSUMED;
 }
@@ -462,8 +457,8 @@ void jwaoo_app_init(void)
 
 	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
 	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_SHUTDOWN;
-	jwaoo_app_settings.bt_led_open_time = 20;
-	jwaoo_app_settings.bt_led_close_time = 580;
+	jwaoo_app_settings.bt_led_open_time = 50;
+	jwaoo_app_settings.bt_led_close_time = 550;
 
 	jwaoo_app_mnf_data_init();
 
@@ -553,8 +548,6 @@ static bool jwaoo_app_need_wakeup(void)
 		while (jwaoo_key_get_status(JWAOO_KEY_UP)) {
 			if (jwaoo_key_get_status(JWAOO_KEY_DOWN)) {
 				if (++count > 200000) {
-					jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
-					jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
 					return true;
 				}
 			} else {
@@ -562,7 +555,6 @@ static bool jwaoo_app_need_wakeup(void)
 			}
 		}
 	} else if (jwaoo_key_get_status(JWAOO_KEY_UP)) {
-		jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
 		return true;
 	}
 
@@ -575,19 +567,13 @@ void jwaoo_app_resume_from_sleep(void)
 	wdg_freeze();
 #endif
 
-	jwaoo_app_env.key_lock_pending = false;
-
 	wkupct_disable_irq();
 	jwaoo_hw_set_deep_sleep(false);
+	jwaoo_app_env.key_lock_pending = false;
 
 	if (jwaoo_app_need_wakeup()) {
 		jwaoo_app_env.key_release_pending = true;
-
-		if (jwaoo_app_env.key_locked) {
-			jwaoo_app_env.key_locked = false;
-			jwaoo_app_env.key_lock_pending = true;
-		}
-
+		jwaoo_app_env.key_locked = false;
 		jwaoo_app_goto_active_mode();
 	} else if (CHG_ONLINE) {
 		jwaoo_app_goto_suspend_mode();

@@ -48,9 +48,6 @@ static bool jwaoo_key_check_lock_state(void)
 	}
 
 	jwaoo_app_env.key_lock_pending = true;
-
-	jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
-	jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
 	jwaoo_app_env.key_release_pending = true;
 
 	for (key = jwaoo_keys, key_end = key + NELEM(jwaoo_keys); key < key_end; key++) {
@@ -124,12 +121,11 @@ void jwaoo_key_process_factory(uint8_t keycode)
 
 void jwaoo_key_process_suspend(uint8_t keycode)
 {
-	if (jwaoo_key_check_lock_state()) {
+	if (jwaoo_app_env.key_locked && jwaoo_key_check_lock_state()) {
 		return;
 	}
 
 	if (jwaoo_keys[JWAOO_KEY_UP].value) {
-		jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
 		jwaoo_app_env.key_release_pending = true;
 		jwaoo_app_goto_active_mode();
 	}
@@ -148,12 +144,6 @@ bool jwaoo_key_check_release(void)
 		}
 	}
 
-	if (success) {
-		for (key = jwaoo_keys; key < key_end; key++) {
-			key->wait_release = false;
-		}
-	}
-
 	return success;
 }
 
@@ -165,12 +155,9 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 	if (jwaoo_app_env.key_release_pending) {
 		if (jwaoo_key_check_release()) {
 			jwaoo_app_env.key_release_pending = false;
-
-			if (jwaoo_app_env.key_lock_pending) {
-				jwaoo_app_env.key_lock_pending = false;
-				jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
-				jwaoo_battery_led_release(2);
-			}
+			jwaoo_app_env.key_lock_pending = false;
+			jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
+			jwaoo_battery_led_release(2);
 		}
 
 		return;
@@ -193,11 +180,16 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 
 void jwaoo_key_set_enable(bool enable)
 {
-	jwaoo_app_env.key_long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
-	jwaoo_app_env.key_multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
+	if (!jwaoo_app_env.initialized) {
+		jwaoo_app_env.key_long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
+		jwaoo_app_env.key_multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
 
-	jwaoo_keys[JWAOO_KEY_UP].repeat_enable = true;
-	jwaoo_keys[JWAOO_KEY_DOWN].repeat_enable = true;
+		jwaoo_keys[JWAOO_KEY_UP].repeat_enable = true;
+		jwaoo_keys[JWAOO_KEY_DOWN].repeat_enable = true;
+
+		jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
+		jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
+	}
 
 	if (enable) {
 		for (int i = 0; i < NELEM(jwaoo_keys); i++) {

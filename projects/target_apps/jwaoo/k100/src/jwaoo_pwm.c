@@ -139,18 +139,24 @@ void jwaoo_pwm_blink_set(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step,
 {
 	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(pwm);
 
-	jwaoo_pwm_device_set_level(device, pwm, max);
-
 	if (min < max && step > 0) {
+		if (count > 0 || device->level > max || step >= max - min) {
+			device->blink_add = false;
+			jwaoo_pwm_device_set_level(device, pwm, max);
+		} else if (device->level < min) {
+			device->blink_add = true;
+			jwaoo_pwm_device_set_level(device, pwm, min);
+		}
+
 		jwaoo_pwm_timer_set(pwm, delay);
 
-		device->blink_add = false;
 		device->blink_min = min;
 		device->blink_max = max;
 		device->blink_step = step;
 		device->blink_delay = delay;
 		device->blink_count = count;
 	} else {
+		jwaoo_pwm_device_set_level(device, pwm, max);
 		jwaoo_pwm_timer_clear(pwm);
 
 		device->blink_min = device->blink_max = min;

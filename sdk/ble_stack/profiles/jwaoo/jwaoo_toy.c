@@ -494,7 +494,8 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 		if (command->moto.mode < JWAOO_MOTO_MODE_COUNT) {
 			if (command->moto.level > 0) {
-				jwaoo_moto_set_mode(command->moto.mode, command->moto.level);
+				jwaoo_app_env.moto_speed = command->moto.level;
+				jwaoo_moto_set_mode(command->moto.mode);
 			} else {
 				jwaoo_moto_blink_close();
 			}
