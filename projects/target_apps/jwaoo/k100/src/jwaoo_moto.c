@@ -22,6 +22,7 @@ static inline void jwaoo_moto_blink_sawtooth(uint32_t cycle, int speed)
 void jwaoo_moto_blink_close(void)
 {
 	jwaoo_app_env.moto_mode = JWAOO_MOTO_MODE_IDLE;
+	jwaoo_app_env.moto_speed = 0;
 	jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
 }
 
@@ -96,7 +97,6 @@ bool jwaoo_moto_speed_add(int value)
 	}
 
 	if (!enable) {
-		jwaoo_app_env.moto_speed = 0;
 		jwaoo_moto_blink_close();
 	}
 
