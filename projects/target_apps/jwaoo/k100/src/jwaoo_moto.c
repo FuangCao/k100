@@ -33,11 +33,9 @@ static inline void jwaoo_moto_blink_square(uint32_t cycle, int speed)
 static void jwaoo_moto_set_rand_enable(bool enable)
 {
 	if (enable) {
-		jwaoo_app_env.moto_rand = 1;
 		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, 1);
 	} else {
 		jwaoo_app_timer_clear(JWAOO_MOTO_RAND_TIMER);
-		jwaoo_app_env.moto_rand = 0;
 	}
 }
 
@@ -172,21 +170,8 @@ uint8_t jwaoo_moto_mode_add(void)
 
 void jwaoo_moto_rand_timer_fire(void)
 {
-	if (jwaoo_app_env.moto_mode == JWAOO_MOTO_MODE_RAND && jwaoo_app_env.moto_rand > 0) {
-		uint8_t count;
-		uint8_t speed = jwaoo_moto_get_speed();
-
-		for (count = 0; speed == jwaoo_app_env.moto_rand && count < 100; count++) {
-			jwaoo_app_env.moto_rand = rand() % JWAOO_MOTO_SPEED_MAX + 1;
-		}
-
-		if (speed < jwaoo_app_env.moto_rand) {
-			speed++;
-		} else {
-			speed--;
-		}
-
-		jwaoo_moto_set_speed(speed);
-		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, 5);
+	if (jwaoo_app_env.moto_mode == JWAOO_MOTO_MODE_RAND) {
+		jwaoo_moto_set_speed(rand() % JWAOO_MOTO_SPEED_MAX + 1);
+		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, 10);
 	}
 }

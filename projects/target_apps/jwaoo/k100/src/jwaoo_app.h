@@ -84,7 +84,6 @@ typedef struct {
 	uint16_t suspend_counter;
 
 	uint8_t moto_mode;
-	uint8_t moto_rand;
 	uint8_t moto_speed;
 	bool moto_report;
 	bool moto_boost_busy;
