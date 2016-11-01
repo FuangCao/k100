@@ -20,7 +20,10 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 
 			blink = true;
 		} else {
-			jwaoo_moto_blink_close();
+			if (jwaoo_app_env.moto_mode != JWAOO_MOTO_MODE_IDLE) {
+				jwaoo_moto_blink_close();
+				blink = true;
+			}
 
 			if (key->repeat > 0) {
 				if (key->repeat > 20) {
