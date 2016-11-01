@@ -5,9 +5,11 @@
 
 void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 {
+	bool blink = false;
+
 	switch (key->code) {
 	case JWAOO_KEY_UP:
-		jwaoo_moto_speed_add(1);
+		blink = jwaoo_moto_speed_add(1);
 		break;
 
 	case JWAOO_KEY_DOWN:
@@ -15,24 +17,36 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 			if (key->repeat > 1) {
 				key->repeat = 1;
 			}
-		} else if (key->repeat > 20) {
-			jwaoo_app_goto_suspend_mode();
+
+			blink = true;
+		} else {
+			jwaoo_moto_blink_close();
+
+			if (key->repeat > 0) {
+				if (key->repeat > 20) {
+					jwaoo_app_goto_suspend_mode();
+				}
+
+				blink = true;
+			}
 		}
 		break;
 
 	case JWAOO_KEY_O:
 		if (jwaoo_app_env.connected) {
-			return;
+			break;
 		}
 
-		jwaoo_moto_mode_add();
+		if (jwaoo_app_env.moto_mode > JWAOO_MOTO_MODE_IDLE) {
+			jwaoo_moto_mode_add();
+			blink = true;
+		}
 		break;
-
-	default:
-		return;
 	}
 
-	jwaoo_battery_led_blink();
+	if (blink) {
+		jwaoo_battery_led_blink();
+	}
 }
 
 void jwaoo_on_host_key_long_clicked(struct jwaoo_key_device *key)

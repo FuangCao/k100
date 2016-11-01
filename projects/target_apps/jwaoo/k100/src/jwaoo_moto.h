@@ -27,11 +27,9 @@ enum
 };
 
 uint16_t jwaoo_moto_speed_to_level(uint16_t speed);
-void jwaoo_moto_set_speed(uint8_t speed);
 uint8_t jwaoo_moto_get_speed(void);
-void jwaoo_moto_blink_close(void);
 
-bool jwaoo_moto_set_mode(uint8_t mode);
+void jwaoo_moto_set_mode(uint8_t mode);
 uint8_t jwaoo_moto_mode_add(void);
 bool jwaoo_moto_speed_add(int value);
 void jwaoo_moto_rand_timer_fire(void);
@@ -46,7 +44,7 @@ static inline uint8_t jwaoo_moto_get_speed(void)
 	return jwaoo_pwm_get_level(JWAOO_PWM_MOTO);
 }
 
-static inline void jwaoo_moto_blink_open(void)
+static inline void jwaoo_moto_blink_close(void)
 {
-	jwaoo_pwm_blink_open(JWAOO_PWM_MOTO);
+	jwaoo_moto_set_mode(JWAOO_MOTO_MODE_IDLE);
 }

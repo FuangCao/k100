@@ -70,8 +70,11 @@ enum {
 typedef struct {
 	uint16_t suspend_delay;
 	uint16_t shutdown_voltage;
-	uint16_t bt_led_open_time;
 	uint16_t bt_led_close_time;
+	uint8_t bt_led_open_time;
+	uint8_t moto_rand_delay;
+	uint8_t moto_rand_max;
+	uint8_t moto_speed_min;
 } jwaoo_app_settings_t;
 
 #pragma pack()

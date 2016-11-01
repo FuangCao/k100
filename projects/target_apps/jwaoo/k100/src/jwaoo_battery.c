@@ -78,7 +78,7 @@ void jwaoo_battery_led_update_state(bool force)
 		break;
 
 	case JWAOO_TOY_BATTERY_CHARGING:
-		jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BATT_LED, JWAOO_PWM_LEVEL_MAX / 10, 2000, 0);
+		jwaoo_pwm_blink_sawtooth_full(JWAOO_PWM_BATT_LED, JWAOO_PWM_LEVEL_MAX / 50, 4000, 0);
 		break;
 
 	default:
