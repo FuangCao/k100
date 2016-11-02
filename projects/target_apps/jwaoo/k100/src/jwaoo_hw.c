@@ -116,9 +116,12 @@ void jwaoo_hw_set_suspend(bool enable)
 		app_easy_gap_advertise_stop();
 		BT_LED_CLOSE;
 	} else {
-		if (jwaoo_app_env.key_release_pending) {
+		if (jwaoo_app_env.key_lock_pending) {
 			jwaoo_app_env.battery_led_locked = 2;
 			jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
+		} else if (jwaoo_app_env.key_release_pending) {
+			jwaoo_battery_led_blink();
+			jwaoo_moto_set_mode(JWAOO_MOTO_MODE_LINE);
 		} else {
 			jwaoo_battery_led_update_state(true);
 		}

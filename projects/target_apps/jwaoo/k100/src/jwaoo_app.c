@@ -264,16 +264,6 @@ static int jwaoo_deep_sleep_to_suspend_handler(ke_msg_id_t const msgid, void con
 	return KE_MSG_CONSUMED;
 }
 
-static int jwaoo_deep_sleep_to_active_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
-{
-	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_ACTIVE);
-
-	// jwaoo_hw_set_deep_sleep(false);
-	jwaoo_hw_set_suspend(false);
-
-	return KE_MSG_CONSUMED;
-}
-
 static int jwaoo_set_upgrade_enable_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_UPGRADE);
@@ -398,7 +388,7 @@ static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 
 static const struct ke_msg_handler jwaoo_app_deep_sleep_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
-	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_deep_sleep_to_active_handler },
+	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_SET_SUSPEND, 						(ke_msg_func_t) jwaoo_deep_sleep_to_suspend_handler },
 };
 
@@ -565,6 +555,8 @@ static bool jwaoo_app_need_wakeup(void)
 		while (jwaoo_key_get_status(JWAOO_KEY_UP)) {
 			if (jwaoo_key_get_status(JWAOO_KEY_DOWN)) {
 				if (++count > 200000) {
+					jwaoo_app_env.key_lock_pending = true;
+					jwaoo_app_env.key_locked = false;
 					return true;
 				}
 			} else {
@@ -590,7 +582,6 @@ void jwaoo_app_resume_from_sleep(void)
 
 	if (jwaoo_app_need_wakeup()) {
 		jwaoo_app_env.key_release_pending = true;
-		jwaoo_app_env.key_locked = false;
 		jwaoo_app_goto_active_mode();
 	} else if (CHG_ONLINE) {
 		jwaoo_app_goto_suspend_mode();

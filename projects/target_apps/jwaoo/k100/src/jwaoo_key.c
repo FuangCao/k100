@@ -242,7 +242,7 @@ void jwaoo_key_repeat_timer_fire(ke_msg_id_t const msgid, uint8_t keycode)
 {
 	struct jwaoo_key_device *key = jwaoo_keys + keycode;
 
-	if (key->value > 0) {
+	if (key->value > 0 && key->repeat < 0xFF) {
 		jwaoo_app_timer_set(msgid, JWAOO_KEY_REPEAT_SHORT_DELAY);
 
 		key->repeat++;
