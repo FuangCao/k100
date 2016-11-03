@@ -29,7 +29,7 @@ bool jwaoo_moto_speed_add(int value)
 {
 	int speed;
 
-	if (jwaoo_app_env.moto_mode == JWAOO_MOTO_MODE_RAND) {
+	if (jwaoo_app_env.moto_mode == JWAOO_MOTO_MODE_RAND && jwaoo_app_settings.moto_rand_max > 0) {
 		return (value > 0);
 	}
 
@@ -139,7 +139,17 @@ uint8_t jwaoo_moto_mode_add(void)
 void jwaoo_moto_rand_timer_fire(void)
 {
 	if (jwaoo_app_env.moto_mode == JWAOO_MOTO_MODE_RAND) {
-		jwaoo_moto_set_speed((rand() % jwaoo_app_settings.moto_rand_max) + 1);
+		uint8_t max;
+
+		if (jwaoo_app_settings.moto_rand_max > 0) {
+			max = jwaoo_app_settings.moto_rand_max;
+		} else if (jwaoo_app_env.moto_speed > 0) {
+			max = jwaoo_app_env.moto_speed;
+		} else {
+			return;
+		}
+
+		jwaoo_moto_set_speed((rand() % max) + 1);
 		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, jwaoo_app_settings.moto_rand_delay);
 	}
 }
