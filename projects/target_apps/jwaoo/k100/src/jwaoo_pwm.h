@@ -37,9 +37,9 @@ struct jwaoo_pwm_device *jwaoo_pwm_get_device(uint8_t pwm);
 void jwaoo_pwm_set_level(uint8_t pwm, uint16_t level);
 void jwaoo_pwm_sync(uint8_t pwm);
 void jwaoo_pwm_blink_walk(uint8_t pwm);
-void jwaoo_pwm_blink_set(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint8_t delay, uint8_t count);
-void jwaoo_pwm_blink_sawtooth(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint32_t cycle, uint8_t count);
-void jwaoo_pwm_blink_square(uint8_t pwm, uint16_t min, uint16_t max, uint32_t cycle, uint8_t count);
+void jwaoo_pwm_blink_set(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint8_t delay, uint8_t count, bool reload);
+void jwaoo_pwm_blink_sawtooth(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint32_t cycle, uint8_t count, bool reload);
+void jwaoo_pwm_blink_square(uint8_t pwm, uint16_t min, uint16_t max, uint32_t cycle, uint8_t count, bool reload);
 
 static inline struct jwaoo_pwm_device *jwaoo_pwm_get_device(uint8_t pwm)
 {
@@ -72,7 +72,7 @@ static inline void jwaoo_pwm_timer_clear(uint8_t pwm)
 
 static inline void jwaoo_pwm_blink_set_level(uint8_t pwm, uint16_t level)
 {
-	jwaoo_pwm_blink_set(pwm, level, level, 0, 0, 0);
+	jwaoo_pwm_blink_set(pwm, level, level, 0, 0, 0, true);
 }
 
 static inline void jwaoo_pwm_blink_open(uint8_t pwm)
@@ -87,11 +87,11 @@ static inline void jwaoo_pwm_blink_close(uint8_t pwm)
 
 static inline void jwaoo_pwm_blink_sawtooth_full(uint8_t pwm, uint16_t step, uint32_t cycle, uint8_t count)
 {
-	jwaoo_pwm_blink_sawtooth(pwm, 0, JWAOO_PWM_LEVEL_MAX, step, cycle, count);
+	jwaoo_pwm_blink_sawtooth(pwm, 0, JWAOO_PWM_LEVEL_MAX, step, cycle, count, true);
 }
 
 static inline void jwaoo_pwm_blink_square_full(uint8_t pwm, uint32_t cycle, uint8_t count)
 {
-	jwaoo_pwm_blink_square(pwm, 0, JWAOO_PWM_LEVEL_MAX, cycle, count);
+	jwaoo_pwm_blink_square(pwm, 0, JWAOO_PWM_LEVEL_MAX, cycle, count, true);
 }
 

@@ -135,12 +135,16 @@ void jwaoo_pwm_blink_walk(uint8_t pwm)
 	}
 }
 
-void jwaoo_pwm_blink_set(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint8_t delay, uint8_t count)
+void jwaoo_pwm_blink_set(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint8_t delay, uint8_t count, bool reload)
 {
 	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(pwm);
 
 	if (min < max && step > 0) {
-		if (count > 0 || device->level > max || step >= max - min) {
+		if (delay < 1) {
+			delay = 1;
+		}
+
+		if (count > 0 || device->level > max) {
 			device->blink_add = false;
 			jwaoo_pwm_device_set_level(device, pwm, max);
 		} else if (device->level < min) {
@@ -148,7 +152,9 @@ void jwaoo_pwm_blink_set(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step,
 			jwaoo_pwm_device_set_level(device, pwm, min);
 		}
 
-		jwaoo_pwm_timer_set(pwm, delay);
+		if (reload) {
+			jwaoo_pwm_timer_set(pwm, delay);
+		}
 
 		device->blink_min = min;
 		device->blink_max = max;
@@ -164,31 +170,22 @@ void jwaoo_pwm_blink_set(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step,
 	}
 }
 
-void jwaoo_pwm_blink_sawtooth(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint32_t cycle, uint8_t count)
+void jwaoo_pwm_blink_sawtooth(uint8_t pwm, uint16_t min, uint16_t max, uint16_t step, uint32_t cycle, uint8_t count, bool reload)
 {
 	uint8_t delay;
 
 	if (max > min) {
 		delay = cycle * step / (max - min) / 20;
-
-		if (delay < 1) {
-			delay = 1;
-		}
 	} else {
 		delay = 0;
 	}
 
-	jwaoo_pwm_blink_set(pwm, min, max, step, delay, count);
+	jwaoo_pwm_blink_set(pwm, min, max, step, delay, count, reload);
 }
 
-void jwaoo_pwm_blink_square(uint8_t pwm, uint16_t min, uint16_t max, uint32_t cycle, uint8_t count)
+void jwaoo_pwm_blink_square(uint8_t pwm, uint16_t min, uint16_t max, uint32_t cycle, uint8_t count, bool reload)
 {
-	uint8_t delay = cycle / 20;
-	if (delay < 1) {
-		delay = 1;
-	}
-
-	jwaoo_pwm_blink_set(pwm, min, max, max - min, delay, count);
+	jwaoo_pwm_blink_set(pwm, min, max, max - min, cycle / 20, count, reload);
 }
 
 static void jwaoo_battery_led_complete(struct jwaoo_pwm_device *device)

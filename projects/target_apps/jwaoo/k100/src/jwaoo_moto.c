@@ -10,14 +10,14 @@ static inline void jwaoo_moto_set_speed(uint8_t speed)
 	jwaoo_pwm_blink_set_level(JWAOO_PWM_MOTO, speed);
 }
 
-static inline void jwaoo_moto_blink_sawtooth(uint32_t cycle, int speed)
+static inline void jwaoo_moto_blink_sawtooth(uint32_t cycle, int speed, bool reload)
 {
-	jwaoo_pwm_blink_sawtooth(JWAOO_PWM_MOTO, 1, speed, 1, cycle, 0);
+	jwaoo_pwm_blink_sawtooth(JWAOO_PWM_MOTO, 1, speed, 1, cycle, 0, reload);
 }
 
-static inline void jwaoo_moto_blink_square(uint32_t cycle, int speed)
+static inline void jwaoo_moto_blink_square(uint32_t cycle, int speed, bool reload)
 {
-	jwaoo_pwm_blink_square(JWAOO_PWM_MOTO, 0, speed, cycle, 0);
+	jwaoo_pwm_blink_square(JWAOO_PWM_MOTO, 0, speed, cycle, 0, reload);
 }
 
 uint16_t jwaoo_moto_speed_to_level(uint16_t speed)
@@ -52,19 +52,19 @@ bool jwaoo_moto_speed_add(int value)
 		break;
 
 	case JWAOO_MOTO_MODE_SAWTOOTH:
-		jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_LONG, speed);
+		jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_LONG, speed, false);
 		break;
 
 	case JWAOO_MOTO_MODE_SAWTOOTH_FAST:
-		jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_SHORT, speed);
+		jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_SHORT, speed, false);
 		break;
 
 	case JWAOO_MOTO_MODE_SQUARE:
-		jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_LONG, speed);
+		jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_LONG, speed, false);
 		break;
 
 	case JWAOO_MOTO_MODE_SQUARE_FAST:
-		jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_SHORT, speed);
+		jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_SHORT, speed, false);
 		break;
 	}
 
@@ -97,19 +97,19 @@ void jwaoo_moto_set_mode(uint8_t mode)
 			break;
 
 		case JWAOO_MOTO_MODE_SAWTOOTH:
-			jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_LONG, jwaoo_app_env.moto_speed);
+			jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_LONG, jwaoo_app_env.moto_speed, true);
 			break;
 
 		case JWAOO_MOTO_MODE_SAWTOOTH_FAST:
-			jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_SHORT, jwaoo_app_env.moto_speed);
+			jwaoo_moto_blink_sawtooth(JWAOO_MOTO_SAWTOOTH_SHORT, jwaoo_app_env.moto_speed, true);
 			break;
 
 		case JWAOO_MOTO_MODE_SQUARE:
-			jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_LONG, jwaoo_app_env.moto_speed);
+			jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_LONG, jwaoo_app_env.moto_speed, true);
 			break;
 
 		case JWAOO_MOTO_MODE_SQUARE_FAST:
-			jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_SHORT, jwaoo_app_env.moto_speed);
+			jwaoo_moto_blink_square(JWAOO_MOTO_SQUARE_SHORT, jwaoo_app_env.moto_speed, true);
 			break;
 
 		case JWAOO_MOTO_MODE_RAND:
