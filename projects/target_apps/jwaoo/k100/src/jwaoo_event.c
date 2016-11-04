@@ -39,6 +39,10 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 			jwaoo_moto_mode_add();
 		}
 		break;
+
+	case JWAOO_KEY_MAX:
+		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
+		break;
 	}
 }
 
