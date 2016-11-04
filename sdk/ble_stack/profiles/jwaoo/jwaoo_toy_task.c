@@ -243,7 +243,10 @@ static int jwaoo_toy_key_report_state_handler(ke_msg_id_t const msgid,
 {
 	uint8_t event[] = { JWAOO_TOY_EVT_KEY_STATE, param->key->code, param->value };
 
-	jwaoo_toy_send_event(event, sizeof(event));
+	if (jwaoo_toy_send_event(event, sizeof(event)) == ATT_ERR_PREPARE_QUEUE_FULL) {
+		ke_msg_forward(param, dest_id, dest_id);
+		return KE_MSG_NO_FREE;
+	}
 
 	return (KE_MSG_CONSUMED);
 }
@@ -255,7 +258,10 @@ static int jwaoo_toy_key_report_click_handler(ke_msg_id_t const msgid,
 {
 	uint8_t event[] = { JWAOO_TOY_EVT_KEY_CLICK, param->key->code, param->count };
 
-	jwaoo_toy_send_event(event, sizeof(event));
+	if (jwaoo_toy_send_event(event, sizeof(event)) == ATT_ERR_PREPARE_QUEUE_FULL) {
+		ke_msg_forward(param, dest_id, dest_id);
+		return KE_MSG_NO_FREE;
+	}
 
 	return (KE_MSG_CONSUMED);
 }
@@ -267,7 +273,10 @@ static int jwaoo_toy_key_report_long_click_handler(ke_msg_id_t const msgid,
 {
 	uint8_t event[] = { JWAOO_TOY_EVT_KEY_LONG_CLICK, param->key->code };
 
-	jwaoo_toy_send_event(event, sizeof(event));
+	if (jwaoo_toy_send_event(event, sizeof(event)) == ATT_ERR_PREPARE_QUEUE_FULL) {
+		ke_msg_forward(param, dest_id, dest_id);
+		return KE_MSG_NO_FREE;
+	}
 
 	return (KE_MSG_CONSUMED);
 }
@@ -283,8 +292,9 @@ static int jwaoo_toy_moto_report_state_handler(ke_msg_id_t const msgid,
 		.moto.level = jwaoo_moto_get_speed(),
 	};
 
-	if (jwaoo_toy_send_event(&command, 3) != ATT_ERR_NO_ERROR) {
-		ke_timer_set(msgid, dest_id, 10);
+	if (jwaoo_toy_send_event(&command, 3) == ATT_ERR_PREPARE_QUEUE_FULL) {
+		ke_msg_forward(param, dest_id, dest_id);
+		return KE_MSG_NO_FREE;
 	}
 
 	return (KE_MSG_CONSUMED);
