@@ -288,6 +288,7 @@ static int jwaoo_set_factory_enable_handler(ke_msg_id_t const msgid, void const 
 
 	jwaoo_app_env.battery_led_locked = 3;
 	jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+	jwaoo_moto_blink_close();
 
 	return KE_MSG_CONSUMED;
 }
