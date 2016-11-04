@@ -283,7 +283,9 @@ static int jwaoo_toy_moto_report_state_handler(ke_msg_id_t const msgid,
 		.moto.level = jwaoo_moto_get_speed(),
 	};
 
-	jwaoo_toy_send_event(&command, 3);
+	if (jwaoo_toy_send_event(&command, 3) != ATT_ERR_NO_ERROR) {
+		ke_timer_set(msgid, dest_id, 10);
+	}
 
 	return (KE_MSG_CONSUMED);
 }

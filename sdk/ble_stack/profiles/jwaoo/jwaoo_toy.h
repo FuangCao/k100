@@ -144,6 +144,7 @@ enum
 	JWAOO_TOY_CMD_KEY_LONG_CLICK_ENABLE,
 	JWAOO_TOY_CMD_KEY_MULTI_CLICK_ENABLE,
 	JWAOO_TOY_CMD_KEY_LOCK,
+	JWAOO_TOY_CMD_KEY_REPORT_ENABLE,
 	JWAOO_TOY_CMD_GPIO_GET = 100,
 	JWAOO_TOY_CMD_GPIO_SET,
 	JWAOO_TOY_CMD_GPIO_CFG,
@@ -205,6 +206,11 @@ struct jwaoo_toy_command
 				uint32_t delay32;
 			};
 		} enable;
+
+		struct {
+			uint8_t index;
+			uint8_t value;
+		} node;
 
 		struct {
 			uint8_t slave;

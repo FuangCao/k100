@@ -138,12 +138,6 @@ uint8_t jwaoo_toy_send_notify(uint16_t attr, const void *data, int size)
 		return ATT_ERR_WRITE_NOT_PERMITTED;
 	}
 
-	if (jwaoo_toy_env.notify_busy_mask & mask) {
-		return ATT_ERR_PREPARE_QUEUE_FULL;
-	}
-
-	jwaoo_toy_env.notify_busy_mask |= mask;
-
 	handle = jwaoo_toy_env.handle + attr;
 
 	ret = attmdb_att_set_value(handle, size, (uint8_t *) data);
@@ -151,6 +145,12 @@ uint8_t jwaoo_toy_send_notify(uint16_t attr, const void *data, int size)
 		println("Failed to attmdb_att_set_value: %d", ret);
 		return ret;
 	}
+
+	if (jwaoo_toy_env.notify_busy_mask & mask) {
+		return ATT_ERR_PREPARE_QUEUE_FULL;
+	}
+
+	jwaoo_toy_env.notify_busy_mask |= mask;
 
 	prf_server_send_event((prf_env_struct *) &jwaoo_toy_env, false, handle);
 
@@ -573,6 +573,13 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 		jwaoo_toy_send_response_u8(command->type, jwaoo_app_env.key_app_locked);
 		return;
+
+	case JWAOO_TOY_CMD_KEY_REPORT_ENABLE:
+		if (length == 3) {
+			jwaoo_keys[command->node.index].report_enable = command->node.value;
+			success = true;
+		}
+		break;
 
 	// ================================================================================
 

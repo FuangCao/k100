@@ -106,17 +106,19 @@ void jwaoo_key_process_active(uint8_t keycode)
 			if (key->value == 0 && key->last_value != JWAOO_KEY_VALUE_LONG) {
 				jwaoo_on_client_key_clicked(key, 1);
 			}
-		} else if (jwaoo_app_env.key_click_enable && key->value > 0) {
-			jwaoo_on_client_key_clicked(key, 1);
+		} else if (jwaoo_app_env.key_click_enable) {
+			if (key->value > 0) {
+				jwaoo_on_client_key_clicked(key, 1);
+			}
+		} else {
+			jwaoo_on_client_key_state_changed(key, false);
 		}
 	}
-
-	jwaoo_on_client_key_state_changed(key);
 }
 
 void jwaoo_key_process_factory(uint8_t keycode)
 {
-	jwaoo_on_client_key_state_changed(jwaoo_keys + keycode);
+	jwaoo_on_client_key_state_changed(jwaoo_keys + keycode, true);
 }
 
 void jwaoo_key_process_suspend(uint8_t keycode)
@@ -189,6 +191,9 @@ void jwaoo_key_set_enable(bool enable)
 
 		jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
 		jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
+
+		jwaoo_keys[JWAOO_KEY_O].report_enable = true;
+		jwaoo_keys[JWAOO_KEY_MAX].report_enable = true;
 	}
 
 	if (enable) {

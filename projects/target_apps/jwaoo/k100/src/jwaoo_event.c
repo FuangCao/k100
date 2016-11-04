@@ -48,17 +48,23 @@ void jwaoo_on_host_key_long_clicked(struct jwaoo_key_device *key)
 
 // ================================================================================
 
-void jwaoo_on_client_key_state_changed(struct jwaoo_key_device *key)
+void jwaoo_on_client_key_state_changed(struct jwaoo_key_device *key, bool force)
 {
-	jwaoo_toy_report_key_state(key);
+	if (key->report_enable || force) {
+		jwaoo_toy_report_key_state(key);
+	}
 }
 
 void jwaoo_on_client_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 {
-	jwaoo_toy_report_key_click(key, count);
+	if (key->report_enable) {
+		jwaoo_toy_report_key_click(key, count);
+	}
 }
 
 void jwaoo_on_client_key_long_clicked(struct jwaoo_key_device *key)
 {
-	jwaoo_toy_report_key_long_click(key);
+	if (key->report_enable) {
+		jwaoo_toy_report_key_long_click(key);
+	}
 }
