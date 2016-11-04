@@ -92,6 +92,7 @@ typedef struct {
 	bool moto_boost_busy;
 
 	bool battery_report;
+	uint8_t battery_skip;
 	uint8_t battery_led_locked;
 	uint8_t battery_state;
 	uint8_t battery_level;

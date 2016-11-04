@@ -147,6 +147,11 @@ void jwaoo_battery_poll(bool optimize)
 
 	adc_disable();
 
+	if (jwaoo_app_env.battery_skip < 3) {
+		jwaoo_app_env.battery_skip++;
+		return;
+	}
+
 	println("raw voltage = %d", voltage);
 
 	voltage = jwaoo_battery_voltage_calibration(jwaoo_battery_voltage_table, NELEM(jwaoo_battery_voltage_table), voltage);
