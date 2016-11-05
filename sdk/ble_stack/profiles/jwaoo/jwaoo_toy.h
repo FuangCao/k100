@@ -140,6 +140,7 @@ enum
 	JWAOO_TOY_CMD_MOTO_SET_MODE = 80,
 	JWAOO_TOY_CMD_MOTO_GET_MODE,
 	JWAOO_TOY_CMD_MOTO_EVENT_ENABLE,
+	JWAOO_TOY_CMD_MOTO_SPEED_TABLE,
 	JWAOO_TOY_CMD_KEY_CLICK_ENABLE = 90,
 	JWAOO_TOY_CMD_KEY_LONG_CLICK_ENABLE,
 	JWAOO_TOY_CMD_KEY_MULTI_CLICK_ENABLE,
@@ -222,6 +223,11 @@ struct jwaoo_toy_command
 			uint8_t mode;
 			uint8_t level;
 		} moto;
+
+		struct {
+			uint8_t index;
+			uint8_t data[9];
+		} speed_table;
 
 		struct {
 			uint8_t index;

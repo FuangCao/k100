@@ -521,6 +521,18 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		success = true;
 		break;
 
+	case JWAOO_TOY_CMD_MOTO_SPEED_TABLE:
+		if (length == 2) {
+			jwaoo_toy_send_response_data(command->type, (uint8_t *) (jwaoo_moto_speed_table + command->value8), 18);
+			return;
+		}
+
+		if (length == 20) {
+			memcpy(jwaoo_moto_speed_table + command->speed_table.index, command->speed_table.data, 18);
+			success = true;
+		}
+		break;
+
 	// ================================================================================
 
 	case JWAOO_TOY_CMD_KEY_CLICK_ENABLE:

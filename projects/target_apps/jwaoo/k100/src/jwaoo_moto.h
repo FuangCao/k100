@@ -26,6 +26,8 @@ enum
 	JWAOO_MOTO_MODE_COUNT,
 };
 
+extern uint16_t jwaoo_moto_speed_table[];
+
 uint16_t jwaoo_moto_speed_to_level(uint16_t speed);
 uint8_t jwaoo_moto_get_speed(void);
 
