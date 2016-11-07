@@ -155,16 +155,30 @@ static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, 
 
 static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	if (jwaoo_app_env.connected) {
+	if (jwaoo_app_settings.bt_led_close_time > 0) {
+		if (jwaoo_app_env.connected) {
+			if (BT_LED_STATE) {
+				BT_LED_CLOSE;
+				jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
+			} else {
+				BT_LED_OPEN;
+				jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
+			}
+		} else {
+			BT_LED_CLOSE;
+		}
+	} else if (jwaoo_app_env.connected) {
+		BT_LED_OPEN;
+	} else if (jwaoo_app_env.disconnected) {
+		BT_LED_CLOSE;
+	} else {
 		if (BT_LED_STATE) {
 			BT_LED_CLOSE;
-			jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
 		} else {
 			BT_LED_OPEN;
-			jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
 		}
-	} else {
-		BT_LED_CLOSE;
+
+		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
 	}
 
 	return KE_MSG_CONSUMED;
