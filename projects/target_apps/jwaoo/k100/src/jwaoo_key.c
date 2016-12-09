@@ -10,21 +10,6 @@ struct jwaoo_key_device jwaoo_keys[] = {
 			.port = KEY1_GPIO_PORT,
 			.pin = KEY1_GPIO_PIN,
 		},
-	}, {
-		.irq_desc = {
-			.port = KEY2_GPIO_PORT,
-			.pin = KEY2_GPIO_PIN,
-		},
-	}, {
-		.irq_desc = {
-			.port = KEY3_GPIO_PORT,
-			.pin = KEY3_GPIO_PIN,
-		}
-	}, {
-		.irq_desc = {
-			.port = KEY4_GPIO_PORT,
-			.pin = KEY4_GPIO_PIN,
-		},
 	},
 };
 
@@ -37,34 +22,7 @@ static void jwaoo_key_timer_clear(uint8_t keycode)
 
 static bool jwaoo_key_check_lock_state(void)
 {
-	struct jwaoo_key_device *key, *key_end;
-
-	if (jwaoo_keys[JWAOO_KEY_UP].value == 0 || jwaoo_keys[JWAOO_KEY_DOWN].value == 0) {
-		return jwaoo_app_env.key_locked;
-	}
-
-	if (jwaoo_app_env.key_lock_pending) {
-		return true;
-	}
-
-	jwaoo_app_env.key_lock_pending = true;
-	jwaoo_app_env.key_release_pending = true;
-
-	for (key = jwaoo_keys, key_end = key + NELEM(jwaoo_keys); key < key_end; key++) {
-		jwaoo_key_timer_clear(key->code);
-	}
-
-	jwaoo_app_env.battery_led_locked = 2;
-
-	if (jwaoo_app_env.key_locked) {
-		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
-	} else {
-		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
-	}
-
-	jwaoo_app_timer_set(JWAOO_KEY_LOCK_TIMER, 300);
-
-	return true;
+	return false;
 }
 
 void jwaoo_key_process_active(uint8_t keycode)
@@ -127,7 +85,7 @@ void jwaoo_key_process_suspend(uint8_t keycode)
 		return;
 	}
 
-	if (jwaoo_keys[JWAOO_KEY_UP].value) {
+	if (jwaoo_keys[0].value) {
 		jwaoo_app_env.key_release_pending = true;
 		jwaoo_app_goto_active_mode();
 	}
@@ -186,14 +144,9 @@ void jwaoo_key_set_enable(bool enable)
 		jwaoo_app_env.key_long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
 		jwaoo_app_env.key_multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
 
-		jwaoo_keys[JWAOO_KEY_UP].repeat_enable = true;
-		jwaoo_keys[JWAOO_KEY_DOWN].repeat_enable = true;
-
-		jwaoo_keys[JWAOO_KEY_UP].wait_release = true;
-		jwaoo_keys[JWAOO_KEY_DOWN].wait_release = true;
-
-		jwaoo_keys[JWAOO_KEY_O].report_enable = true;
-		jwaoo_keys[JWAOO_KEY_MAX].report_enable = true;
+		jwaoo_keys[0].repeat_enable = true;
+		jwaoo_keys[0].wait_release = true;
+		jwaoo_keys[0].report_enable = true;
 	}
 
 	if (enable) {

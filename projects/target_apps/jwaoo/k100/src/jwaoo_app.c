@@ -564,23 +564,15 @@ void jwaoo_app_before_sleep(void)
 
 static bool jwaoo_app_need_wakeup(void)
 {
-	if (jwaoo_app_env.key_locked) {
 		uint32_t count = 0;
 
-		while (jwaoo_key_get_status(JWAOO_KEY_UP)) {
-			if (jwaoo_key_get_status(JWAOO_KEY_DOWN)) {
+		while (jwaoo_key_get_status(0)) {
 				if (++count > 200000) {
 					jwaoo_app_env.key_lock_pending = true;
 					jwaoo_app_env.key_locked = false;
 					return true;
 				}
-			} else {
-				count = 0;
-			}
 		}
-	} else if (jwaoo_key_get_status(JWAOO_KEY_UP)) {
-		return true;
-	}
 
 	return false;
 }
