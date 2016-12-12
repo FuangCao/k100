@@ -5,11 +5,11 @@
 
 void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 {
-	jwaoo_battery_led_blink();
 }
 
 void jwaoo_on_host_key_long_clicked(struct jwaoo_key_device *key)
 {
+	jwaoo_app_goto_suspend_mode();
 }
 
 // ================================================================================

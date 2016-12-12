@@ -144,7 +144,7 @@ void jwaoo_key_set_enable(bool enable)
 		jwaoo_app_env.key_long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
 		jwaoo_app_env.key_multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
 
-		jwaoo_keys[0].repeat_enable = true;
+		jwaoo_keys[0].long_click_enable = true;
 		jwaoo_keys[0].wait_release = true;
 		jwaoo_keys[0].report_enable = true;
 	}
@@ -183,11 +183,15 @@ bool jwaoo_key_get_status(uint8_t keycode)
 void jwaoo_key_lock_timer_fire(void)
 {
 	if (jwaoo_app_env.key_locked) {
+#ifdef BATT_LED_GPIO_PORT
 		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
+#endif
 		jwaoo_app_env.key_locked = false;
 		jwaoo_app_goto_active_mode();
 	} else {
+#ifdef BATT_LED_GPIO_PORT
 		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+#endif
 		jwaoo_app_env.key_locked = true;
 
 		if (!jwaoo_app_env.connected) {

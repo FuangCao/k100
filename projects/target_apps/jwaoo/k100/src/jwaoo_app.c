@@ -84,9 +84,12 @@ static int jwaoo_factory_battery_poll_handler(ke_msg_id_t const msgid, void cons
 
 static int jwaoo_suspend_battery_poll_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+#ifdef CHG_ONLINE
 	if (CHG_ONLINE) {
 		jwaoo_battery_poll(true);
-	} else if (jwaoo_app_env.key_release_pending) {
+	} else
+#endif
+	if (jwaoo_app_env.key_release_pending) {
 		jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 20);
 		jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
 	} else {
@@ -114,7 +117,9 @@ static int jwaoo_shutdown_handler(ke_msg_id_t const msgid, void const *param, ke
 
 static int jwaoo_pwm_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+#if JWAOO_PWM_COUNT > 0
 	jwaoo_pwm_blink_walk(msgid - JWAOO_PWM1_BLINK_TIMER);
+#endif
 
 	return KE_MSG_CONSUMED;
 }
@@ -128,7 +133,11 @@ static int jwaoo_key_lock_timer_handler(ke_msg_id_t const msgid, void const *par
 
 static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+#ifdef MOTO_GPIO_PORT
 	if (jwaoo_app_env.connected || jwaoo_app_env.moto_mode > JWAOO_MOTO_MODE_IDLE) {
+#else
+	if (jwaoo_app_env.connected) {
+#endif
 		jwaoo_app_suspend_counter_reset();
 	} else if (jwaoo_app_env.key_locked) {
 		jwaoo_app_goto_suspend_mode();
@@ -148,7 +157,9 @@ static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *para
 static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	jwaoo_app_env.moto_boost_busy = false;
+#ifdef MOTO_GPIO_PORT
 	jwaoo_pwm_sync(JWAOO_PWM_MOTO);
+#endif
 
 	return KE_MSG_CONSUMED;
 }
@@ -186,7 +197,9 @@ static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param
 
 static int jwaoo_moto_rand_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+#ifdef MOTO_GPIO_PORT
 	jwaoo_moto_rand_timer_fire();
+#endif
 
 	return KE_MSG_CONSUMED;
 }
@@ -220,6 +233,7 @@ static int jwaoo_dummy_handler(ke_msg_id_t const msgid, void const *param, ke_ta
 static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	switch (msgid) {
+#if JWAOO_PWM_COUNT > 0
 	case JWAOO_PWM1_BLINK_TIMER:
 	case JWAOO_PWM2_BLINK_TIMER:
 	case JWAOO_PWM3_BLINK_TIMER: {
@@ -229,10 +243,13 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 			jwaoo_pwm_set_complete(pwm);
 		}
 		break;
+#endif
 
 	case JWAOO_MOTO_BOOST:
 		jwaoo_app_env.moto_boost_busy = false;
+#ifdef MOTO_GPIO_PORT
 		jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
+#endif
 		break;
 
 	case JWAOO_SUSPEND_TIMER:
@@ -301,8 +318,14 @@ static int jwaoo_set_factory_enable_handler(ke_msg_id_t const msgid, void const 
 	BT_LED_OPEN;
 
 	jwaoo_app_env.battery_led_locked = 3;
+
+#ifdef BATT_LED_GPIO_PORT
 	jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+#endif
+
+#ifdef MOTO_GPIO_PORT
 	jwaoo_moto_blink_close();
+#endif
 
 	return KE_MSG_CONSUMED;
 }
@@ -397,7 +420,9 @@ static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_suspend_battery_poll_handler },
 	{ JWAOO_KEY_LOCK_TIMER, 					(ke_msg_func_t) jwaoo_key_lock_timer_handler },
+#ifdef BATT_LED_GPIO_PORT
 	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
+#endif
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_suspend_process_key_handler },
 };
 
@@ -464,10 +489,13 @@ static void jwaoo_app_load_settings(void)
 	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
 	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_SHUTDOWN;
 	jwaoo_app_settings.bt_led_open_time = 50;
-	jwaoo_app_settings.bt_led_close_time = 550;
+	jwaoo_app_settings.bt_led_close_time = 0; // 550;
+
+#ifdef MOTO_GPIO_PORT
 	jwaoo_app_settings.moto_rand_delay = 10;
 	jwaoo_app_settings.moto_rand_max = JWAOO_MOTO_SPEED_MAX;
 	jwaoo_app_settings.moto_speed_min = JWAOO_MOTO_SPEED_MIN;
+#endif
 }
 
 void jwaoo_app_init(void)
@@ -564,15 +592,15 @@ void jwaoo_app_before_sleep(void)
 
 static bool jwaoo_app_need_wakeup(void)
 {
-		uint32_t count = 0;
+	uint32_t count = 0;
 
-		while (jwaoo_key_get_status(0)) {
-				if (++count > 200000) {
-					jwaoo_app_env.key_lock_pending = true;
-					jwaoo_app_env.key_locked = false;
-					return true;
-				}
+	while (jwaoo_key_get_status(0)) {
+		if (++count > 200000) {
+			jwaoo_app_env.key_lock_pending = true;
+			jwaoo_app_env.key_locked = false;
+			return true;
 		}
+	}
 
 	return false;
 }
@@ -590,8 +618,10 @@ void jwaoo_app_resume_from_sleep(void)
 	if (jwaoo_app_need_wakeup()) {
 		jwaoo_app_env.key_release_pending = true;
 		jwaoo_app_goto_active_mode();
+#ifdef CHG_ONLINE
 	} else if (CHG_ONLINE) {
 		jwaoo_app_goto_suspend_mode();
+#endif
 	} else {
 		jwaoo_hw_set_deep_sleep(true);
 	}

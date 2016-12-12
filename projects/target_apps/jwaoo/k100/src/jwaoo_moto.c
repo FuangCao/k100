@@ -1,6 +1,7 @@
 #include "jwaoo_moto.h"
 #include "co_math.h"
 
+#ifdef MOTO_GPIO_PORT
 uint16_t jwaoo_moto_speed_table[JWAOO_MOTO_SPEED_MAX + 1] = {
 	// 0, 20, 25, 35, 50, 70, 95, 125, 160, 200, 245, 295, 350, 410, 475, 545, 620, 700, JWAOO_PWM_LEVEL_MAX
 	0, 20, 25, 30, 40, 55, 72, 93, 118, 146, 177, 212, 251, 293, 338, 387, 440, 496, 555
@@ -154,3 +155,4 @@ void jwaoo_moto_rand_timer_fire(void)
 		jwaoo_app_timer_set(JWAOO_MOTO_RAND_TIMER, jwaoo_app_settings.moto_rand_delay);
 	}
 }
+#endif

@@ -107,21 +107,32 @@ bool jwaoo_hw_irq_disable(IRQn_Type irq)
 void jwaoo_hw_set_suspend(bool enable)
 {
 	if (enable) {
+#ifdef CHG_ONLINE
 		if (!CHG_ONLINE) {
+#else
+		{
+#endif
 			jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
 		}
 
+#ifdef MOTO_GPIO_PORT
 		jwaoo_moto_blink_close();
+#endif
+
 		app_easy_gap_disconnect(app_connection_idx);
 		app_easy_gap_advertise_stop();
 		BT_LED_CLOSE;
 	} else {
 		if (jwaoo_app_env.key_lock_pending) {
 			jwaoo_app_env.battery_led_locked = 2;
+#ifdef BATT_LED_GPIO_PORT
 			jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
+#endif
 		} else if (jwaoo_app_env.key_release_pending) {
 			jwaoo_battery_led_blink();
+#ifdef MOTO_GPIO_PORT
 			jwaoo_moto_set_mode(JWAOO_MOTO_MODE_LINE);
+#endif
 		} else {
 			jwaoo_battery_led_update_state(true);
 		}
@@ -136,7 +147,10 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 	if (enable) {
 		jwaoo_battery_poll_stop();
 		jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
+
+#ifdef MOTO_GPIO_PORT
 		jwaoo_moto_blink_close();
+#endif
 
 		arch_ble_ext_wakeup_on();
 

@@ -286,6 +286,7 @@ static int jwaoo_toy_moto_report_state_handler(ke_msg_id_t const msgid,
 										 ke_task_id_t const dest_id,
 										 ke_task_id_t const src_id)
 {
+#ifdef MOTO_GPIO_PORT
 	struct jwaoo_toy_command command = {
 		.type = JWAOO_TOY_EVT_MOTO_STATE_CHANGED,
 		.moto.mode = jwaoo_app_env.moto_mode,
@@ -296,6 +297,7 @@ static int jwaoo_toy_moto_report_state_handler(ke_msg_id_t const msgid,
 		ke_msg_forward(param, dest_id, dest_id);
 		return KE_MSG_NO_FREE;
 	}
+#endif
 
 	return (KE_MSG_CONSUMED);
 }

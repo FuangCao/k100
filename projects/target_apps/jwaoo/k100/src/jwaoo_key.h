@@ -23,6 +23,7 @@
 		(pol_mask) |= WKUPCT_PIN_POLARITY(port, pin, GPIO_GetPinStatus(port, pin)); \
 	} while (0)
 
+#ifdef CHG_DET_GPIO_PORT
 #define WAKEUP_KEY_MASK_BUILD_ALL(pin_mask, pol_mask) \
 	do { \
 		(pin_mask) = 0; \
@@ -30,6 +31,14 @@
 		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, WAKEUP_KEY_PORT, WAKEUP_KEY_PIN); \
 		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, CHG_DET_GPIO_PORT, CHG_DET_GPIO_PIN); \
 	} while (0)
+#else
+#define WAKEUP_KEY_MASK_BUILD_ALL(pin_mask, pol_mask) \
+	do { \
+		(pin_mask) = 0; \
+		(pol_mask) = 0; \
+		WAKEUP_KEY_MASK_BUILD(pin_mask, pol_mask, WAKEUP_KEY_PORT, WAKEUP_KEY_PIN); \
+	} while (0)
+#endif
 
 enum {
 	JWAOO_KEY_VALUE_UP,

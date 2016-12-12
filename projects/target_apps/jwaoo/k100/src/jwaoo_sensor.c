@@ -30,7 +30,9 @@ bool jwaoo_sensor_set_enable(bool enable)
 	println("sensor_enable = %d, sensor_poll_delay = %d", enable, jwaoo_app_env.sensor_poll_delay);
 
 	if (enable) {
+#ifdef LDO_P3V3_OPEN
 		LDO_P3V3_OPEN;
+#endif
 
 		if (jwaoo_accel_sensor_set_enable) {
 			jwaoo_sensor_set_enable_retry(jwaoo_accel_sensor_set_enable);
@@ -50,7 +52,13 @@ bool jwaoo_sensor_set_enable(bool enable)
 		jwaoo_app_env.sensor_poll_enable = false;
 		ke_timer_clear(JWAOO_TOY_SENSOR_POLL, TASK_JWAOO_TOY);
 
+#ifdef LDO_P3V3_CLOSE
 		LDO_P3V3_CLOSE;
+#else
+		if (jwaoo_accel_sensor_set_enable) {
+			jwaoo_accel_sensor_set_enable(false);
+		}
+#endif
 	}
 
 	return true;

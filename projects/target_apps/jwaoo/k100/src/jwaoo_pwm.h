@@ -10,8 +10,13 @@
 	(JWAOO_PWM1_BLINK_TIMER + (pwm))
 
 enum {
+#ifdef MOTO_GPIO_PORT
 	JWAOO_PWM_MOTO,
+#endif
+#ifdef BATT_LED_GPIO_PORT
 	JWAOO_PWM_BATT_LED,
+#endif
+	JWAOO_PWM_COUNT,
 };
 
 struct jwaoo_pwm_device {
@@ -31,6 +36,7 @@ struct jwaoo_pwm_device {
 	void (*on_complete)(struct jwaoo_pwm_device *device);
 };
 
+#if JWAOO_PWM_COUNT > 0
 extern struct jwaoo_pwm_device jwaoo_pwms[];
 
 struct jwaoo_pwm_device *jwaoo_pwm_get_device(uint8_t pwm);
@@ -94,4 +100,4 @@ static inline void jwaoo_pwm_blink_square_full(uint8_t pwm, uint32_t cycle, uint
 {
 	jwaoo_pwm_blink_square(pwm, 0, JWAOO_PWM_LEVEL_MAX, cycle, count, true);
 }
-
+#endif

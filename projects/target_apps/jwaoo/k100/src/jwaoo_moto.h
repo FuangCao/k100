@@ -2,6 +2,7 @@
 
 #include "jwaoo_pwm.h"
 
+#ifdef MOTO_GPIO_PORT
 #define JWAOO_MOTO_SPEED_MIN			6
 #define JWAOO_MOTO_SPEED_MAX			18
 #define JWAOO_MOTO_BOOST_LEVEL			JWAOO_PWM_LEVEL_MAX
@@ -50,3 +51,4 @@ static inline void jwaoo_moto_blink_close(void)
 {
 	jwaoo_moto_set_mode(JWAOO_MOTO_MODE_IDLE);
 }
+#endif
