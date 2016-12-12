@@ -243,11 +243,9 @@ void jwaoo_battery_poll(bool optimize)
 		} else {
 			state = JWAOO_TOY_BATTERY_LOW;
 
-#if 0
 			if (voltage < jwaoo_app_settings.shutdown_voltage) {
 				jwaoo_app_goto_suspend_mode();
 			}
-#endif
 		}
 	}
 
