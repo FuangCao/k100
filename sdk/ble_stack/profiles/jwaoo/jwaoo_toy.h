@@ -44,8 +44,8 @@
  ****************************************************************************************
  */
 
-#define JWAOO_TOY_IDENTIFY				"MODEL-06"
-#define JWAOO_TOY_VERSION				0x20161105
+#define JWAOO_TOY_IDENTIFY				"MODEL-10"
+#define JWAOO_TOY_VERSION				0x20161212
 #define JWAOO_TOY_READ_FLASH_ENABLE		0
 
 /*
