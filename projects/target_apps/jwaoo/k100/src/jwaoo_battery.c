@@ -4,26 +4,40 @@
 #include "jwaoo_battery.h"
 #include "jwaoo_toy_task.h"
 
+#define DEBUG_AVG_VOLTAGE		0
+
 static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
-	{ 3940, 3500 },
-	{ 3820, 3400 },
-	{ 3710, 3300 },
-	{ 3590, 3200 },
-	{ 3480, 3100 },
-	{ 3420, 3000 },
-	{ 3305, 2900 },
-	{ 3185, 2800 },
-	{ 3075, 2700 },
-	{ 2955, 2600 },
-	{ 2840, 2500 },
-	{ 2720, 2400 },
-	{ 2620, 2300 },
-	{ 2500, 2200 },
-	{ 2385, 2100 },
-	{ 2265, 2000 },
-	{ 2155, 1900 },
-	{ 2040, 1800 },
-	{ 1925, 1700 },
+	{ 2063, 1800 },
+	{ 2121, 1850 },
+	{ 2177, 1900 },
+	{ 2237, 1950 },
+	{ 2295, 2000 },
+	{ 2353, 2050 },
+	{ 2411, 2100 },
+	{ 2469, 2150 },
+	{ 2526, 2200 },
+	{ 2585, 2250 },
+	{ 2643, 2300 },
+	{ 2700, 2350 },
+	{ 2757, 2400 },
+	{ 2814, 2450 },
+	{ 2873, 2500 },
+	{ 2931, 2550 },
+	{ 2991, 2600 },
+	{ 3047, 2650 },
+	{ 3105, 2700 },
+	{ 3163, 2750 },
+	{ 3221, 2800 },
+	{ 3278, 2850 },
+	{ 3334, 2900 },
+	{ 3394, 2950 },
+	{ 3452, 3000 },
+	{ 3512, 3050 },
+	{ 3566, 3100 },
+	{ 2626, 3150 },
+	{ 3685, 3200 },
+	{ 3741, 3250 },
+	{ 3800, 3300 },
 };
 
 #ifdef CHG_DET_GPIO_PORT
@@ -103,36 +117,19 @@ void jwaoo_battery_set_state(uint8_t state)
 	}
 }
 
-uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, uint32_t voltage)
+uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, volatile uint32_t voltage)
 {
 	const struct jwaoo_battery_voltage_map *map, *map_end;
 
-	for (map = table, map_end = map + size; map < map_end; map++) {
-		if (voltage > map->raw_value) {
-			continue;
-		}
+	for (map = table, map_end = map + size - 1; map < map_end && map->raw_value < voltage; map++);
 
-		if (map > table) {
-			uint16_t raw_min, raw_range;
-			uint16_t real_min, real_range;
-			const struct jwaoo_battery_voltage_map *prev = map - 1;
-
-			raw_min = prev->raw_value;
-			raw_range = map->raw_value - raw_min;
-
-			real_min = prev->real_value;
-			real_range = map->real_value - real_min;
-
-			return (voltage - raw_min) * real_range / raw_range + real_min;
-		} else {
-			return voltage * map->real_value / map->raw_value;
-		}
-	}
-
-	map = map_end - 1;
-
-	return voltage * map->real_value / map->raw_value;
+	return voltage * map->real_value / map->raw_value + 18;
 }
+
+#if DEBUG_AVG_VOLTAGE
+static volatile uint32_t avg_count;
+static volatile uint32_t avg_voltage;
+#endif
 
 void jwaoo_battery_poll(bool optimize)
 {
@@ -144,7 +141,11 @@ void jwaoo_battery_poll(bool optimize)
 	bool charge_online = CHG_ONLINE;
 #endif
 
+#if DEBUG_AVG_VOLTAGE
+	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 5);
+#else
 	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, JWAOO_BATT_POLL_DELAY);
+#endif
 
 	adc_calibrate();
 
@@ -158,10 +159,22 @@ void jwaoo_battery_poll(bool optimize)
 
 	adc_disable();
 
+#if DEBUG_AVG_VOLTAGE
 	if (jwaoo_app_env.battery_skip < 3) {
 		jwaoo_app_env.battery_skip++;
 		return;
 	}
+
+	if (avg_count++ > 0) {
+		avg_voltage = (avg_voltage * 7 + voltage) >> 3;
+
+		if (avg_count > 200) {
+			avg_count = 0;
+		}
+	} else {
+		avg_voltage = voltage;
+	}
+#endif
 
 	println("raw voltage = %d", voltage);
 
@@ -232,7 +245,7 @@ void jwaoo_battery_poll(bool optimize)
 		} else {
 			state = JWAOO_TOY_BATTERY_FULL;
 		}
-	} else {
+	} else
 #else
 	{
 #endif
@@ -244,7 +257,7 @@ void jwaoo_battery_poll(bool optimize)
 			state = JWAOO_TOY_BATTERY_LOW;
 
 			if (voltage < jwaoo_app_settings.shutdown_voltage) {
-				jwaoo_app_goto_suspend_mode();
+				// jwaoo_app_goto_suspend_mode();
 			}
 		}
 	}

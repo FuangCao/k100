@@ -489,7 +489,7 @@ static void jwaoo_app_load_settings(void)
 	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
 	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_SHUTDOWN;
 	jwaoo_app_settings.bt_led_open_time = 50;
-	jwaoo_app_settings.bt_led_close_time = 0; // 550;
+	jwaoo_app_settings.bt_led_close_time = 550;
 
 #ifdef MOTO_GPIO_PORT
 	jwaoo_app_settings.moto_rand_delay = 10;
