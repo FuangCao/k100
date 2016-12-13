@@ -36,8 +36,20 @@ static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
 	{ 3566, 3100 },
 	{ 2626, 3150 },
 	{ 3685, 3200 },
-	{ 3741, 3250 },
-	{ 3800, 3300 },
+};
+
+static struct jwaoo_led_current_map jwaoo_led_current_table[] = {
+	{ 2700, 1892 },
+	{ 2750, 2686 },
+	{ 2800, 3675 },
+	{ 2850, 4845 },
+	{ 2900, 6200 },
+	{ 2950, 7725 },
+	{ 3000, 9460 },
+	{ 3050, 11350 },
+	{ 3100, 13440 },
+	{ 3150, 15630 },
+	{ 3200, 17938 },
 };
 
 #ifdef CHG_DET_GPIO_PORT
@@ -68,7 +80,7 @@ void jwaoo_battery_led_blink(void)
 {
 	if (jwaoo_app_env.battery_led_locked < 2) {
 		jwaoo_app_env.battery_led_locked = 1;
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 		jwaoo_pwm_blink_square_full(JWAOO_PWM_BATT_LED, 50, 1);
 #endif
 	}
@@ -89,7 +101,7 @@ void jwaoo_battery_led_update_state(bool force)
 		return;
 	}
 
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 	switch (jwaoo_app_env.battery_state) {
 	case JWAOO_TOY_BATTERY_LOW:
 		jwaoo_pwm_blink_square_full(JWAOO_PWM_BATT_LED, 500, 0);
@@ -117,11 +129,14 @@ void jwaoo_battery_set_state(uint8_t state)
 	}
 }
 
-uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, volatile uint32_t voltage)
+uint16_t jwaoo_battery_voltage_calibration(uint32_t voltage)
 {
-	const struct jwaoo_battery_voltage_map *map, *map_end;
+	const struct jwaoo_battery_voltage_map *map = jwaoo_battery_voltage_table;
+	const struct jwaoo_battery_voltage_map *map_end = map + NELEM(jwaoo_battery_voltage_table) - 1;
 
-	for (map = table, map_end = map + size - 1; map < map_end && map->raw_value < voltage; map++);
+	while (map < map_end && map->raw_value < voltage) {
+		map++;
+	}
 
 	return voltage * map->real_value / map->raw_value + 18;
 }
@@ -178,7 +193,7 @@ void jwaoo_battery_poll(bool optimize)
 
 	println("raw voltage = %d", voltage);
 
-	voltage = jwaoo_battery_voltage_calibration(jwaoo_battery_voltage_table, NELEM(jwaoo_battery_voltage_table), voltage);
+	voltage = jwaoo_battery_voltage_calibration(voltage);
 
 	if (optimize) {
 		if (voltage < JWAOO_BATT_VOLTAGE_VALID_MIN || voltage > JWAOO_BATT_VOLTAGE_VALID_MAX) {
@@ -268,5 +283,22 @@ void jwaoo_battery_poll(bool optimize)
 	if (jwaoo_app_env.battery_report) {
 		SEND_EMPTY_MESSAGE(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY);
 	}
+
+#ifdef CFG_JWAOO_PWM_BT_LED
+	if (BT_LED_STATE) {
+		BT_LED_OPEN;
+	}
+#endif
 }
 
+uint16_t jwaoo_battery_get_led_max_current(uint32_t voltage)
+{
+	const struct jwaoo_led_current_map *map = jwaoo_led_current_table;
+	const struct jwaoo_led_current_map *map_end = map + NELEM(jwaoo_led_current_table) - 1;
+
+	while (map < map_end && map->voltage < voltage) {
+		map++;
+	}
+
+	return voltage * map->current / map->voltage;
+}

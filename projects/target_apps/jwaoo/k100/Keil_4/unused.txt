@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Tue Dec 13 14:55:38 2016
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Tue Dec 13 17:02:55 2016
 ;VERSION 0.2
 ;FILE adc.o
 ;FILE app.o
@@ -114,6 +114,11 @@ jwaoo_i2c_update_u16 <= USED 0
 jwaoo_i2c_update_u32 <= USED 0
 jwaoo_i2c_update_u8 <= USED 0
 ;FILE jwaoo_key.o
+;FILE jwaoo_pwm.o
+jwaoo_pwm_blink_sawtooth <= USED 0
+jwaoo_pwm_blink_square <= USED 0
+jwaoo_pwm_set_level <= USED 0
+jwaoo_pwm_sync <= USED 0
 ;FILE jwaoo_sensor.o
 ;FILE jwaoo_toy.o
 jwaoo_toy_send_command_data <= USED 0
@@ -129,8 +134,6 @@ jwaoo_toy_send_command_u8 <= USED 0
 prf_pack_date_time <= USED 0
 prf_unpack_date_time <= USED 0
 ;FILE pwm.o
-set_tmr_div <= USED 0
-set_tmr_enable <= USED 0
 timer0_disable_irq <= USED 0
 timer0_enable_irq <= USED 0
 timer0_init <= USED 0
@@ -142,15 +145,10 @@ timer0_set_pwm_low_counter <= USED 0
 timer0_set_pwm_on_counter <= USED 0
 timer0_start <= USED 0
 timer0_stop <= USED 0
-timer2_enable <= USED 0
-timer2_init <= USED 0
-timer2_set_hw_pause <= USED 0
 timer2_set_pwm2_duty_cycle <= USED 0
 timer2_set_pwm3_duty_cycle <= USED 0
 timer2_set_pwm4_duty_cycle <= USED 0
 timer2_set_pwm_frequency <= USED 0
-timer2_set_sw_pause <= USED 0
-timer2_stop <= USED 0
 ;FILE rf_580.o
 rf_nfm_disable <= USED 0
 rf_nfm_enable <= USED 0

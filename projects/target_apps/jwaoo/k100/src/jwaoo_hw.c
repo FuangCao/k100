@@ -115,7 +115,7 @@ void jwaoo_hw_set_suspend(bool enable)
 			jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
 		}
 
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 		jwaoo_moto_blink_close();
 #endif
 
@@ -125,12 +125,12 @@ void jwaoo_hw_set_suspend(bool enable)
 	} else {
 		if (jwaoo_app_env.key_lock_pending) {
 			jwaoo_app_env.battery_led_locked = 2;
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 			jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
 #endif
 		} else if (jwaoo_app_env.key_release_pending) {
 			jwaoo_battery_led_blink();
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 			jwaoo_moto_set_mode(JWAOO_MOTO_MODE_LINE);
 #endif
 		} else {
@@ -148,7 +148,7 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 		jwaoo_battery_poll_stop();
 		jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
 
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 		jwaoo_moto_blink_close();
 #endif
 

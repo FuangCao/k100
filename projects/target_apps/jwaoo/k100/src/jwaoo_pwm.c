@@ -2,7 +2,7 @@
 #include "jwaoo_moto.h"
 #include "jwaoo_battery.h"
 
-#if JWAOO_PWM_COUNT > 0
+#ifdef CFG_JWAOO_PWM
 static void jwaoo_pwm_set_enable(uint8_t pwm, bool enable)
 {
 	static uint8_t enable_mask;
@@ -46,7 +46,7 @@ static void jwaoo_pwm_device_set_level_handler(struct jwaoo_pwm_device *device, 
 	}
 }
 
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 static void jwaoo_moto_device_set_level_handler(struct jwaoo_pwm_device *device, uint8_t pwm, uint16_t level)
 {
 	if (jwaoo_app_env.moto_boost_busy) {
@@ -196,18 +196,39 @@ static void jwaoo_battery_led_complete(struct jwaoo_pwm_device *device)
 	jwaoo_battery_led_release(1);
 }
 
+#ifdef CFG_JWAOO_PWM_BT_LED
+uint16_t jwaoo_pwm_get_level_by_voltage(uint32_t voltage)
+{
+	uint16_t current = jwaoo_battery_get_led_max_current(voltage);
+
+	if (current > JWAOO_BT_LED_MAX_CURRENT) {
+		return JWAOO_PWM_LEVEL_MAX * JWAOO_BT_LED_MAX_CURRENT / current;
+	} else {
+		return JWAOO_PWM_LEVEL_MAX;
+	}
+}
+#endif
+
 struct jwaoo_pwm_device jwaoo_pwms[] = {
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 	[JWAOO_PWM_MOTO] = {
 		.port = MOTO_GPIO_PORT,
 		.pin = MOTO_GPIO_PIN,
 		.set_level = jwaoo_moto_device_set_level_handler,
 	},
 #endif
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 	[JWAOO_PWM_BATT_LED] = {
 		.port = BATT_LED_GPIO_PORT,
 		.pin = BATT_LED_GPIO_PIN,
+		.set_level = jwaoo_pwm_device_set_level_handler,
+		.on_complete = jwaoo_battery_led_complete,
+	},
+#endif
+#ifdef CFG_JWAOO_PWM_BT_LED
+	[JWAOO_PWM_BT_LED] = {
+		.port = BT_LED_GPIO_PORT,
+		.pin = BT_LED_GPIO_PIN,
 		.set_level = jwaoo_pwm_device_set_level_handler,
 		.on_complete = jwaoo_battery_led_complete,
 	},

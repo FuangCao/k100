@@ -81,4 +81,9 @@
     #define CFG_PRINTF_UART2
 #endif
 
+#define CFG_JWAOO_PWM
+// #define CFG_JWAOO_PWM_MOTO
+#define CFG_JWAOO_PWM_BT_LED
+// #define CFG_JWAOO_PWM_BATT_LED
+
 #endif // _DA1458X_CONFIG_BASIC_H_

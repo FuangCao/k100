@@ -183,13 +183,13 @@ bool jwaoo_key_get_status(uint8_t keycode)
 void jwaoo_key_lock_timer_fire(void)
 {
 	if (jwaoo_app_env.key_locked) {
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 		jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
 #endif
 		jwaoo_app_env.key_locked = false;
 		jwaoo_app_goto_active_mode();
 	} else {
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 #endif
 		jwaoo_app_env.key_locked = true;

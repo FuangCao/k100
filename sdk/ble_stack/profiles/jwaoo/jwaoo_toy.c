@@ -411,7 +411,7 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		if (length >= 2) {
 			bool enable = (length > 2 && command->led.enable > 0);
 
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 			if (command->led.index == 1) {
 				if (enable) {
 					jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
@@ -490,7 +490,7 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 	// ================================================================================
 
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 	case JWAOO_TOY_CMD_MOTO_SET_MODE:
 		if (jwaoo_app_is_upgrade() || length != 3) {
 			break;

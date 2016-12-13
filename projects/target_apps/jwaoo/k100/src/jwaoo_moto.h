@@ -2,7 +2,6 @@
 
 #include "jwaoo_pwm.h"
 
-#ifdef MOTO_GPIO_PORT
 #define JWAOO_MOTO_SPEED_MIN			6
 #define JWAOO_MOTO_SPEED_MAX			18
 #define JWAOO_MOTO_BOOST_LEVEL			JWAOO_PWM_LEVEL_MAX
@@ -37,6 +36,7 @@ uint8_t jwaoo_moto_mode_add(void);
 bool jwaoo_moto_speed_add(int value);
 void jwaoo_moto_rand_timer_fire(void);
 
+#ifdef CFG_JWAOO_PWM_MOTO
 static inline struct jwaoo_pwm_device *jwaoo_moto_get_device()
 {
 	return jwaoo_pwm_get_device(JWAOO_PWM_MOTO);

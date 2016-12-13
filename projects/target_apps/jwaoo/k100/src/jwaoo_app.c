@@ -117,7 +117,7 @@ static int jwaoo_shutdown_handler(ke_msg_id_t const msgid, void const *param, ke
 
 static int jwaoo_pwm_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-#if JWAOO_PWM_COUNT > 0
+#ifdef CFG_JWAOO_PWM
 	jwaoo_pwm_blink_walk(msgid - JWAOO_PWM1_BLINK_TIMER);
 #endif
 
@@ -133,7 +133,7 @@ static int jwaoo_key_lock_timer_handler(ke_msg_id_t const msgid, void const *par
 
 static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 	if (jwaoo_app_env.connected || jwaoo_app_env.moto_mode > JWAOO_MOTO_MODE_IDLE) {
 #else
 	if (jwaoo_app_env.connected) {
@@ -157,7 +157,7 @@ static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *para
 static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	jwaoo_app_env.moto_boost_busy = false;
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 	jwaoo_pwm_sync(JWAOO_PWM_MOTO);
 #endif
 
@@ -197,7 +197,7 @@ static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param
 
 static int jwaoo_moto_rand_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 	jwaoo_moto_rand_timer_fire();
 #endif
 
@@ -233,7 +233,7 @@ static int jwaoo_dummy_handler(ke_msg_id_t const msgid, void const *param, ke_ta
 static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 	switch (msgid) {
-#if JWAOO_PWM_COUNT > 0
+#ifdef CFG_JWAOO_PWM
 	case JWAOO_PWM1_BLINK_TIMER:
 	case JWAOO_PWM2_BLINK_TIMER:
 	case JWAOO_PWM3_BLINK_TIMER: {
@@ -247,7 +247,7 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 
 	case JWAOO_MOTO_BOOST:
 		jwaoo_app_env.moto_boost_busy = false;
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 		jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
 #endif
 		break;
@@ -319,11 +319,11 @@ static int jwaoo_set_factory_enable_handler(ke_msg_id_t const msgid, void const 
 
 	jwaoo_app_env.battery_led_locked = 3;
 
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 	jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 #endif
 
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 	jwaoo_moto_blink_close();
 #endif
 
@@ -420,7 +420,7 @@ static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ JWAOO_SET_ACTIVE, 						(ke_msg_func_t) jwaoo_suspend_to_active_handler },
 	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_suspend_battery_poll_handler },
 	{ JWAOO_KEY_LOCK_TIMER, 					(ke_msg_func_t) jwaoo_key_lock_timer_handler },
-#ifdef BATT_LED_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_BATT_LED
 	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
 #endif
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_suspend_process_key_handler },
@@ -491,7 +491,7 @@ static void jwaoo_app_load_settings(void)
 	jwaoo_app_settings.bt_led_open_time = 50;
 	jwaoo_app_settings.bt_led_close_time = 550;
 
-#ifdef MOTO_GPIO_PORT
+#ifdef CFG_JWAOO_PWM_MOTO
 	jwaoo_app_settings.moto_rand_delay = 10;
 	jwaoo_app_settings.moto_rand_max = JWAOO_MOTO_SPEED_MAX;
 	jwaoo_app_settings.moto_speed_min = JWAOO_MOTO_SPEED_MIN;
