@@ -147,8 +147,9 @@ static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *para
 
 static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
-	jwaoo_app_env.moto_boost_busy = false;
-	jwaoo_pwm_sync(JWAOO_PWM_MOTO);
+	struct jwaoo_pwm_device *device = jwaoo_pwm_get_device(JWAOO_PWM_MOTO);
+
+	jwaoo_pwm_device_set_level_boost(device, JWAOO_PWM_MOTO, device->level);
 
 	return KE_MSG_CONSUMED;
 }
@@ -231,7 +232,6 @@ static int jwaoo_default_handler(ke_msg_id_t const msgid, void const *param, ke_
 		break;
 
 	case JWAOO_MOTO_BOOST:
-		jwaoo_app_env.moto_boost_busy = false;
 		jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);
 		break;
 
@@ -587,15 +587,24 @@ static bool jwaoo_app_need_wakeup(void)
 
 void jwaoo_app_resume_from_sleep(void)
 {
-#if USE_WDOG
-	wdg_freeze();
-#endif
+	bool wakeup;
 
 	wkupct_disable_irq();
 	jwaoo_hw_set_deep_sleep(false);
 	jwaoo_app_env.key_lock_pending = false;
 
-	if (jwaoo_app_need_wakeup()) {
+#if USE_WDOG
+	wdg_freeze();
+#endif
+
+	wakeup = jwaoo_app_need_wakeup();
+
+#if USE_WDOG
+	wdg_reload(WATCHDOG_DEFAULT_PERIOD);
+	wdg_resume();
+#endif
+
+	if (wakeup) {
 		jwaoo_app_env.key_release_pending = true;
 		jwaoo_app_goto_active_mode();
 	} else if (CHG_ONLINE) {
@@ -603,9 +612,4 @@ void jwaoo_app_resume_from_sleep(void)
 	} else {
 		jwaoo_hw_set_deep_sleep(true);
 	}
-
-#if USE_WDOG
-	wdg_reload(WATCHDOG_DEFAULT_PERIOD);
-	wdg_resume();
-#endif
 }

@@ -45,19 +45,23 @@ static void jwaoo_pwm_device_set_level_handler(struct jwaoo_pwm_device *device, 
 	}
 }
 
-static void jwaoo_moto_device_set_level_handler(struct jwaoo_pwm_device *device, uint8_t pwm, uint16_t level)
+void jwaoo_pwm_device_set_level_boost(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level)
 {
-	if (jwaoo_app_env.moto_boost_busy) {
-		return;
+	uint8_t boost = jwaoo_app_env.moto_boost_level + JWAOO_MOTO_BOOST_STEP;
+
+	if (level > boost) {
+		level = boost;
+		jwaoo_app_env.moto_boost_level = boost;
+		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_BOOST_DELAY);
 	}
 
-	if (level > 0 && device->level == 0) {
-		jwaoo_app_env.moto_boost_busy = true;
-		jwaoo_pwm_device_set_level_handler(device, pwm, JWAOO_MOTO_BOOST_LEVEL);
-		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_BOOST_TIME);
-	} else {
-		jwaoo_pwm_device_set_level_handler(device, pwm, jwaoo_moto_speed_to_level(level));
-	}
+	jwaoo_pwm_device_set_level_handler(device, pwm, jwaoo_moto_speed_to_level(level));
+}
+
+static void jwaoo_moto_device_set_level_handler(struct jwaoo_pwm_device *device, uint8_t pwm, uint16_t level)
+{
+	jwaoo_app_env.moto_boost_level = device->level;
+	jwaoo_pwm_device_set_level_boost(device, pwm, level);
 }
 
 static bool jwaoo_pwm_set_blink_direction(struct jwaoo_pwm_device *device, bool add)

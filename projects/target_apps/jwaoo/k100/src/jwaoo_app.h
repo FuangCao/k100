@@ -88,8 +88,8 @@ typedef struct {
 
 	uint8_t moto_mode;
 	uint8_t moto_speed;
+	uint8_t moto_boost_level;
 	bool moto_report;
-	bool moto_boost_busy;
 
 	bool battery_report;
 	uint8_t battery_skip;

@@ -3,7 +3,17 @@
 
 uint16_t jwaoo_moto_speed_table[JWAOO_MOTO_SPEED_MAX + 1] = {
 	// 0, 20, 25, 35, 50, 70, 95, 125, 160, 200, 245, 295, 350, 410, 475, 545, 620, 700, JWAOO_PWM_LEVEL_MAX
+#if JWAOO_PWM_LEVEL_MAX == 100
+	0, 2, 3, 4, 5, 6, 7, 9, 11, 14, 17, 21, 25, 29, 33, 38, 44, 49, 55
+#elif JWAOO_PWM_LEVEL_MAX == 200
+	0, 4, 6, 8, 10, 12, 14, 18, 22, 28, 34, 42, 50, 58, 66, 76, 88, 98, 110
+#elif JWAOO_PWM_LEVEL_MAX == 500
+	0, 10, 13, 15, 20, 28, 36, 47, 60, 73, 90, 106, 126, 146, 169, 194, 220, 248, 280
+#elif JWAOO_PWM_LEVEL_MAX == 1000
 	0, 20, 25, 30, 40, 55, 72, 93, 118, 146, 177, 212, 251, 293, 338, 387, 440, 496, 555
+#else
+	#error "invalid pwm max level"
+#endif
 };
 
 static inline void jwaoo_moto_set_speed(uint8_t speed)

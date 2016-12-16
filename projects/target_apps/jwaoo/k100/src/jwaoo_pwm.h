@@ -34,6 +34,7 @@ struct jwaoo_pwm_device {
 extern struct jwaoo_pwm_device jwaoo_pwms[];
 
 struct jwaoo_pwm_device *jwaoo_pwm_get_device(uint8_t pwm);
+void jwaoo_pwm_device_set_level_boost(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level);
 void jwaoo_pwm_set_level(uint8_t pwm, uint16_t level);
 void jwaoo_pwm_sync(uint8_t pwm);
 void jwaoo_pwm_blink_walk(uint8_t pwm);
