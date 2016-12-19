@@ -50,8 +50,7 @@ void jwaoo_pwm_device_set_level_boost(struct jwaoo_pwm_device *device, uint8_t p
 	uint8_t boost = jwaoo_app_env.moto_boost_level + JWAOO_MOTO_BOOST_STEP;
 
 	if (level > boost) {
-		level = boost;
-		jwaoo_app_env.moto_boost_level = boost;
+		jwaoo_app_env.moto_boost_level = level = boost;
 		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_BOOST_DELAY);
 	}
 
