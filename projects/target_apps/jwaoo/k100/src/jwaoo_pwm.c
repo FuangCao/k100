@@ -230,7 +230,9 @@ struct jwaoo_pwm_device jwaoo_pwms[] = {
 		.port = BT_LED_GPIO_PORT,
 		.pin = BT_LED_GPIO_PIN,
 		.set_level = jwaoo_pwm_device_set_level_handler,
+#ifndef CFG_JWAOO_PWM_BATT_LED
 		.on_complete = jwaoo_battery_led_complete,
+#endif
 	},
 #endif
 };

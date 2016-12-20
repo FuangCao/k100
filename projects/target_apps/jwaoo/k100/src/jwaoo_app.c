@@ -167,6 +167,12 @@ static int jwaoo_moto_boost_handler(ke_msg_id_t const msgid, void const *param, 
 
 static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
+#ifndef CFG_JWAOO_PWM_BATT_LED
+	if (jwaoo_app_env.battery_led_locked) {
+		return KE_MSG_CONSUMED;
+	}
+#endif
+
 	if (jwaoo_app_settings.bt_led_close_time > 0) {
 		if (jwaoo_app_env.connected) {
 			if (BT_LED_STATE) {
@@ -423,6 +429,8 @@ static const struct ke_msg_handler jwaoo_app_suspend_handlers[] = {
 	{ JWAOO_KEY_LOCK_TIMER, 					(ke_msg_func_t) jwaoo_key_lock_timer_handler },
 #ifdef CFG_JWAOO_PWM_BATT_LED
 	{ JWAOO_PWM_TIMER(JWAOO_PWM_BATT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
+#elif defined(CFG_JWAOO_PWM_BT_LED)
+	{ JWAOO_PWM_TIMER(JWAOO_PWM_BT_LED),		(ke_msg_func_t) jwaoo_pwm_blink_handler },
 #endif
 	{ JWAOO_PROCESS_KEY,						(ke_msg_func_t) jwaoo_suspend_process_key_handler },
 };

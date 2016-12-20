@@ -82,6 +82,8 @@ void jwaoo_battery_led_blink(void)
 		jwaoo_app_env.battery_led_locked = 1;
 #ifdef CFG_JWAOO_PWM_BATT_LED
 		jwaoo_pwm_blink_square_full(JWAOO_PWM_BATT_LED, 50, 1);
+#elif defined(CFG_JWAOO_PWM_BT_LED)
+		jwaoo_pwm_blink_square(JWAOO_PWM_BT_LED, 0, jwaoo_pwm_get_level_by_voltage(jwaoo_app_env.battery_voltage), 50, 1, true);
 #endif
 	}
 }
@@ -118,6 +120,9 @@ void jwaoo_battery_led_update_state(bool force)
 	default:
 		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
 	}
+#elif defined(CFG_JWAOO_PWM_BT_LED)
+	jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
+	jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
 #endif
 }
 
