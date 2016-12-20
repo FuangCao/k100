@@ -71,7 +71,7 @@ static const struct advertise_configuration user_undirected_advertise_conf ={
     /// Own BD address source of the device:
     .address_src=GAPM_PUBLIC_ADDR,
     /// Advertise interval
-    .intv = 160,                    // 100ms (160*0.625ms)
+    .intv = 320,                    // 100ms (160*0.625ms)
     ///Advertising channel map
     .channel_map = 0x7,
 };

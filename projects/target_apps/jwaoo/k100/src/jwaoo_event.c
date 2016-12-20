@@ -6,7 +6,11 @@
 void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 {
 	jwaoo_battery_led_blink();
-	SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
+
+	if (!jwaoo_app_env.connected) {
+		app_easy_gap_undirected_advertise_start();
+		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
+	}
 }
 
 void jwaoo_on_host_key_long_clicked(struct jwaoo_key_device *key)
