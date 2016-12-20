@@ -6,7 +6,7 @@
 #include "jwaoo_hw.h"
 #include "jwaoo_battery.h"
 
-#define JWAOO_SUSPEND_DELAY_DEFAULT		600
+#define JWAOO_SUSPEND_DELAY_DEFAULT		300
 
 #define APP_AD_MSD_COMPANY_ID			(0xABCD)
 #define APP_AD_MSD_COMPANY_ID_LEN		(2)
@@ -77,6 +77,13 @@ typedef struct {
 	uint8_t moto_speed_min;
 } jwaoo_app_settings_t;
 
+typedef struct {
+	bool click_enable;
+	bool multi_click_enable;
+	uint16_t multi_click_delay;
+	bool long_click_enable;
+	uint16_t long_click_delay;
+} jwaoo_key_settings_t;
 #pragma pack()
 
 typedef struct {
@@ -119,17 +126,13 @@ typedef struct {
 	bool key_app_locked;
 	bool key_lock_pending;
 	bool key_release_pending;
-	bool key_click_enable;
-	bool key_multi_click_enable;
-	bool key_long_click_enable;
-	uint16_t key_long_click_delay;
-	uint16_t key_multi_click_delay;
 
 	uint8_t app_data[16];
 } jwaoo_app_env_t;
 
 extern jwaoo_app_env_t jwaoo_app_env;
 extern jwaoo_app_settings_t jwaoo_app_settings;
+extern jwaoo_key_settings_t jwaoo_key_settings;
 
 ke_state_t jwaoo_app_state_get(void);
 void jwaoo_app_state_set(ke_state_t const state_id);

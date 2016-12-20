@@ -100,12 +100,12 @@ static const enum gap_adv_mode user_non_connectable_advertise_mode = GAP_GEN_DIS
 /// Advertising AD type flags, shall not be set in advertising data
     #define USER_ADVERTISE_DATA    "\x03"\
                                     ADV_TYPE_COMPLETE_LIST_16BIT_SERVICE_IDS\
-                                    ADV_UUID_DEVICE_INFORMATION_SERVICE
+                                    "\x88\x18"
 
 /// Advertising data length - maximum 28 bytes, 3 bytes are reserved to set
     #define USER_ADVERTISE_DATA_LEN (sizeof(USER_ADVERTISE_DATA)-1)
 /// Advertising name
-    #define USER_DEVICE_NAME    ("JwaooToy")
+    #define USER_DEVICE_NAME    ("SenseBand")
 /// Advertising name Length
     #define USER_DEVICE_NAME_LEN (sizeof(USER_DEVICE_NAME)-1)
 /// Scan response data

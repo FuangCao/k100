@@ -13,6 +13,7 @@ static struct
 
 jwaoo_app_env_t jwaoo_app_env __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
 jwaoo_app_settings_t jwaoo_app_settings __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
+jwaoo_key_settings_t jwaoo_key_settings __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
 
 static void jwaoo_app_mnf_data_init(void)
 {
@@ -496,6 +497,9 @@ static void jwaoo_app_load_settings(void)
 	jwaoo_app_settings.moto_rand_max = JWAOO_MOTO_SPEED_MAX;
 	jwaoo_app_settings.moto_speed_min = JWAOO_MOTO_SPEED_MIN;
 #endif
+
+	jwaoo_key_settings.long_click_delay = 200;
+	jwaoo_key_settings.multi_click_delay = 30;
 }
 
 void jwaoo_app_init(void)
@@ -503,8 +507,6 @@ void jwaoo_app_init(void)
 	jwaoo_app_load_settings();
 
 	jwaoo_app_env.sensor_poll_delay = 20;
-	jwaoo_app_env.key_long_click_delay = 200;
-	jwaoo_app_env.key_multi_click_delay = 30;
 
 	jwaoo_app_env.battery_state = JWAOO_TOY_BATTERY_NORMAL;
 	jwaoo_app_env.battery_level = 100;
@@ -590,32 +592,13 @@ void jwaoo_app_before_sleep(void)
 	wkupct_enable_irq(pin_mask, pol_mask, 1, 60);
 }
 
-static bool jwaoo_app_need_wakeup(void)
-{
-	uint32_t count = 0;
-
-	while (jwaoo_key_get_status(0)) {
-		if (++count > 200000) {
-			jwaoo_app_env.key_lock_pending = true;
-			jwaoo_app_env.key_locked = false;
-			return true;
-		}
-	}
-
-	return false;
-}
-
 void jwaoo_app_resume_from_sleep(void)
 {
-#if USE_WDOG
-	wdg_freeze();
-#endif
-
 	wkupct_disable_irq();
 	jwaoo_hw_set_deep_sleep(false);
 	jwaoo_app_env.key_lock_pending = false;
 
-	if (jwaoo_app_need_wakeup()) {
+	if (jwaoo_key_get_status(0)) {
 		jwaoo_app_env.key_release_pending = true;
 		jwaoo_app_goto_active_mode();
 #ifdef CHG_ONLINE
@@ -625,9 +608,4 @@ void jwaoo_app_resume_from_sleep(void)
 	} else {
 		jwaoo_hw_set_deep_sleep(true);
 	}
-
-#if USE_WDOG
-	wdg_reload(WATCHDOG_DEFAULT_PERIOD);
-	wdg_resume();
-#endif
 }

@@ -40,9 +40,9 @@ void jwaoo_key_process_active(uint8_t keycode)
 		key->count++;
 		key->repeat = 0;
 		jwaoo_app_timer_set(jwaoo_key_get_repeat_timer(keycode), JWAOO_KEY_REPEAT_LONG_DELAY);
-		jwaoo_app_timer_set(jwaoo_key_get_long_click_timer(keycode), jwaoo_app_env.key_long_click_delay);
+		jwaoo_app_timer_set(jwaoo_key_get_long_click_timer(keycode), jwaoo_key_settings.long_click_delay);
 	} else {
-		jwaoo_app_timer_set(jwaoo_key_get_multi_click_timer(keycode), jwaoo_app_env.key_multi_click_delay);
+		jwaoo_app_timer_set(jwaoo_key_get_multi_click_timer(keycode), jwaoo_key_settings.multi_click_delay);
 	}
 
 	if (key->multi_click_enable == false) {
@@ -59,12 +59,12 @@ void jwaoo_key_process_active(uint8_t keycode)
 		}
 	}
 
-	if (!jwaoo_app_env.key_multi_click_enable) {
-		if (jwaoo_app_env.key_long_click_enable) {
+	if (!jwaoo_key_settings.multi_click_enable) {
+		if (jwaoo_key_settings.long_click_enable) {
 			if (key->value == 0 && key->last_value != JWAOO_KEY_VALUE_LONG) {
 				jwaoo_on_client_key_clicked(key, 1);
 			}
-		} else if (jwaoo_app_env.key_click_enable) {
+		} else if (jwaoo_key_settings.click_enable) {
 			if (key->value > 0) {
 				jwaoo_on_client_key_clicked(key, 1);
 			}
@@ -141,10 +141,9 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 void jwaoo_key_set_enable(bool enable)
 {
 	if (!jwaoo_app_env.initialized) {
-		jwaoo_app_env.key_long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
-		jwaoo_app_env.key_multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
+		jwaoo_key_settings.long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
+		jwaoo_key_settings.multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
 
-		jwaoo_keys[0].long_click_enable = true;
 		jwaoo_keys[0].wait_release = true;
 		jwaoo_keys[0].report_enable = true;
 	}
@@ -225,7 +224,7 @@ void jwaoo_key_long_click_timer_fire(ke_msg_id_t const msgid, uint8_t keycode)
 
 	key->value = JWAOO_KEY_VALUE_LONG;
 
-	if (jwaoo_app_env.key_long_click_enable) {
+	if (jwaoo_key_settings.long_click_enable) {
 		jwaoo_on_client_key_long_clicked(key);
 	}
 
@@ -238,8 +237,8 @@ void jwaoo_key_multi_click_timer_fire(ke_msg_id_t const msgid, uint8_t keycode)
 {
 	struct jwaoo_key_device *key = jwaoo_keys + keycode;
 
-	if (jwaoo_app_env.key_long_click_enable == false || key->last_value != JWAOO_KEY_VALUE_LONG) {
-		if (jwaoo_app_env.key_multi_click_enable) {
+	if (jwaoo_key_settings.long_click_enable == false || key->last_value != JWAOO_KEY_VALUE_LONG) {
+		if (jwaoo_key_settings.multi_click_enable) {
 			jwaoo_on_client_key_clicked(key, key->count);
 		}
 	}

@@ -1107,8 +1107,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>364</TopLine>
+      <CurrentLine>365</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_main.c</PathWithFileName>
       <FilenameWithoutPath>arch_main.c</FilenameWithoutPath>
@@ -1139,8 +1139,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>257</TopLine>
+      <CurrentLine>267</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_sleep.c</PathWithFileName>
       <FilenameWithoutPath>arch_sleep.c</FilenameWithoutPath>
@@ -1403,8 +1403,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>327</TopLine>
+      <CurrentLine>341</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\gpio\gpio.c</PathWithFileName>
       <FilenameWithoutPath>gpio.c</FilenameWithoutPath>
@@ -1417,10 +1417,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>4</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>176</TopLine>
+      <CurrentLine>180</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\wkupct_quadec\wkupct_quadec.c</PathWithFileName>
       <FilenameWithoutPath>wkupct_quadec.c</FilenameWithoutPath>
@@ -1553,10 +1553,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>6</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>660</TopLine>
-      <CurrentLine>670</CurrentLine>
+      <TopLine>303</TopLine>
+      <CurrentLine>309</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\rwip\src\rwip.c</PathWithFileName>
       <FilenameWithoutPath>rwip.c</FilenameWithoutPath>
@@ -1609,10 +1609,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>4</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>511</TopLine>
+      <CurrentLine>544</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\ble_stack\profiles\jwaoo\jwaoo_toy.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_toy.c</FilenameWithoutPath>
@@ -2547,8 +2547,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>485</TopLine>
+      <CurrentLine>500</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_app.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_app.c</FilenameWithoutPath>
@@ -2625,10 +2625,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>27</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>204</TopLine>
+      <CurrentLine>241</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_key.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_key.c</FilenameWithoutPath>

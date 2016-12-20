@@ -541,23 +541,23 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 	// ================================================================================
 
 	case JWAOO_TOY_CMD_KEY_CLICK_ENABLE:
-		jwaoo_app_env.key_click_enable = (length > 1 && command->enable.value);
+		jwaoo_key_settings.click_enable = (length > 1 && command->enable.value);
 		success = true;
 		break;
 
 	case JWAOO_TOY_CMD_KEY_LONG_CLICK_ENABLE:
 		if (length > 1 && command->enable.value) {
-			jwaoo_app_env.key_long_click_enable = true;
+			jwaoo_key_settings.long_click_enable = true;
 
 			if (length > 3) {
 				uint16_t delay = command->enable.delay16 / 10;
 
 				if (delay > 0) {
-					jwaoo_app_env.key_long_click_delay = delay;
+					jwaoo_key_settings.long_click_delay = delay;
 				}
 			}
 		} else {
-			jwaoo_app_env.key_long_click_enable = false;
+			jwaoo_key_settings.long_click_enable = false;
 		}
 
 		success = true;
@@ -565,17 +565,17 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 
 	case JWAOO_TOY_CMD_KEY_MULTI_CLICK_ENABLE:
 		if (length > 1 && command->enable.value) {
-			jwaoo_app_env.key_multi_click_enable = true;
+			jwaoo_key_settings.multi_click_enable = true;
 
 			if (length > 3) {
 				uint16_t delay = command->enable.delay16 / 10;
 
 				if (delay > 0) {
-					jwaoo_app_env.key_multi_click_delay = delay;
+					jwaoo_key_settings.multi_click_delay = delay;
 				}
 			}
 		} else {
-			jwaoo_app_env.key_multi_click_enable = false;
+			jwaoo_key_settings.multi_click_enable = false;
 		}
 
 		success = true;
@@ -599,6 +599,18 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 				jwaoo_keys[i].report_enable = ((command->value8 & (1 << i)) != 0);
 			}
 
+			success = true;
+		}
+		break;
+
+	case JWAOO_TOY_CMD_KEY_SETTINGS:
+		if (length == 1) {
+			jwaoo_toy_send_response_data(command->type, (uint8_t *) &jwaoo_key_settings, sizeof(jwaoo_key_settings));
+			return;
+		}
+
+		if (--length == sizeof(jwaoo_key_settings)) {
+			memcpy(&jwaoo_key_settings, command->bytes, length);
 			success = true;
 		}
 		break;
