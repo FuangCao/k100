@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Mon Dec 19 12:37:30 2016
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Thu Dec 22 12:22:41 2016
 ;VERSION 0.2
 ;FILE adc.o
 ;FILE app.o
@@ -54,6 +54,7 @@ app_easy_security_tk_exch <= USED 0
 app_easy_security_tk_get_active <= USED 0
 app_easy_security_validate_encrypt_req_against_env <= USED 0
 ;FILE app_easy_timer.o
+app_easy_timer_cancel <= USED 0
 app_easy_timer_cancel_all <= USED 0
 app_easy_timer_free_callback <= USED 0
 app_easy_timer_modify <= USED 0
