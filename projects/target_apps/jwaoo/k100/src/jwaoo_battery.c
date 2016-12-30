@@ -81,10 +81,31 @@ void jwaoo_battery_led_blink(void)
 	if (jwaoo_app_env.battery_led_locked < 2) {
 		jwaoo_app_env.battery_led_locked = 1;
 #ifdef CFG_JWAOO_PWM_BATT_LED
-		jwaoo_pwm_blink_square_full(JWAOO_PWM_BATT_LED, 50, 1);
+		jwaoo_pwm_blink_square_full(JWAOO_PWM_BATT_LED, jwaoo_key_settings.led_blink_delay, 1);
 #elif defined(CFG_JWAOO_PWM_BT_LED)
-		jwaoo_pwm_blink_square(JWAOO_PWM_BT_LED, 0, jwaoo_pwm_get_level_by_voltage(jwaoo_app_env.battery_voltage), 50, 1, true);
+		jwaoo_pwm_blink_square(JWAOO_PWM_BT_LED, 0, jwaoo_pwm_get_level_by_voltage(jwaoo_app_env.battery_voltage), jwaoo_key_settings.led_blink_delay, 1, true);
 #endif
+	}
+}
+
+void jwaoo_battery_led_set_enable(bool enable)
+{
+	if (enable) {
+		if (jwaoo_app_env.battery_led_locked < 2) {
+			jwaoo_app_env.battery_led_locked = 1;
+#ifdef CFG_JWAOO_PWM_BATT_LED
+			jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
+#elif defined(CFG_JWAOO_PWM_BT_LED)
+			jwaoo_pwm_blink_set_level(JWAOO_PWM_BT_LED, jwaoo_pwm_get_level_by_voltage(jwaoo_app_env.battery_voltage));
+#endif
+		}
+	} else {
+#ifdef CFG_JWAOO_PWM_BATT_LED
+		jwaoo_pwm_blink_close(JWAOO_PWM_BATT_LED);
+#elif defined(CFG_JWAOO_PWM_BT_LED)
+		jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
+#endif
+		jwaoo_battery_led_release(1);
 	}
 }
 
@@ -130,7 +151,9 @@ void jwaoo_battery_set_state(uint8_t state)
 {
 	if (jwaoo_app_env.battery_state != state) {
 		jwaoo_app_env.battery_state = state;
+#ifdef CFG_JWAOO_PWM_BATT_LED
 		jwaoo_battery_led_update_state(false);
+#endif
 	}
 }
 
@@ -290,12 +313,6 @@ void jwaoo_battery_poll(bool optimize)
 	if (jwaoo_app_env.battery_report) {
 		SEND_EMPTY_MESSAGE(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY);
 	}
-
-#ifdef CFG_JWAOO_PWM_BT_LED
-	if (BT_LED_STATE) {
-		BT_LED_OPEN;
-	}
-#endif
 }
 
 uint16_t jwaoo_battery_get_led_max_current(uint32_t voltage)

@@ -83,6 +83,7 @@ typedef struct {
 	uint16_t multi_click_delay;
 	bool long_click_enable;
 	uint16_t long_click_delay;
+	uint16_t led_blink_delay;
 } jwaoo_key_settings_t;
 #pragma pack()
 

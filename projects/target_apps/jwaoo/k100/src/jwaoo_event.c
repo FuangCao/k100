@@ -5,7 +5,9 @@
 
 void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 {
-	jwaoo_battery_led_blink();
+	if (jwaoo_key_settings.led_blink_delay > 0) {
+		jwaoo_battery_led_blink();
+	}
 
 	if (!jwaoo_app_env.connected) {
 		app_easy_gap_undirected_advertise_start();

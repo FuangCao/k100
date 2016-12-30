@@ -391,15 +391,17 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		return;
 
 	case JWAOO_TOY_CMD_APP_SETTINGS:
-		if (length == 1) {
+		if (length < 2) {
 			jwaoo_toy_send_response_data(command->type, (uint8_t *) &jwaoo_app_settings, sizeof(jwaoo_app_settings));
 			return;
 		}
 
-		if (--length == sizeof(jwaoo_app_settings)) {
-			memcpy(&jwaoo_app_settings, command->bytes, length);
-			success = true;
+		if (--length > sizeof(jwaoo_app_settings)) {
+			length = sizeof(jwaoo_app_settings);
 		}
+
+		memcpy(&jwaoo_app_settings, command->bytes, length);
+		success = true;
 		break;
 
 	case JWAOO_TOY_CMD_FACTORY_ENABLE:
@@ -604,15 +606,17 @@ void jwaoo_toy_process_command(const struct jwaoo_toy_command *command, uint16_t
 		break;
 
 	case JWAOO_TOY_CMD_KEY_SETTINGS:
-		if (length == 1) {
+		if (length < 2) {
 			jwaoo_toy_send_response_data(command->type, (uint8_t *) &jwaoo_key_settings, sizeof(jwaoo_key_settings));
 			return;
 		}
 
-		if (--length == sizeof(jwaoo_key_settings)) {
-			memcpy(&jwaoo_key_settings, command->bytes, length);
-			success = true;
+		if (--length > sizeof(jwaoo_key_settings)) {
+			length = sizeof(jwaoo_key_settings);
 		}
+
+		memcpy(&jwaoo_key_settings, command->bytes, length);
+		success = true;
 		break;
 
 	// ================================================================================

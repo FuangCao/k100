@@ -85,7 +85,7 @@ bool jwaoo_hw_irq_enable(IRQn_Type irq, struct jwaoo_irq_desc *desc, bool active
 	jwaoo_hw_set_irq_desc(irq, desc);
 
 	status = GPIO_GetPinStatus(desc->port, desc->pin);
-	GPIO_EnableIRQ(desc->port, desc->pin, irq, status, false, 60);
+	GPIO_EnableIRQ(desc->port, desc->pin, irq, status, false, 10);
 
 	return true;
 }
@@ -129,7 +129,12 @@ void jwaoo_hw_set_suspend(bool enable)
 			jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
 #endif
 		} else if (jwaoo_app_env.key_release_pending) {
-			jwaoo_battery_led_blink();
+			if (jwaoo_key_settings.led_blink_delay > 0) {
+				jwaoo_battery_led_blink();
+			} else {
+				jwaoo_battery_led_set_enable(true);
+			}
+
 #ifdef CFG_JWAOO_PWM_MOTO
 			jwaoo_moto_set_mode(JWAOO_MOTO_MODE_LINE);
 #endif

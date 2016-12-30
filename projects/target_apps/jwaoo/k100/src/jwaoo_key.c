@@ -10,6 +10,8 @@ struct jwaoo_key_device jwaoo_keys[] = {
 			.port = KEY1_GPIO_PORT,
 			.pin = KEY1_GPIO_PIN,
 		},
+		.wait_release = true,
+		.report_enable = true,
 	},
 };
 
@@ -37,11 +39,19 @@ void jwaoo_key_process_active(uint8_t keycode)
 	}
 
 	if (key->value > 0) {
+		if (jwaoo_key_settings.led_blink_delay == 0) {
+			jwaoo_battery_led_set_enable(true);
+		}
+
 		key->count++;
 		key->repeat = 0;
 		jwaoo_app_timer_set(jwaoo_key_get_repeat_timer(keycode), JWAOO_KEY_REPEAT_LONG_DELAY);
 		jwaoo_app_timer_set(jwaoo_key_get_long_click_timer(keycode), jwaoo_key_settings.long_click_delay);
 	} else {
+		if (jwaoo_key_settings.led_blink_delay == 0) {
+			jwaoo_battery_led_set_enable(false);
+		}
+
 		jwaoo_app_timer_set(jwaoo_key_get_multi_click_timer(keycode), jwaoo_key_settings.multi_click_delay);
 	}
 
@@ -76,7 +86,15 @@ void jwaoo_key_process_active(uint8_t keycode)
 
 void jwaoo_key_process_factory(uint8_t keycode)
 {
-	jwaoo_on_client_key_state_changed(jwaoo_keys + keycode, true);
+	struct jwaoo_key_device *key = jwaoo_keys + keycode;
+
+	if (key->value) {
+		jwaoo_app_timer_set(JWAOO_SET_SUSPEND, 1000);
+	} else {
+		jwaoo_app_timer_clear(JWAOO_SET_SUSPEND);
+	}
+
+	jwaoo_on_client_key_state_changed(key, true);
 }
 
 void jwaoo_key_process_suspend(uint8_t keycode)
@@ -140,14 +158,6 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 
 void jwaoo_key_set_enable(bool enable)
 {
-	if (!jwaoo_app_env.initialized) {
-		jwaoo_key_settings.long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
-		jwaoo_key_settings.multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
-
-		jwaoo_keys[0].wait_release = true;
-		jwaoo_keys[0].report_enable = true;
-	}
-
 	if (enable) {
 		for (int i = 0; i < NELEM(jwaoo_keys); i++) {
 			struct jwaoo_key_device *key = jwaoo_keys + i;

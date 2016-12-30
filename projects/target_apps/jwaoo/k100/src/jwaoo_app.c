@@ -415,6 +415,7 @@ static const struct ke_msg_handler jwaoo_app_upgrade_handlers[] = {
 static const struct ke_msg_handler jwaoo_app_factory_handlers[] = {
 	{ KE_MSG_DEFAULT_HANDLER,					(ke_msg_func_t) jwaoo_default_handler },
 	{ JWAOO_SET_FACTORY_DISABLE,				(ke_msg_func_t) jwaoo_set_factory_disable_handler },
+	{ JWAOO_SET_SUSPEND,						(ke_msg_func_t) jwaoo_active_to_suspend_handler },
 	{ JWAOO_ADV_START,							(ke_msg_func_t) jwaoo_adv_start_handler },
 	{ JWAOO_BATT_POLL_TIMER,					(ke_msg_func_t) jwaoo_factory_battery_poll_handler },
 	{ JWAOO_MOTO_BOOST,							(ke_msg_func_t) jwaoo_moto_boost_handler },
@@ -506,8 +507,9 @@ static void jwaoo_app_load_settings(void)
 	jwaoo_app_settings.moto_speed_min = JWAOO_MOTO_SPEED_MIN;
 #endif
 
-	jwaoo_key_settings.long_click_delay = 200;
-	jwaoo_key_settings.multi_click_delay = 30;
+	jwaoo_key_settings.long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
+	jwaoo_key_settings.multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
+	jwaoo_key_settings.led_blink_delay = 100;
 }
 
 void jwaoo_app_init(void)
