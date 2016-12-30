@@ -3,7 +3,7 @@
 #include "jwaoo_hw.h"
 #include "jwaoo_app.h"
 
-#define JWAOO_KEY_REPEAT_LONG_DELAY			100
+#define JWAOO_KEY_REPEAT_LONG_DELAY			50
 #define JWAOO_KEY_REPEAT_SHORT_DELAY		10
 #define JWAOO_KEY_LONG_CLICK_DELAY			300
 #define JWAOO_KEY_MULTI_CLICK_DELAY			30

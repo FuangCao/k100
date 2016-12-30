@@ -509,7 +509,7 @@ static void jwaoo_app_load_settings(void)
 
 	jwaoo_key_settings.long_click_delay = JWAOO_KEY_LONG_CLICK_DELAY;
 	jwaoo_key_settings.multi_click_delay = JWAOO_KEY_MULTI_CLICK_DELAY;
-	jwaoo_key_settings.led_blink_delay = 100;
+	jwaoo_key_settings.led_blink_delay = 60;
 }
 
 void jwaoo_app_init(void)

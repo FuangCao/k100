@@ -9,7 +9,7 @@ void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 		jwaoo_battery_led_blink();
 	}
 
-	if (!jwaoo_app_env.connected) {
+	if (key->repeat == 0 && jwaoo_app_env.connected == false) {
 		app_easy_gap_undirected_advertise_start();
 		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
 	}

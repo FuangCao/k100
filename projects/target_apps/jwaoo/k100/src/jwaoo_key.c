@@ -10,6 +10,7 @@ struct jwaoo_key_device jwaoo_keys[] = {
 			.port = KEY1_GPIO_PORT,
 			.pin = KEY1_GPIO_PIN,
 		},
+		.repeat_enable = true,
 		.wait_release = true,
 		.report_enable = true,
 	},
