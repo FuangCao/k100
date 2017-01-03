@@ -103,6 +103,7 @@ void user_app_disconnect(struct gapc_disconnect_ind const *param)
 
 	jwaoo_app_set_connect_state(false);
 
+#if 0
     if ((state == APP_SECURITY) ||
         (state == APP_CONNECTED) ||
         (state == APP_PARAM_UPD))
@@ -115,6 +116,9 @@ void user_app_disconnect(struct gapc_disconnect_ind const *param)
         // We are not in a Connected State
         ASSERT_ERR(0);
     }
+#else
+	jwaoo_app_adv_start();
+#endif
 }
 
 void user_catch_rest_hndl(ke_msg_id_t const msgid,
