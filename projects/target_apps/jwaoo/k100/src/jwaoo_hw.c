@@ -120,6 +120,8 @@ void jwaoo_hw_set_suspend(bool enable)
 #endif
 
 		app_easy_gap_disconnect(app_connection_idx);
+		jwaoo_app_set_connect_state(false);
+
 		app_easy_gap_advertise_stop();
 		BT_LED_CLOSE;
 	} else {
