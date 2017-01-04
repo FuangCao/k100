@@ -3,14 +3,14 @@
 #include "gap.h"
 #include "app.h"
 #include "arch_api.h"
+#include "user_k100.h"
 #include "jwaoo_hw.h"
 #include "jwaoo_battery.h"
 
 #define JWAOO_SUSPEND_DELAY_DEFAULT		600
 
-#define APP_AD_MSD_COMPANY_ID			(0xABCD)
-#define APP_AD_MSD_COMPANY_ID_LEN		(2)
-#define APP_AD_MSD_DATA_LEN				(sizeof(uint16_t))
+#define APP_AD_MSD_COMPANY_ID			('J' | ('W' << 8))
+#define APP_AD_MSD_DATA					(0x0010)
 
 #define SEND_EMPTY_MESSAGE(msgid, taskid) \
 	ke_msg_send(ke_msg_alloc(msgid, taskid, 0, 0))
@@ -88,8 +88,6 @@ typedef struct {
 #pragma pack()
 
 typedef struct {
-	bool connected;
-	bool disconnected;
 	bool initialized;
 	bool device_enabled;
 	uint16_t suspend_counter;
@@ -143,7 +141,6 @@ void jwaoo_app_msg_send(void const *param);
 
 void jwaoo_app_init(void);
 void jwaoo_app_adv_start(void);
-void jwaoo_app_set_connect_state(bool connected);
 void jwaoo_app_goto_active_mode(void);
 void jwaoo_app_goto_suspend_mode(void);
 void jwaoo_app_set_upgrade_enable(bool enable);

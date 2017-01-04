@@ -136,7 +136,7 @@ static void jwaoo_key_isr(struct jwaoo_irq_desc *desc, bool status)
 			jwaoo_app_env.key_release_pending = false;
 			jwaoo_app_env.key_lock_pending = false;
 			jwaoo_app_timer_clear(JWAOO_KEY_LOCK_TIMER);
-			jwaoo_battery_led_release(2);
+			jwaoo_battery_led_release(2, false);
 		}
 
 		return;
@@ -204,7 +204,7 @@ void jwaoo_key_lock_timer_fire(void)
 #endif
 		jwaoo_app_env.key_locked = true;
 
-		if (!jwaoo_app_env.connected) {
+		if (user_app_not_connected()) {
 			jwaoo_app_goto_suspend_mode();
 		}
 	}

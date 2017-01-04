@@ -115,14 +115,16 @@ void jwaoo_hw_set_suspend(bool enable)
 			jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
 		}
 
+		jwaoo_battery_led_release(0, true);
+
 #ifdef CFG_JWAOO_PWM_MOTO
 		jwaoo_moto_blink_close();
 #endif
 
 		app_easy_gap_disconnect(app_connection_idx);
-		jwaoo_app_set_connect_state(false);
-
+		user_app_set_state(APP_DISCONNECTED);
 		app_easy_gap_advertise_stop();
+
 		BT_LED_CLOSE;
 	} else {
 		if (jwaoo_app_env.key_lock_pending) {

@@ -65,6 +65,7 @@ enum APP_STATE
     APP_DISABLED,
     /// Database Initialization State
     APP_DB_INIT,
+    APP_DISCONNECTED,
     /// Connectable state
     APP_CONNECTABLE,
 

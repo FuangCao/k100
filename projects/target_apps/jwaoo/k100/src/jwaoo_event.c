@@ -5,14 +5,18 @@
 
 void jwaoo_on_host_key_clicked(struct jwaoo_key_device *key, uint8_t count)
 {
+	volatile ke_state_t state = user_app_get_state();
+
 	if (jwaoo_key_settings.led_blink_delay > 0) {
 		jwaoo_battery_led_blink();
 	}
 
-	if (key->repeat == 0 && jwaoo_app_env.connected == false) {
-		app_easy_gap_undirected_advertise_start();
-		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
+	if (key->repeat > 0 || user_app_connected()) {
+		return;
 	}
+
+	jwaoo_app_adv_start();
+	SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, 1);
 }
 
 void jwaoo_on_host_key_long_clicked(struct jwaoo_key_device *key)

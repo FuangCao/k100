@@ -77,7 +77,7 @@ void user_app_connection(uint8_t connection_idx, struct gapc_connection_req_ind 
             app_param_update_request_timer_used = app_easy_timer(APP_PARAM_UPDATE_REQUEST_TO, param_update_request_timer_cb);
         }
 
-		jwaoo_app_set_connect_state(true);
+		jwaoo_update_bt_led_state();
     }
     else
     {
@@ -99,11 +99,11 @@ void user_app_adv_undirect_complete(uint8_t status)
 
 void user_app_disconnect(struct gapc_disconnect_ind const *param)
 {
+#if 0
      uint8_t state = ke_state_get(TASK_APP);
 
 	jwaoo_app_set_connect_state(false);
 
-#if 0
     if ((state == APP_SECURITY) ||
         (state == APP_CONNECTED) ||
         (state == APP_PARAM_UPD))
@@ -117,6 +117,8 @@ void user_app_disconnect(struct gapc_disconnect_ind const *param)
         ASSERT_ERR(0);
     }
 #else
+	user_app_set_state(APP_DISCONNECTED);
+	jwaoo_update_bt_led_state();
 	jwaoo_app_adv_start();
 #endif
 }

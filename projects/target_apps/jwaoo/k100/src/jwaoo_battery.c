@@ -105,13 +105,13 @@ void jwaoo_battery_led_set_enable(bool enable)
 #elif defined(CFG_JWAOO_PWM_BT_LED)
 		jwaoo_pwm_blink_close(JWAOO_PWM_BT_LED);
 #endif
-		jwaoo_battery_led_release(1);
+		jwaoo_battery_led_release(1, false);
 	}
 }
 
-void jwaoo_battery_led_release(uint8_t level)
+void jwaoo_battery_led_release(uint8_t level, bool force)
 {
-	if (jwaoo_app_env.battery_led_locked <= level) {
+	if (jwaoo_app_env.battery_led_locked <= level || force) {
 		jwaoo_battery_led_update_state(true);
 	}
 }

@@ -121,6 +121,37 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                           ke_task_id_t const dest_id,
                           ke_task_id_t const src_id);
 
+static inline ke_state_t user_app_get_state(void)
+{
+	volatile ke_state_t state = ke_state_get(TASK_APP);
+	return state;
+}
+
+static inline void user_app_set_state(ke_state_t state)
+{
+	ke_state_set(TASK_APP, state);
+}
+
+static inline bool user_app_connectable(void)
+{
+	return user_app_get_state() >= APP_CONNECTABLE;
+}
+
+static inline bool user_app_connected(void)
+{
+	return user_app_get_state() == APP_CONNECTED;
+}
+
+static inline bool user_app_not_connected(void)
+{
+	return user_app_get_state() != APP_CONNECTED;
+}
+
+static inline bool user_app_disconnected(void)
+{
+	return user_app_get_state() <= APP_DISCONNECTED;
+}
+
 /// @} APP
 
 #endif //_USER_BAREBONE_H_

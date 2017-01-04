@@ -27,7 +27,7 @@ extern struct jwaoo_irq_desc jwaoo_charge;
 void jwaoo_battery_set_enable(bool enable);
 void jwaoo_battery_led_blink(void);
 void jwaoo_battery_led_set_enable(bool enable);
-void jwaoo_battery_led_release(uint8_t level);
+void jwaoo_battery_led_release(uint8_t level, bool force);
 void jwaoo_battery_led_update_state(bool force);
 void jwaoo_battery_set_state(uint8_t state);
 void jwaoo_battery_poll(bool optimize);

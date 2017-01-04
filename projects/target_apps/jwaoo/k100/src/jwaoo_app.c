@@ -7,8 +7,8 @@ static struct
 {
     uint8_t ad_structure_size;
     uint8_t ad_structure_type;
-    uint8_t company_id[APP_AD_MSD_COMPANY_ID_LEN];
-    uint8_t proprietary_data[APP_AD_MSD_DATA_LEN];
+    uint16_t company_id;
+    uint16_t proprietary_data;
 } mnf_data __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
 
 jwaoo_app_env_t jwaoo_app_env __attribute__((section("retention_mem_area0"), zero_init)); //@RETENTION MEMORY
@@ -19,25 +19,8 @@ static void jwaoo_app_mnf_data_init(void)
 {
 	mnf_data.ad_structure_size = sizeof(mnf_data) - sizeof(uint8_t); // minus the size of the ad_structure_size field
 	mnf_data.ad_structure_type = GAP_AD_TYPE_MANU_SPECIFIC_DATA;
-	mnf_data.company_id[0] = APP_AD_MSD_COMPANY_ID & 0xFF; // LSB
-	mnf_data.company_id[1] = (APP_AD_MSD_COMPANY_ID >> 8 )& 0xFF; // MSB
-	mnf_data.proprietary_data[0] = 0;
-	mnf_data.proprietary_data[1] = 0;
-}
-
-static void jwaoo_app_mnf_data_update(void)
-{
-	uint16_t data;
-
-	data = mnf_data.proprietary_data[0] | (mnf_data.proprietary_data[1] << 8);
-	data += 1;
-	mnf_data.proprietary_data[0] = data & 0xFF;
-	mnf_data.proprietary_data[1] = (data >> 8) & 0xFF;
-
-	if (data == 0xFFFF) {
-		mnf_data.proprietary_data[0] = 0;
-		mnf_data.proprietary_data[1] = 0;
-	}
+	mnf_data.company_id = APP_AD_MSD_COMPANY_ID;
+	mnf_data.proprietary_data = APP_AD_MSD_DATA;
 }
 
 static void jwaoo_app_add_ad_struct(struct gapm_start_advertise_cmd *cmd, void *ad_struct_data, uint8_t ad_struct_len)
@@ -55,15 +38,12 @@ static int jwaoo_adv_start_handler(ke_msg_id_t const msgid, void const *param, k
 {
 	struct gapm_start_advertise_cmd *cmd = app_easy_gap_undirected_advertise_get_active();
 
-	jwaoo_app_mnf_data_update();
 	jwaoo_app_add_ad_struct(cmd, &mnf_data, sizeof(mnf_data));
 
 	app_easy_gap_undirected_advertise_start();
 	jwaoo_battery_poll_start();
 
 	jwaoo_app_suspend_counter_start();
-
-	jwaoo_app_env.disconnected = false;
 	jwaoo_update_bt_led_state();
 
 	return KE_MSG_CONSUMED;
@@ -135,9 +115,9 @@ static int jwaoo_key_lock_timer_handler(ke_msg_id_t const msgid, void const *par
 static int jwaoo_suspend_timer_handler(ke_msg_id_t const msgid, void const *param, ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
 #ifdef CFG_JWAOO_PWM_MOTO
-	if (jwaoo_app_env.connected || jwaoo_app_env.moto_mode > JWAOO_MOTO_MODE_IDLE) {
+	if (user_app_connected() || jwaoo_app_env.moto_mode > JWAOO_MOTO_MODE_IDLE) {
 #else
-	if (jwaoo_app_env.connected) {
+	if (user_app_connected()) {
 #endif
 		jwaoo_app_suspend_counter_reset();
 	} else if (jwaoo_app_env.key_locked) {
@@ -174,7 +154,7 @@ static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param
 #endif
 
 	if (jwaoo_app_settings.bt_led_close_time > 0) {
-		if (jwaoo_app_env.connected) {
+		if (user_app_connected()) {
 			if (BT_LED_STATE) {
 				BT_LED_CLOSE;
 				jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_close_time);
@@ -185,11 +165,9 @@ static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param
 		} else {
 			BT_LED_CLOSE;
 		}
-	} else if (jwaoo_app_env.connected) {
+	} else if (user_app_connected()) {
 		BT_LED_OPEN;
-	} else if (jwaoo_app_env.disconnected) {
-		BT_LED_CLOSE;
-	} else {
+	} else if (user_app_connectable()) {
 		if (BT_LED_STATE) {
 			BT_LED_CLOSE;
 		} else {
@@ -197,6 +175,8 @@ static int jwaoo_bt_led_blink_handler(ke_msg_id_t const msgid, void const *param
 		}
 
 		jwaoo_app_timer_set(JWAOO_BT_LED_BLINK, jwaoo_app_settings.bt_led_open_time);
+	} else {
+		BT_LED_CLOSE;
 	}
 
 	return KE_MSG_CONSUMED;
@@ -342,7 +322,7 @@ static int jwaoo_set_factory_disable_handler(ke_msg_id_t const msgid, void const
 	ke_state_set(TASK_JWAOO_APP, JWAOO_APP_STATE_ACTIVE);
 
 	jwaoo_update_bt_led_state();
-	jwaoo_battery_led_release(3);
+	jwaoo_battery_led_release(3, false);
 
 	return KE_MSG_CONSUMED;
 }
@@ -499,7 +479,7 @@ static void jwaoo_app_load_settings(void)
 	jwaoo_app_settings.suspend_delay = JWAOO_SUSPEND_DELAY_DEFAULT;
 	jwaoo_app_settings.shutdown_voltage = JWAOO_BATT_VOLTAGE_SHUTDOWN;
 	jwaoo_app_settings.bt_led_open_time = 50;
-	jwaoo_app_settings.bt_led_close_time = 550;
+	// jwaoo_app_settings.bt_led_close_time = 550;
 
 #ifdef CFG_JWAOO_PWM_MOTO
 	jwaoo_app_settings.moto_rand_delay = 10;
@@ -570,13 +550,6 @@ void jwaoo_app_set_factory_enable(bool enable)
 void jwaoo_app_adv_start(void)
 {
 	jwaoo_app_msg_send(jwaoo_app_msg_alloc(JWAOO_ADV_START, 0));
-}
-
-void jwaoo_app_set_connect_state(bool connected)
-{
-	jwaoo_app_env.connected = connected;
-	jwaoo_app_env.disconnected = !connected;
-	jwaoo_update_bt_led_state();
 }
 
 void jwaoo_app_suspend_counter_reset(void)
