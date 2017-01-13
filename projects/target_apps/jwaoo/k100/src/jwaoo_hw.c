@@ -114,6 +114,7 @@ void jwaoo_hw_set_suspend(bool enable)
 		jwaoo_moto_blink_close();
 		app_easy_gap_disconnect(app_connection_idx);
 		app_easy_gap_advertise_stop();
+		jwaoo_app_set_connect_state(false);
 		BT_LED_CLOSE;
 	} else {
 		if (jwaoo_app_env.key_lock_pending) {
