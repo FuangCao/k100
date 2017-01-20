@@ -44,8 +44,8 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>.\out_580\</OutputDirectory>
-          <OutputName>jwaoo-toy</OutputName>
+          <OutputDirectory>.\out_model10\</OutputDirectory>
+          <OutputName>JwaooFwModel10</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
