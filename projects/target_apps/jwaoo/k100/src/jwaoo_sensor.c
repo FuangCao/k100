@@ -4,6 +4,7 @@
 #include "jwaoo_toy.h"
 #include "fdc1004.h"
 #include "bmi160.h"
+#include "da213.h"
 
 static bool jwaoo_sensor_read_values_dummy(uint8_t values[6])
 {
@@ -35,6 +36,9 @@ bool jwaoo_sensor_set_enable(bool enable)
 
 		if (jwaoo_accel_sensor_set_enable) {
 			jwaoo_sensor_set_enable_retry(jwaoo_accel_sensor_set_enable);
+		} else if (jwaoo_sensor_set_enable_retry(da213_set_enable)) {
+			jwaoo_accel_sensor_set_enable = da213_set_enable;
+			jwaoo_accel_sensor_read_values = da213_read_sensor_values;
 		} else if (jwaoo_sensor_set_enable_retry(bmi160_set_enable)) {
 			jwaoo_accel_sensor_set_enable = bmi160_set_enable;
 			jwaoo_accel_sensor_read_values = bmi160_read_sensor_values;

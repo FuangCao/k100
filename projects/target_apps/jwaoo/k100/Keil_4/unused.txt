@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Fri Jan 20 13:06:54 2017
+;#<FEEDBACK># ARM Linker, 5.03 [Build 76]: Last Updated: Mon Feb 13 11:39:15 2017
 ;VERSION 0.2
 ;FILE adc.o
 ;FILE app.o
@@ -97,6 +97,7 @@ battery_get_lvl <= USED 0
 ;FILE bmi160.o
 ;FILE boot_vectors.o
 ;FILE ch_map.obj
+;FILE da213.o
 ;FILE fdc1004.o
 fdc1004_read_sensor_values <= USED 0
 fdc1004_set_enable <= USED 0
