@@ -621,11 +621,6 @@
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.c</FilePath>
             </File>
             <File>
-              <FileName>bmi160.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\bmi160\bmi160.c</FilePath>
-            </File>
-            <File>
               <FileName>fdc1004.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\fdc1004\fdc1004.c</FilePath>
@@ -1639,11 +1634,6 @@
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.c</FilePath>
             </File>
             <File>
-              <FileName>bmi160.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\bmi160\bmi160.c</FilePath>
-            </File>
-            <File>
               <FileName>fdc1004.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\fdc1004\fdc1004.c</FilePath>
@@ -2655,11 +2645,6 @@
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\sdk\platform\driver\pwm\pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>bmi160.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\driver\bmi160\bmi160.c</FilePath>
             </File>
             <File>
               <FileName>fdc1004.c</FileName>

@@ -2,8 +2,6 @@
 #include "jwaoo_sensor.h"
 #include "jwaoo_app.h"
 #include "jwaoo_toy.h"
-#include "fdc1004.h"
-#include "bmi160.h"
 #include "da213.h"
 
 static bool jwaoo_sensor_read_values_dummy(uint8_t values[6])
@@ -16,12 +14,26 @@ static bool (*jwaoo_accel_sensor_read_values)(uint8_t values[6]) = jwaoo_sensor_
 
 static bool jwaoo_sensor_set_enable_retry(bool (*handler)(bool enable))
 {
-	int i;
+	int i, j;
 
-	for (i = 10; i > 0; i--) {
-		if (handler(true)) {
-			return true;
+	for (j = 0; j < 3; j++) {
+		for (i = 10; i > 0; i--) {
+			if (handler(true)) {
+				return true;
+			}
 		}
+
+#ifdef SENSOR_RST_OPEN
+		SENSOR_RST_OPEN;
+#endif
+
+		for (i = 0; i < 10000; i++) {
+			__NOP(), __NOP(), __NOP();
+		}
+
+#ifdef SENSOR_RST_CLOSE
+		SENSOR_RST_CLOSE;
+#endif
 	}
 
 	return false;
@@ -32,16 +44,15 @@ bool jwaoo_sensor_set_enable(bool enable)
 	println("sensor_enable = %d, sensor_poll_delay = %d", enable, jwaoo_app_env.sensor_poll_delay);
 
 	if (enable) {
+#ifdef LDO_P3V3_OPEN
 		LDO_P3V3_OPEN;
+#endif
 
 		if (jwaoo_accel_sensor_set_enable) {
 			jwaoo_sensor_set_enable_retry(jwaoo_accel_sensor_set_enable);
 		} else if (jwaoo_sensor_set_enable_retry(da213_set_enable)) {
 			jwaoo_accel_sensor_set_enable = da213_set_enable;
 			jwaoo_accel_sensor_read_values = da213_read_sensor_values;
-		} else if (jwaoo_sensor_set_enable_retry(bmi160_set_enable)) {
-			jwaoo_accel_sensor_set_enable = bmi160_set_enable;
-			jwaoo_accel_sensor_read_values = bmi160_read_sensor_values;
 		} else {
 			jwaoo_accel_sensor_read_values = jwaoo_sensor_read_values_dummy;
 		}
@@ -55,7 +66,13 @@ bool jwaoo_sensor_set_enable(bool enable)
 		jwaoo_app_env.sensor_poll_enable = false;
 		ke_timer_clear(JWAOO_TOY_SENSOR_POLL, TASK_JWAOO_TOY);
 
+#ifdef LDO_P3V3_CLOSE
 		LDO_P3V3_CLOSE;
+#else
+		if (jwaoo_accel_sensor_set_enable) {
+			jwaoo_accel_sensor_set_enable(false);
+		}
+#endif
 	}
 
 	return true;
