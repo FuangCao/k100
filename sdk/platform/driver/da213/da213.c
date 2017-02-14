@@ -39,12 +39,20 @@ bool da213_set_enable(bool enable)
 bool da213_read_sensor_values(uint8_t values[6])
 {
 	int ret;
+	int16_t value;
+	int16_t *value16;
 
 	ret = da213_read_data(DA213_REG_ACC_X_LSB, values, 6);
 	if (ret < 0) {
 		println("Failed to da213_read_data: %d", ret);
 		return false;
 	}
+
+	value16 = (int16_t *) values;
+
+	value = value16[0];
+	value16[0] = -value16[1];
+	value16[1] = value;
 
 	return true;
 }
