@@ -11,6 +11,30 @@ extern uint8_t app_connection_idx;
 
 struct jwaoo_irq_desc *jwaoo_irqs[JWAOO_IRQ_COUNT];
 
+void jwaoo_hw_udelay(uint32_t usec)
+{
+	while(usec--) {
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+		__nop();
+	}
+}
+
+void jwaoo_hw_mdelay(uint32_t msec)
+{
+	while (msec--) {
+		jwaoo_hw_udelay(1000);
+	}
+}
+
 bool jwaoo_hw_is_valid_bd_addr(const uint8_t bd_addr[6])
 {
 	uint8_t i;
