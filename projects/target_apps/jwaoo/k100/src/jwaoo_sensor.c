@@ -14,26 +14,12 @@ static bool (*jwaoo_accel_sensor_read_values)(uint8_t values[6]) = jwaoo_sensor_
 
 static bool jwaoo_sensor_set_enable_retry(bool (*handler)(bool enable))
 {
-	int i, j;
+	int i;
 
-	for (j = 0; j < 3; j++) {
-		for (i = 10; i > 0; i--) {
-			if (handler(true)) {
-				return true;
-			}
+	for (i = 10; i > 0; i--) {
+		if (handler(true)) {
+			return true;
 		}
-
-#ifdef SENSOR_RST_OPEN
-		SENSOR_RST_OPEN;
-#endif
-
-		for (i = 0; i < 10000; i++) {
-			__NOP(), __NOP(), __NOP();
-		}
-
-#ifdef SENSOR_RST_CLOSE
-		SENSOR_RST_CLOSE;
-#endif
 	}
 
 	return false;
@@ -46,6 +32,13 @@ bool jwaoo_sensor_set_enable(bool enable)
 	if (enable) {
 #ifdef LDO_P3V3_OPEN
 		LDO_P3V3_OPEN;
+#endif
+
+#ifdef SENSOR_RST_OPEN
+		SENSOR_RST_OPEN;
+		jwaoo_hw_mdelay(5);
+		SENSOR_RST_CLOSE;
+		jwaoo_hw_mdelay(5);
 #endif
 
 		if (jwaoo_accel_sensor_set_enable) {
