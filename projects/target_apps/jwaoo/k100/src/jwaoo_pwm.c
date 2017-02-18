@@ -47,6 +47,7 @@ static void jwaoo_pwm_device_set_level_handler(struct jwaoo_pwm_device *device, 
 
 void jwaoo_pwm_device_set_level_boost(struct jwaoo_pwm_device *device, uint8_t pwm, uint8_t level)
 {
+#if 1
 	uint8_t boost = jwaoo_app_env.moto_boost_level + JWAOO_MOTO_BOOST_STEP;
 
 	if (level > boost) {
@@ -55,6 +56,9 @@ void jwaoo_pwm_device_set_level_boost(struct jwaoo_pwm_device *device, uint8_t p
 	}
 
 	jwaoo_pwm_device_set_level_handler(device, pwm, jwaoo_moto_speed_to_level(level));
+#else
+	jwaoo_pwm_device_set_level_handler(device, pwm, 0);
+#endif
 
 #ifdef RESISTOR_GPIO_PORT
 	RESISTOR_CLOSE;
@@ -69,7 +73,7 @@ static void jwaoo_moto_device_set_level_handler(struct jwaoo_pwm_device *device,
 		jwaoo_pwm_device_set_level_boost(device, pwm, level);
 	} else if (level > 0) {
 		RESISTOR_OPEN;
-		jwaoo_app_env.moto_boost_level = level;
+		jwaoo_app_env.moto_boost_level = 0;
 		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_LIMIT_DELAY);
 		jwaoo_pwm_device_set_level_handler(device, pwm, JWAOO_MOTO_LIMIT_LEVEL);
 	} else {
