@@ -88,7 +88,9 @@ typedef struct {
 
 	uint8_t moto_mode;
 	uint8_t moto_speed;
+#ifndef RESISTOR_GPIO_PORT
 	uint8_t moto_boost_level;
+#endif
 	bool moto_report;
 
 	bool battery_report;
