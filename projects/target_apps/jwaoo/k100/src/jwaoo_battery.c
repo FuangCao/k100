@@ -1,6 +1,7 @@
 #include "adc.h"
 #include "jwaoo_app.h"
 #include "jwaoo_pwm.h"
+#include "jwaoo_moto.h"
 #include "jwaoo_battery.h"
 #include "jwaoo_toy_task.h"
 
@@ -221,8 +222,10 @@ void jwaoo_battery_poll(bool optimize)
 	} else {
 		jwaoo_app_env.battery_full = 0;
 
-		if (level > JWAOO_BATT_LEVEL_LOW) {
+		if (level > JWAOO_BATT_LEVEL_NORMAL) {
 			state = JWAOO_TOY_BATTERY_NORMAL;
+		} else if (level > JWAOO_BATT_LEVEL_LOW) {
+			state = jwaoo_app_env.battery_state_raw;
 		} else {
 			state = JWAOO_TOY_BATTERY_LOW;
 
@@ -233,6 +236,7 @@ void jwaoo_battery_poll(bool optimize)
 	}
 
 	jwaoo_app_env.battery_level = level;
+	jwaoo_app_env.battery_state_raw = state;
 	jwaoo_battery_set_state(state);
 
 	if (jwaoo_app_env.battery_report) {

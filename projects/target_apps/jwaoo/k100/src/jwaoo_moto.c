@@ -57,6 +57,10 @@ bool jwaoo_moto_speed_add(int value)
 
 	switch (jwaoo_app_env.moto_mode) {
 	case JWAOO_MOTO_MODE_IDLE:
+		if (jwaoo_app_env.battery_state_raw == JWAOO_TOY_BATTERY_LOW) {
+			return false;
+		}
+
 		jwaoo_app_env.moto_mode = JWAOO_MOTO_MODE_LINE;
 	case JWAOO_MOTO_MODE_LINE:
 		jwaoo_moto_set_speed(speed);
@@ -90,7 +94,7 @@ bool jwaoo_moto_speed_add(int value)
 
 void jwaoo_moto_set_mode(uint8_t mode)
 {
-	if (mode < JWAOO_MOTO_MODE_FIRST || mode > JWAOO_MOTO_MODE_LAST) {
+	if (mode < JWAOO_MOTO_MODE_FIRST || mode > JWAOO_MOTO_MODE_LAST || jwaoo_app_env.battery_state_raw == JWAOO_TOY_BATTERY_LOW) {
 		jwaoo_app_env.moto_mode = JWAOO_MOTO_MODE_IDLE;
 		jwaoo_app_env.moto_speed = 0;
 		jwaoo_pwm_blink_close(JWAOO_PWM_MOTO);

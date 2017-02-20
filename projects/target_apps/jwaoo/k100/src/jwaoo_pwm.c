@@ -71,15 +71,17 @@ static void jwaoo_moto_device_set_level_handler(struct jwaoo_pwm_device *device,
 	if (device->level > 0) {
 		jwaoo_app_env.moto_boost_level = device->level;
 		jwaoo_pwm_device_set_level_boost(device, pwm, level);
-	} else if (level > 0) {
-		RESISTOR_OPEN;
-		jwaoo_app_env.moto_boost_level = 0;
-		jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_LIMIT_DELAY);
-		jwaoo_pwm_device_set_level_handler(device, pwm, JWAOO_MOTO_LIMIT_LEVEL);
 	} else {
-		RESISTOR_CLOSE;
-		jwaoo_app_timer_clear(JWAOO_MOTO_BOOST);
-		jwaoo_pwm_device_set_level_handler(device, pwm, 0);
+		RESISTOR_OPEN;
+
+		if (level > 0) {
+			jwaoo_app_env.moto_boost_level = 0;
+			jwaoo_app_timer_set(JWAOO_MOTO_BOOST, JWAOO_MOTO_LIMIT_DELAY);
+			jwaoo_pwm_device_set_level_handler(device, pwm, JWAOO_MOTO_LIMIT_LEVEL);
+		} else {
+			jwaoo_app_timer_clear(JWAOO_MOTO_BOOST);
+			jwaoo_pwm_device_set_level_handler(device, pwm, 0);
+		}
 	}
 #else
 	jwaoo_app_env.moto_boost_level = device->level;

@@ -141,6 +141,8 @@ void jwaoo_hw_set_suspend(bool enable)
 		jwaoo_app_set_connect_state(false);
 		BT_LED_CLOSE;
 	} else {
+		jwaoo_battery_set_state(jwaoo_app_env.battery_state_raw);
+
 		if (jwaoo_app_env.key_lock_pending) {
 			jwaoo_app_env.battery_led_locked = 2;
 			jwaoo_pwm_blink_open(JWAOO_PWM_BATT_LED);
