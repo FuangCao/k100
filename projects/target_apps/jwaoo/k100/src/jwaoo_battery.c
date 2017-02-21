@@ -5,25 +5,37 @@
 #include "jwaoo_battery.h"
 #include "jwaoo_toy_task.h"
 
+#define JWAOO_BATT_TEST		0
+
 static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
-	{ 3120, 2800 },
-	{ 3230, 2900 },
-	{ 3340, 3000 },
-	{ 3450, 3100 },
-	{ 3560, 3200 },
-	{ 3680, 3300 },
-	{ 3790, 3400 },
-	{ 3900, 3500 },
-	{ 4020, 3600 },
-	{ 4130, 3700 },
-	{ 4240, 3800 },
-	{ 4360, 3900 },
-	{ 4460, 4000 },
-	{ 4580, 4100 },
-	{ 4680, 4200 },
-	{ 4790, 4300 },
+	{ 3102, 2800 },
+	{ 3212, 2900 },
+	{ 3322, 3000 },
+	{ 3441, 3100 },
+	{ 3561, 3200 },
+	{ 3611, 3250 },
+	{ 3665, 3300 },
+	{ 3723, 3350 },
+	{ 3778, 3400 },
+	{ 3833, 3450 },
+	{ 3889, 3500 },
+	{ 3949, 3550 },
+	{ 4008, 3600 },
+	{ 4059, 3650 },
+	{ 4120, 3700 },
+	{ 4175, 3750 },
+	{ 4234, 3800 },
+	{ 4292, 3850 },
+	{ 4349, 3900 },
+	{ 4402, 3950 },
+	{ 4455, 4000 },
+	{ 4514, 4050 },
+	{ 4573, 4100 },
+	{ 4628, 4150 },
+	{ 4689, 4200 },
+	{ 4797, 4300 },
 	{ 4910, 4400 },
-	{ 5030, 4500 },
+	{ 5020, 4500 },
 };
 
 static void jwaoo_charge_isr(struct jwaoo_irq_desc *desc, bool status)
@@ -126,6 +138,11 @@ uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_ma
 	return voltage * map->real_value / map->raw_value;
 }
 
+#if JWAOO_BATT_TEST
+static int test_count;
+static volatile uint32_t test_voltage;
+#endif
+
 void jwaoo_battery_poll(bool optimize)
 {
 	int i;
@@ -134,7 +151,11 @@ void jwaoo_battery_poll(bool optimize)
 	uint32_t voltage;
 	bool charge_online = CHG_ONLINE;
 
+#if JWAOO_BATT_TEST
+	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 5);
+#else
 	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, JWAOO_BATT_POLL_DELAY);
+#endif
 
 	adc_calibrate();
 
@@ -155,6 +176,16 @@ void jwaoo_battery_poll(bool optimize)
 
 	println("raw voltage = %d", voltage);
 
+#if JWAOO_BATT_TEST
+	if (++test_count > 1) {
+		test_voltage = (test_voltage * 3 + voltage) >> 2;
+		if (test_count > 100) {
+			test_count = 0;
+		}
+	} else {
+		test_voltage = voltage;
+	}
+#else
 	voltage = jwaoo_battery_voltage_calibration(jwaoo_battery_voltage_table, NELEM(jwaoo_battery_voltage_table), voltage);
 
 	if (optimize) {
@@ -242,5 +273,6 @@ void jwaoo_battery_poll(bool optimize)
 	if (jwaoo_app_env.battery_report) {
 		SEND_EMPTY_MESSAGE(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY);
 	}
+#endif
 }
 
