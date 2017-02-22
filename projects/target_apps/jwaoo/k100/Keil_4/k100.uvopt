@@ -123,7 +123,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
+          <Name>/</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -146,29 +146,27 @@
           <Name>-U20090928 -O78 -S0 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO7 -FD0 -FC800 -FN0</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>191</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>536887914</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>D:\dialog\k100\projects\target_apps\jwaoo\k100\src\jwaoo_battery.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>test_voltage,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>map0-&gt;raw_value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>map1-&gt;raw_value,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>voltage_last,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -997,8 +995,8 @@
       <Focus>0</Focus>
       <ColumnNumber>42</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>38</TopLine>
-      <CurrentLine>52</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\boot\rvds\system_ARMCM0.c</PathWithFileName>
       <FilenameWithoutPath>system_ARMCM0.c</FilenameWithoutPath>
@@ -1014,7 +1012,7 @@
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>136</TopLine>
-      <CurrentLine>146</CurrentLine>
+      <CurrentLine>152</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\boot\rvds\boot_vectors.s</PathWithFileName>
       <FilenameWithoutPath>boot_vectors.s</FilenameWithoutPath>
@@ -1085,8 +1083,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\nvds\src\nvds.c</PathWithFileName>
       <FilenameWithoutPath>nvds.c</FilenameWithoutPath>
@@ -1101,7 +1099,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>333</TopLine>
+      <TopLine>334</TopLine>
       <CurrentLine>353</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_main.c</PathWithFileName>
@@ -1133,7 +1131,7 @@
       <Focus>0</Focus>
       <ColumnNumber>24</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>263</TopLine>
+      <TopLine>264</TopLine>
       <CurrentLine>286</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_sleep.c</PathWithFileName>
@@ -1149,7 +1147,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>818</TopLine>
+      <TopLine>819</TopLine>
       <CurrentLine>837</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_system.c</PathWithFileName>
@@ -1397,7 +1395,7 @@
       <Focus>0</Focus>
       <ColumnNumber>1</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>339</TopLine>
+      <TopLine>340</TopLine>
       <CurrentLine>362</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\gpio\gpio.c</PathWithFileName>
@@ -1413,7 +1411,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>185</TopLine>
+      <TopLine>186</TopLine>
       <CurrentLine>199</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\wkupct_quadec\wkupct_quadec.c</PathWithFileName>
@@ -1461,8 +1459,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>127</TopLine>
-      <CurrentLine>128</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\trng\trng.c</PathWithFileName>
       <FilenameWithoutPath>trng.c</FilenameWithoutPath>
@@ -1549,8 +1547,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>805</TopLine>
-      <CurrentLine>824</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\ble_stack\rwble\rwble.c</PathWithFileName>
       <FilenameWithoutPath>rwble.c</FilenameWithoutPath>
@@ -1565,7 +1563,7 @@
       <Focus>0</Focus>
       <ColumnNumber>31</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>309</TopLine>
+      <TopLine>310</TopLine>
       <CurrentLine>328</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\rwip\src\rwip.c</PathWithFileName>
@@ -1621,8 +1619,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>660</TopLine>
-      <CurrentLine>689</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\ble_stack\profiles\jwaoo\jwaoo_toy.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_toy.c</FilenameWithoutPath>
@@ -1637,8 +1635,8 @@
       <Focus>0</Focus>
       <ColumnNumber>21</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>455</TopLine>
-      <CurrentLine>492</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\ble_stack\profiles\jwaoo\jwaoo_toy_task.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_toy_task.c</FilenameWithoutPath>
@@ -1693,8 +1691,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\app_modules\src\app_common\app_task.c</PathWithFileName>
       <FilenameWithoutPath>app_task.c</FilenameWithoutPath>
@@ -2325,7 +2323,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>57</TopLine>
+      <TopLine>66</TopLine>
       <CurrentLine>84</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\..\..\..\..\sdk\platform\arch\main\arch_wdg.h</PathWithFileName>
@@ -2525,8 +2523,8 @@
       <Focus>0</Focus>
       <ColumnNumber>18</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>5</TopLine>
-      <CurrentLine>20</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\user_k100.c</PathWithFileName>
       <FilenameWithoutPath>user_k100.c</FilenameWithoutPath>
@@ -2555,9 +2553,9 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>42</ColumnNumber>
+      <ColumnNumber>43</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>560</TopLine>
+      <TopLine>561</TopLine>
       <CurrentLine>581</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_app.c</PathWithFileName>
@@ -2571,10 +2569,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>11</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>145</TopLine>
-      <CurrentLine>151</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_battery.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_battery.c</FilenameWithoutPath>
@@ -2605,8 +2603,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_hw.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_hw.c</FilenameWithoutPath>
@@ -2637,8 +2635,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1</TopLine>
-      <CurrentLine>1</CurrentLine>
+      <TopLine>0</TopLine>
+      <CurrentLine>0</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_key.c</PathWithFileName>
       <FilenameWithoutPath>jwaoo_key.c</FilenameWithoutPath>
@@ -2669,7 +2667,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>36</TopLine>
+      <TopLine>37</TopLine>
       <CurrentLine>50</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_sensor.c</PathWithFileName>

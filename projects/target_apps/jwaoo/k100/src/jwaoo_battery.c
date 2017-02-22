@@ -107,35 +107,35 @@ void jwaoo_battery_set_state(uint8_t state)
 	}
 }
 
-uint16_t jwaoo_battery_voltage_calibration(const struct jwaoo_battery_voltage_map *table, uint8_t size, uint32_t voltage)
+uint16_t jwaoo_battery_voltage_calibration(uint32_t voltage)
 {
-	const struct jwaoo_battery_voltage_map *map, *map_end;
+	static const struct jwaoo_battery_voltage_map *map0 = jwaoo_battery_voltage_table;
+	static const struct jwaoo_battery_voltage_map *map1 = jwaoo_battery_voltage_table + 1;
+	static const struct jwaoo_battery_voltage_map *map_tail = jwaoo_battery_voltage_table + NELEM(jwaoo_battery_voltage_table) - 1;
 
-	for (map = table, map_end = map + size; map < map_end; map++) {
-		if (voltage > map->raw_value) {
-			continue;
+	if (voltage < map0->raw_value) {
+		while (1) {
+			if (map0 > jwaoo_battery_voltage_table) {
+				map1 = map0--;
+
+				if (voltage >= map0->raw_value) {
+					break;
+				}
+			} else {
+				return voltage * map0->real_value / map0->raw_value;
+			}
 		}
+	} else if (voltage > map1->raw_value) {
+		while (map1 < map_tail) {
+			map0 = map1++;
 
-		if (map > table) {
-			uint16_t raw_min, raw_range;
-			uint16_t real_min, real_range;
-			const struct jwaoo_battery_voltage_map *prev = map - 1;
-
-			raw_min = prev->raw_value;
-			raw_range = map->raw_value - raw_min;
-
-			real_min = prev->real_value;
-			real_range = map->real_value - real_min;
-
-			return (voltage - raw_min) * real_range / raw_range + real_min;
-		} else {
-			return voltage * map->real_value / map->raw_value;
+			if (voltage <= map1->raw_value) {
+				break;
+			}
 		}
 	}
 
-	map = map_end - 1;
-
-	return voltage * map->real_value / map->raw_value;
+	return (voltage - map0->raw_value) * (map1->real_value - map0->real_value) / (map1->raw_value - map0->raw_value) + map0->real_value;
 }
 
 #if JWAOO_BATT_TEST
@@ -186,7 +186,7 @@ void jwaoo_battery_poll(bool optimize)
 		test_voltage = voltage;
 	}
 #else
-	voltage = jwaoo_battery_voltage_calibration(jwaoo_battery_voltage_table, NELEM(jwaoo_battery_voltage_table), voltage);
+	voltage = jwaoo_battery_voltage_calibration(voltage);
 
 	if (optimize) {
 		if (voltage < JWAOO_BATT_VOLTAGE_VALID_MIN || voltage > JWAOO_BATT_VOLTAGE_VALID_MAX) {
