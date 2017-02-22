@@ -1012,7 +1012,7 @@
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>136</TopLine>
-      <CurrentLine>152</CurrentLine>
+      <CurrentLine>146</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\boot\rvds\boot_vectors.s</PathWithFileName>
       <FilenameWithoutPath>boot_vectors.s</FilenameWithoutPath>
@@ -1099,7 +1099,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>334</TopLine>
+      <TopLine>335</TopLine>
       <CurrentLine>353</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_main.c</PathWithFileName>
@@ -1131,7 +1131,7 @@
       <Focus>0</Focus>
       <ColumnNumber>24</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>264</TopLine>
+      <TopLine>265</TopLine>
       <CurrentLine>286</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_sleep.c</PathWithFileName>
@@ -1147,7 +1147,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>819</TopLine>
+      <TopLine>820</TopLine>
       <CurrentLine>837</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\arch\main\arch_system.c</PathWithFileName>
@@ -1395,7 +1395,7 @@
       <Focus>0</Focus>
       <ColumnNumber>1</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>340</TopLine>
+      <TopLine>341</TopLine>
       <CurrentLine>362</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\gpio\gpio.c</PathWithFileName>
@@ -1411,7 +1411,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>186</TopLine>
+      <TopLine>187</TopLine>
       <CurrentLine>199</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\driver\wkupct_quadec\wkupct_quadec.c</PathWithFileName>
@@ -1563,7 +1563,7 @@
       <Focus>0</Focus>
       <ColumnNumber>31</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>310</TopLine>
+      <TopLine>311</TopLine>
       <CurrentLine>328</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\..\..\..\..\..\sdk\platform\core_modules\rwip\src\rwip.c</PathWithFileName>
@@ -2553,9 +2553,9 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>43</ColumnNumber>
+      <ColumnNumber>44</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>561</TopLine>
+      <TopLine>562</TopLine>
       <CurrentLine>581</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_app.c</PathWithFileName>
@@ -2667,7 +2667,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>37</TopLine>
+      <TopLine>38</TopLine>
       <CurrentLine>50</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\src\jwaoo_sensor.c</PathWithFileName>

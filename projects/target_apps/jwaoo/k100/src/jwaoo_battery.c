@@ -1,11 +1,10 @@
 #include "adc.h"
 #include "jwaoo_app.h"
 #include "jwaoo_pwm.h"
-#include "jwaoo_moto.h"
 #include "jwaoo_battery.h"
 #include "jwaoo_toy_task.h"
 
-#define JWAOO_BATT_TEST		0
+#define DEBUG_AVG_VOLTAGE		0
 
 static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
 	{ 3102, 2800 },
@@ -138,9 +137,9 @@ uint16_t jwaoo_battery_voltage_calibration(uint32_t voltage)
 	return (voltage - map0->raw_value) * (map1->real_value - map0->real_value) / (map1->raw_value - map0->raw_value) + map0->real_value;
 }
 
-#if JWAOO_BATT_TEST
-static int test_count;
-static volatile uint32_t test_voltage;
+#if DEBUG_AVG_VOLTAGE
+static volatile uint32_t avg_count;
+static volatile uint32_t avg_voltage;
 #endif
 
 void jwaoo_battery_poll(bool optimize)
@@ -151,7 +150,7 @@ void jwaoo_battery_poll(bool optimize)
 	uint32_t voltage;
 	bool charge_online = CHG_ONLINE;
 
-#if JWAOO_BATT_TEST
+#if DEBUG_AVG_VOLTAGE
 	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, 5);
 #else
 	jwaoo_app_timer_set(JWAOO_BATT_POLL_TIMER, JWAOO_BATT_POLL_DELAY);
@@ -174,18 +173,19 @@ void jwaoo_battery_poll(bool optimize)
 		return;
 	}
 
-	println("raw voltage = %d", voltage);
+#if DEBUG_AVG_VOLTAGE
+	if (avg_count++ > 0) {
+		avg_voltage = (avg_voltage * 7 + voltage) >> 3;
 
-#if JWAOO_BATT_TEST
-	if (++test_count > 1) {
-		test_voltage = (test_voltage * 3 + voltage) >> 2;
-		if (test_count > 100) {
-			test_count = 0;
+		if (avg_count > 200) {
+			avg_count = 0;
 		}
 	} else {
-		test_voltage = voltage;
+		avg_voltage = voltage;
 	}
 #else
+	println("raw voltage = %d", voltage);
+
 	voltage = jwaoo_battery_voltage_calibration(voltage);
 
 	if (optimize) {
