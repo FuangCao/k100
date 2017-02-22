@@ -7,35 +7,52 @@
 #define DEBUG_AVG_VOLTAGE		0
 
 static const struct jwaoo_battery_voltage_map jwaoo_battery_voltage_table[] = {
-	{ 2063, 1800 },
-	{ 2121, 1850 },
-	{ 2177, 1900 },
-	{ 2237, 1950 },
-	{ 2295, 2000 },
-	{ 2353, 2050 },
-	{ 2411, 2100 },
-	{ 2469, 2150 },
-	{ 2526, 2200 },
-	{ 2585, 2250 },
-	{ 2643, 2300 },
-	{ 2700, 2350 },
-	{ 2757, 2400 },
-	{ 2814, 2450 },
-	{ 2873, 2500 },
-	{ 2931, 2550 },
-	{ 2991, 2600 },
-	{ 3047, 2650 },
-	{ 3105, 2700 },
-	{ 3163, 2750 },
-	{ 3221, 2800 },
-	{ 3278, 2850 },
-	{ 3334, 2900 },
-	{ 3394, 2950 },
-	{ 3452, 3000 },
-	{ 3512, 3050 },
-	{ 3566, 3100 },
-	{ 2626, 3150 },
-	{ 3685, 3200 },
+	{ 2048, 1800 },
+	{ 2106, 1850 },
+	{ 2163, 1900 },
+	{ 2222, 1950 },
+	{ 2278, 2000 },
+	{ 2337, 2050 },
+	{ 2393, 2100 },
+	{ 2450, 2150 },
+	{ 2509, 2200 },
+	{ 2566, 2250 },
+	{ 2623, 2300 },
+	{ 2682, 2350 },
+	{ 2740, 2400 },
+	{ 2761, 2420 },
+	{ 2784, 2440 },
+	{ 2808, 2460 },
+	{ 2829, 2480 },
+	{ 2852, 2500 },
+	{ 2877, 2520 },
+	{ 2899, 2540 },
+	{ 2922, 2560 },
+	{ 2944, 2580 },
+	{ 2970, 2600 },
+	{ 2992, 2620 },
+	{ 3014, 2640 },
+	{ 3037, 2660 },
+	{ 3061, 2680 },
+	{ 3083, 2700 },
+	{ 3106, 2720 },
+	{ 3129, 2740 },
+	{ 3152, 2760 },
+	{ 3176, 2780 },
+	{ 3198, 2800 },
+	{ 3221, 2820 },
+	{ 3244, 2840 },
+	{ 3291, 2880 },
+	{ 3312, 2900 },
+	{ 3335, 2920 },
+	{ 3359, 2940 },
+	{ 3382, 2960 },
+	{ 3405, 2980 },
+	{ 3427, 3000 },
+	{ 3484, 3050 },
+	{ 3544, 3100 },
+	{ 3599, 3150 },
+	{ 3657, 3200 },
 };
 
 static struct jwaoo_led_current_map jwaoo_led_current_table[] = {
@@ -159,14 +176,33 @@ void jwaoo_battery_set_state(uint8_t state)
 
 uint16_t jwaoo_battery_voltage_calibration(uint32_t voltage)
 {
-	const struct jwaoo_battery_voltage_map *map = jwaoo_battery_voltage_table;
-	const struct jwaoo_battery_voltage_map *map_end = map + NELEM(jwaoo_battery_voltage_table) - 1;
+	static const struct jwaoo_battery_voltage_map *map0 = jwaoo_battery_voltage_table;
+	static const struct jwaoo_battery_voltage_map *map1 = jwaoo_battery_voltage_table + 1;
+	static const struct jwaoo_battery_voltage_map *map_tail = jwaoo_battery_voltage_table + NELEM(jwaoo_battery_voltage_table) - 1;
 
-	while (map < map_end && map->raw_value < voltage) {
-		map++;
+	if (voltage < map0->raw_value) {
+		while (1) {
+			if (map0 > jwaoo_battery_voltage_table) {
+				map1 = map0--;
+
+				if (voltage >= map0->raw_value) {
+					break;
+				}
+			} else {
+				return voltage * map0->real_value / map0->raw_value;
+			}
+		}
+	} else if (voltage > map1->raw_value) {
+		while (map1 < map_tail) {
+			map0 = map1++;
+
+			if (voltage <= map1->raw_value) {
+				break;
+			}
+		}
 	}
 
-	return voltage * map->real_value / map->raw_value + 18;
+	return (voltage - map0->raw_value) * (map1->real_value - map0->real_value) / (map1->raw_value - map0->raw_value) + map0->real_value;
 }
 
 #if DEBUG_AVG_VOLTAGE
@@ -202,12 +238,12 @@ void jwaoo_battery_poll(bool optimize)
 
 	adc_disable();
 
-#if DEBUG_AVG_VOLTAGE
 	if (jwaoo_app_env.battery_skip < 3) {
 		jwaoo_app_env.battery_skip++;
 		return;
 	}
 
+#if DEBUG_AVG_VOLTAGE
 	if (avg_count++ > 0) {
 		avg_voltage = (avg_voltage * 7 + voltage) >> 3;
 
@@ -217,8 +253,7 @@ void jwaoo_battery_poll(bool optimize)
 	} else {
 		avg_voltage = voltage;
 	}
-#endif
-
+#else
 	println("raw voltage = %d", voltage);
 
 	voltage = jwaoo_battery_voltage_calibration(voltage);
@@ -313,6 +348,7 @@ void jwaoo_battery_poll(bool optimize)
 	if (jwaoo_app_env.battery_report) {
 		SEND_EMPTY_MESSAGE(JWAOO_TOY_BATT_REPORT_STATE, TASK_JWAOO_TOY);
 	}
+#endif
 }
 
 uint16_t jwaoo_battery_get_led_max_current(uint32_t voltage)
