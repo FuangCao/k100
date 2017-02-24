@@ -112,6 +112,14 @@ i.e.
 #ifdef POSITION3_GPIO_PIN
 	POSITION_GPIO_RESERVE(3);
 #endif
+
+#ifdef RESISTOR_GPIO_RESERVE
+	RESISTOR_GPIO_RESERVE;
+#endif
+
+#ifdef LIMIT_IC_GPIO_RESERVE
+	LIMIT_IC_GPIO_RESERVE;
+#endif
 }
 #endif //DEVELOPMENT_DEBUG
 
@@ -166,6 +174,14 @@ void set_pad_functions(void)        // set gpio port function mode
 
 #ifdef POSITION3_GPIO_PIN
 	POSITION_GPIO_CONFIG(3);
+#endif
+
+#ifdef RESISTOR_GPIO_CONFIG
+	RESISTOR_GPIO_CONFIG;
+#endif
+
+#ifdef LIMIT_IC_GPIO_CONFIG
+	LIMIT_IC_GPIO_CONFIG;
 #endif
 }
 
