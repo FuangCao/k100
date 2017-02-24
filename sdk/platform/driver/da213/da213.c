@@ -22,6 +22,12 @@ bool da213_set_enable(bool enable)
 			return false;
 		}
 
+		ret = da213_write_register(DA213_REG_SWAP_POLARITY, 1 << 2 | 1 << 1 | 1);
+		if (ret < 0) {
+			println("Failed to da213_write_register: %d", ret);
+			return false;
+		}
+
 		command = 0x1E;
 	} else {
 		command = 0x9E;
