@@ -3,3 +3,5 @@ out_*
 *.Administrator
 *.bak
 *.dep
+*.bin
+*.bat
