@@ -168,6 +168,14 @@ void jwaoo_hw_set_deep_sleep(bool enable)
 		jwaoo_battery_set_state(JWAOO_TOY_BATTERY_NORMAL);
 		jwaoo_moto_blink_close();
 
+#ifdef LIMIT_IC_CLOSE
+		LIMIT_IC_CLOSE;
+#endif
+
+#ifdef RESISTOR_CLOSE
+		RESISTOR_CLOSE;
+#endif
+
 		arch_ble_ext_wakeup_on();
 
 #if (USE_MEMORY_MAP == EXT_SLEEP_SETUP)
