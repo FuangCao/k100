@@ -241,10 +241,20 @@ void jwaoo_battery_poll(bool optimize)
 	}
 
 	if (charge_online) {
-		if (BATT_CHARGING) {
+		if (optimize) {
+			if (BATT_CHARGING || level < 100) {
+				jwaoo_app_env.battery_full = 0;
+				state = JWAOO_TOY_BATTERY_CHARGING;
+			} else if (jwaoo_app_env.battery_full < 10) {
+				jwaoo_app_env.battery_full++;
+				state = JWAOO_TOY_BATTERY_CHARGING;
+			} else {
+				state = JWAOO_TOY_BATTERY_FULL;
+			}
+		} else if (BATT_CHARGING) {
 			jwaoo_app_env.battery_full = 0;
 			state = JWAOO_TOY_BATTERY_CHARGING;
-		} else if (jwaoo_app_env.battery_full < 10) {
+		} else if (jwaoo_app_env.battery_full < 1) {
 			jwaoo_app_env.battery_full++;
 			state = JWAOO_TOY_BATTERY_CHARGING;
 		} else {
